@@ -1,0 +1,127 @@
+* {
+  font-family: 'Poppins', sans-serif;
+  box-sizing:border-box;
+  margin:0;
+  padding:0;  
+}
+
+:root {
+  --black10: rgb(35, 35, 35);
+  --black20: rgb(25, 25, 25);
+  --black30: rgb(49, 64, 76);
+}
+
+body, html {
+  height:100%;
+  background: linear-gradient(transparent 0px, transparent 2px, rgb(255, 255, 255) 2px, rgb(255, 255, 255) 20px), linear-gradient(to right, rgb(200, 195, 199) 0px, rgb(200, 195, 199) 2px, rgb(255, 255, 255) 2px, rgb(255, 255, 255) 20px);
+  background-position: -231px -2px;
+  background-size: 20px 20px;
+}
+
+.main-page-bg {
+  background: linear-gradient(transparent 0px, transparent 2px, rgb(255, 255, 255) 2px, rgb(255, 255, 255) 20px), linear-gradient(to right, rgb(200, 195, 199) 0px, rgb(200, 195, 199) 2px, rgb(255, 255, 255) 2px, rgb(255, 255, 255) 20px);
+  background-position: -231px -2px;
+  background-size: 20px 20px;
+}
+
+.layout {
+  display:grid;
+  grid-template-rows: 4rem 1fr;
+  justify-items: center;
+  height: 100%;
+}
+.center-v {
+  align-self: center;
+}
+
+/*LOGIN + REGISTER*/
+.layout-login {
+  width:100%;
+  max-width: 20rem;
+  padding:1.5rem;
+  background-color: rgb(255, 255, 255);
+  border-radius:0.5rem;
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
+  margin: auto;
+}
+.layout-login form {
+  height:20rem;
+  display:flex;
+  flex-direction: column;
+}
+.layout-login form input {
+  margin-top: 0.5rem;
+}
+
+.layout-login form input {
+  display:block;
+  width:100%;
+  background-color: rgb(235, 235, 235);
+  border:none;
+  outline:none;
+  height:3rem;
+  font-size: 1.25rem;
+  padding:0.5rem 1rem;
+  border-radius: 0.25rem;
+}
+
+.layout-login form input::placeholder {
+  font-size: 1rem;
+  font-weight: 400;
+  position: relative;
+  top:-0.05rem;
+}
+.layout-login button {
+  outline:none;
+  border:none;
+  align-self: center;
+  width:10rem;
+  font-size:1rem;
+  height: 3rem;
+  letter-spacing: 0.075rem;
+  font-weight: 400;
+  color: rgb(250,250,250);
+  background-color: var(--black20);
+  border-radius: 0.25rem;
+  padding:0.5rem;
+  cursor:pointer;
+  margin-top:1rem;
+}
+.layout-login button:hover {
+  background-color: var(--black10);
+}
+.layout-login  h2 {
+  text-align: center;
+  font-size: 2rem;
+  color: var(--black10);
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+}
+.layout-login .no-account {
+  color:rgb(105, 105, 105);
+  text-align: center;
+  margin-top: auto;
+}
+.layout-login .no-account a {
+  font-weight: 500;
+  color:var(--black20);
+  text-decoration: none;
+}
+.layout-login .no-account a:hover {
+  color:var(--black10);
+  cursor:pointer;
+}
+.layout-login .forgotten-password {
+  color:rgb(41, 41, 41);
+  font-weight: 400;
+  text-align: end;
+  font-size:0.8rem;
+}  
+.error {
+  color: #ee0034;
+  margin: 0;
+  font-size: 0.8rem;
+  font-weight: bold;
+  margin-top: 0.25rem;
+  margin-bottom: 0.25rem;
+}

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap" rel="stylesheet">
+</head>
+
+<body>
+  <div class="layout">
+    <%- include('partials/navbar'); %>
+    <main class="main-page-bg center-v">
+      <div class="layout-login">
+        <h2>Registrace</h2>
+        <form action="/login" method="POST">
+          <input type="text" placeholder="Email" name="email">
+          <div class="email error"></div>
+          <input type="password" placeholder="Heslo" name="password">
+          <div class="password error"></div>
+          <input type="password" placeholder="Heslo znovu" id="passwordConfirm">
+          <button type="submit">Registrovat se</button>
+          <div class="no-account">Máte účet? <a href="/login">Přihlašte se</a></div> 
+        </form>
+      </div>
+    </main>    
+  </div>
+</body>
+</html>
+
+<script>
+  const form = document.querySelector('form');
+  const emailError = document.querySelector('.email.error');
+  const passwordError = document.querySelector('.password.error');
+  const passwordConfirm = document.querySelector('#passwordConfirm')
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    // reset errors
+    emailError.textContent = '';
+    passwordError.textContent = '';
+    // get values
+    const email = form.email.value;
+    const password = form.password.value;
+
+    if (password !== passwordConfirm.value) {
+      passwordError.textContent = "Hesla se neshodují"
+      return
+    }
+
+    try {
+      const res = await fetch('/register', { 
+        method: 'POST', 
+        body: JSON.stringify({ email, password }),
+        headers: {'Content-Type': 'application/json'}
+      });
+      
+      const data = await res.json();
+      console.log(data);
+      if (data.errors) {      
+        emailError.textContent = data.errors.email;
+        passwordError.textContent = data.errors.password;
+      }
+      if (data.user) {
+        console.log('dostalo se sem do /tests')
+        location.assign('/tests');
+      }
+    }
+    catch (err) {
+      console.log(err);
+    }
+  });
+</script>

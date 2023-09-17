@@ -1,0 +1,73 @@
+<div class="black-line"></div>
+<div class="navbar">
+  <div class="navbar-wrap">
+    <% if (user) { %>
+      <a class="logo" href="/tests">blank<span class="orange">maps</span></a>
+      <% } else { %>
+        <a class="logo" href="/">blankmaps</a>
+        <% } %>
+  </div>
+
+  <% if (user) { %>
+    <a href="/logout" class="login">Odhlásit se</a>
+    <% } else { %>
+      <a href="/login" class="login">Přihlásit se</a>
+      <% } %>
+</div>
+
+<style>
+  .black-line {
+    height: 4rem;
+    width: 100%;
+    position: absolute;
+    background-color: var(--black10);
+    z-index: 9;
+    top: 0;
+    left: 0;
+  } 
+
+  .navbar {
+    display:flex;
+    height: 4rem;
+    width:100%;
+    margin:0 auto;
+    justify-content:space-between;
+    align-items:center;
+    padding:0.5rem;
+    z-index: 9;
+  }
+
+  .logo {
+    text-transform: uppercase;
+    font-weight: 500;
+    color: white;
+    font-size: 1.25rem;
+    padding: 0.5rem 0.75rem;
+    border-radius: 0.3rem;
+  }
+  
+  .orange {
+    color:#ad915f;
+  }
+
+  .logo:hover {
+    background-color: #494949;
+  }
+
+  .navbar a {
+    text-decoration: none;
+    cursor: pointer;
+  }
+
+  .login {
+    color: white;
+    background-color: #363636;
+    padding: 0.5rem 0.75rem;
+    border-radius: 0.3rem;
+  }
+
+  .login:hover {
+    background-color: #494949;
+  }
+
+</style>

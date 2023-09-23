@@ -17,6 +17,9 @@
   <script defer src="/components/mapLoader.js"></script>
   <script defer src="/components/questionBar.js"></script>
   <script defer src="/components/canvas.js"></script>
+  <script defer src="/components/points.js"></script>
+  <script defer src="/components/answer.js"></script>
+  <script defer src="/components/question.js"></script>
 </head>
 
 <body>  
@@ -87,26 +90,46 @@
                                           <%=i%>" name="question">
                                               <label for="question<%=i+1%>">
                                                   <%=i+1%>
+                                                }
                                               </label>
                               </span>
                               <% } %>
                                   <% } %>
-                                  <span>
-                                    <input type="radio" id="question1" data-questionindex="-1" name="question">
-                                    <label for="question1">1</label>
-                                  </span>
                                   <div id="add-new-question">+</div>
                   </div>
-                  <div class="question-setting-wrapper">
-                    <div class="canvas-wrap">
-                      <canvas id="canvas"></canvas>
+                  <div class="wrap-testing">  
+                    <div class="canvas-wrap-testing">
+                      <canvas class="canvas-testing"></canvas>
                     </div>
-                    <div class="question-setting-wrap">
-                      <h4 class="wrap-heading">mapa</h4>      
-                      <select name="choose-from-map" id="select-map">
-                        <option value="null" disabled selected>Vyberte mapu</option>
-                      </select>                       
-                      <button id="delete-question">smazat otázku</button>
+                    <div class="panel-testing">
+                      <div class="question-heading-wrap">
+                        <div class="wrap-heading-main">
+                          <span>Otázka:</span>
+                          <span>1</span>
+                        </div>                        
+                        <span class="material-symbols-outlined" id="deleteQuestionBtn">delete</span>
+                      </div>
+                      <div>
+                        <div class="wrap-heading-small">Mapa</div>
+                        <select name="choose-from-map" id="select-map">
+                          <option value="null" disabled selected>Vyberte mapu</option>
+                        </select>
+                      </div>
+                      <div class="line-separator"></div>
+                      <div>
+                        <div class="wrap-heading-small">Odpovědi</div>
+                        <button class="material-symbols-outlined" id="add-answer-wrap">add</button>
+                        <div id="answers-wrap"></div>
+                      </div>
+                      <div class="line-separator"></div>
+                      <div>
+                        <div class="wrap-heading-small">Body (1 - 10)</div>
+                        <div class="points">
+                          <button class="material-symbols-outlined" id="dec-point">remove</button>
+                          <span id="point-value">1</span>
+                          <button class="material-symbols-outlined" id="inc-point">add</button>
+                        </div>
+                      </div>
                     </div>
                   </div>
               </div>
@@ -207,6 +230,7 @@
 
 .create-test-wrapper {
   height: 100%;
+  overflow-x: auto;
 }
 
 .create-test-page {
@@ -384,43 +408,221 @@
 }
 
 /*layout 2 stranka - canvas, nastaveni otazky*/
-.question-setting-wrapper {
-  max-width:1100px;
-  display:flex;
-  gap:1rem;
-}
-.canvas-wrap {
-  background:white;
+
+
+.canvas-wrap-testing {
+  background:rgb(237, 209, 156); 
   width:750px;
   overflow-x:auto;
-  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
 }
-canvas {
-  background:transparent;
+.canvas-testing {
+  overflow-x:auto;
+  background:rgb(187, 241, 190);
   width:750px;
 }
-.question-setting-wrap {
-  min-width:280px;
-  background:rgb(198, 198, 198);
-  height: fit-content;
-  padding:1rem;
+.panel-testing {
+  background-color: rgb(245,245,245);
+  flex:1;
+  min-width: 18rem;
   display:flex;
   flex-direction:column;
+  border-radius: 0.75rem;
+}
+.wrap-testing {
+  display:flex;
+  max-width:1120px;
+  margin:0.5rem auto 0 auto;
+  gap:0.5rem;
 }
 
 @media (max-width: 600px) {
-  .question-setting-wrapper {
+  .wrap-testing {
     flex-direction: column;
   }
-  .question-setting-wrap {
+  .panel-testing {
     min-width: unset;
     flex:1;
     order: 1;
   }
-  .canvas-wrap {
+  .canvas-wrap-testing {
     width: 100%;
     order: 2;
   }
+}
+
+
+/* panel nastaveni otazky */
+.panel-testing > div:nth-child(1){
+  display:flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1rem 1rem 1rem;
+  background: #e7e7e7;
+  border-radius: 0.75rem;
+  margin-bottom: 1rem;
+}
+.panel-testing > div:not(:nth-child(1)) {
+  padding: 0 1rem 0 1rem;
+  margin-bottom: 0.5rem;
+}
+
+
+.panel-testing .wrap-heading-small {
+  text-transform: uppercase;
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #545454;
+  margin-bottom: 0.5rem;
+}
+.panel-testing .wrap-heading-main > * {
+  font-size: 1.5rem;
+    letter-spacing: 0.15rem;
+    text-transform: uppercase;
+    font-weight: 600;
+    color: #424242;
+}
+
+#deleteQuestionBtn {
+      color: #262626;
+      border-radius: 0.25rem;
+      padding: 0.45rem;
+      cursor: pointer;
+}
+
+#deleteQuestionBtn:hover {
+    background-color: #d5d5d5;
+}
+
+.panel-testing select:hover {
+  background-color: rgb(232,232,232);
+  cursor: pointer;
+}
+
+.panel-testing select, #selectTimeLimit {
+  background: rgb(235,235,235);
+  width: 100%;
+  outline: none;
+  border: none;
+  padding: 0.5rem 0.2rem;
+  border-right: 0.2rem solid transparent;
+  font-size: 0.9rem;
+  border-radius: 0.5rem;
+  font-weight: 500;
+  color: #545151;
+  height: 41px;
+}
+
+#add-answer-wrap {
+  background-color: rgb(235,235,235);
+    color: #4f98f4;
+    font-weight: 600;
+    outline: none;
+    border: none;
+    font-size: 1.5rem;
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+}
+
+#add-answer-wrap:hover {
+  background-color: rgb(225,225,225);
+  cursor:pointer;
+}
+.points {
+  display:flex;
+  align-items: center;
+  gap:1rem;
+}
+
+.points button {
+  outline: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.35rem;
+  border-radius: 0.35rem;
+  background-color: transparent;
+  color: #545151;
+  font-weight: 700;
+}
+.points button:hover {
+  background-color: rgb(235,235,235);
+}
+
+#point-value {
+  width: 2rem;
+  font-size: 1.5rem;
+  text-align: center;
+  font-weight: 500;
+  color: rgb(65,65,65);
+  user-select: none;
+  color: #4f98f4;
+}
+
+
+.answer-wrap {
+  background-color:rgb(235,235,235);
+  box-shadow: 0 1px 4px 0 rgb(60 64 67 / 30%);
+  padding:0 0.5rem 0.25rem 0.5rem;
+  display:grid;
+  grid-template-columns:minmax(4rem, auto) 3rem;
+  width:100%;
+  border-radius:0.5rem;
+  margin-bottom:0.5rem;
+}
+.answer-wrap-green {
+  background-color: rgb(133,233,151);
+}
+
+.answer-text {
+  outline:none;
+  border:none;
+  background:inherit;
+  font-size:1.2rem;
+  color:rgb(64, 64, 82);
+  font-weight:450;
+  grid-column: span 1;
+  height:2.5rem;
+}
+.answer-text::placeholder {
+  color:rgba(75,75,105,0.5);
+  font-weight:400;
+  font-size:1rem;
+}
+.answer-checkbox {
+  grid-column: span 1;
+  font-size:0.75rem;
+  color:rgb(45,45,45);
+  /* border-top:1px solid rgb(220,220,220);
+  padding-top:0.5rem; */
+  position:relative;
+}
+.answer-checkbox input {
+  accent-color: white;
+}
+.answer-checkbox span {
+  position:relative;
+  top:-0.1rem;
+  margin-left:0.15rem;
+}
+.close-term {
+  font-size:1.25rem;
+  border:none;
+  background:inherit;
+  color: rgb(65,65,65);
+  width:2rem;
+  height:2rem;
+  grid-row: span 2;
+  align-self:center;
+  justify-self:center;
+  position: relative;
+  top:0.15rem;
+}
+.close-term:hover {
+  background: white;
+  border-radius:0.5rem;
+  cursor:pointer;
+}
+.answer-wrap  {
+  margin-top: 0.5rem;
 }
 
 </style>

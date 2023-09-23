@@ -55,3 +55,39 @@ function deleteMap(e) {
     selectMap.item(0).selected = true;
   }
 }
+
+
+/* Nahrátí mapy a následné přidání do select-map */
+let selectMap = document.querySelector('#select-map');
+let mapsWrap = document.querySelector('.maps-wrap');
+
+// sledovane zmeny
+const config = {
+  childList: true
+}
+
+// sledovany node
+const targetNode = mapsWrap;
+console.log("targetNOde: ", targetNode);
+
+function observe() {
+  const callback = mutations => {
+    mutations.forEach(mutation => {
+      if (mutation.type === 'childList') {
+        if (mutation.addedNodes[0]) {  
+          console.log("here ", mutation.addedNodes[0]) 
+          let mapName = mutation.addedNodes[0].querySelector('input').value
+          selectMap.add(new Option(`${mapName}`,`${mutation.addedNodes[0].id}`))
+        }
+        if (mutation.removedNodes[0]) {
+          let mapIdToDelete = mutation.removedNodes[0].id;
+          selectMap.removeChild(selectMap.querySelector(`option[value="${mapIdToDelete}"]`));
+        }
+      }
+    })
+  }
+  const observer = new MutationObserver(callback);
+  observer.observe(targetNode, config);
+}
+
+observe();

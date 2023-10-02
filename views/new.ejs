@@ -15,6 +15,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap" rel="stylesheet">
   <script defer src="/components/pageSwitcher.js"></script>
   <script defer src="/components/mapLoader.js"></script>
+  <script defer src="/components/classes.js"></script>
   <script defer src="/components/questionBar.js"></script>
   <script defer src="/components/canvas.js"></script>
   <script defer src="/components/points.js"></script>
@@ -105,7 +106,7 @@
                       <div class="question-heading-wrap">
                         <div class="wrap-heading-main">
                           <span>Otázka:</span>
-                          <span>1</span>
+                          <span id="question-number">1</span>
                         </div>                        
                         <span class="material-symbols-outlined" id="deleteQuestionBtn">delete</span>
                       </div>
@@ -217,15 +218,23 @@
 
 .go-back-wrapper a {
   font-size: 3rem;
-  background-color: rgb(245,245,245);
-  color: rgb(55,55,55);
-  border-radius: 0.35rem;
+  background-color: rgb(255 255 255);
+  color: rgb(122 122 122);
+  border-radius: 9999px;
   text-decoration: none;
 }
 
 .go-back-wrapper a:hover {
   font-size: 3rem;
   background-color: rgb(235,235,235);
+}
+
+.go-back-wrapper span {
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  letter-spacing: 0.07rem;
+  color: #4e4e4e;
 }
 
 .create-test-wrapper {
@@ -414,6 +423,7 @@
   background:rgb(237, 209, 156); 
   width:750px;
   overflow-x:auto;
+  visibility: hidden;
 }
 .canvas-testing {
   overflow-x:auto;
@@ -427,6 +437,7 @@
   display:flex;
   flex-direction:column;
   border-radius: 0.75rem;
+  visibility: hidden;
 }
 .wrap-testing {
   display:flex;

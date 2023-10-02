@@ -1,19 +1,26 @@
 /* Vytváření otázek*/
 let wrapQuestionsElem = document.querySelector(".wrap-questions");
+let addNewQuestionBtn = document.querySelector("#add-new-question");
+let panel = document.querySelector('.panel-testing');
+let canvasWrap = document.querySelector('.canvas-wrap-testing');
 let maps = [];
 let questions = [];
 let test = new Test("", questions, maps, false, [], null);
-let addNewQuestionBtn = document.querySelector("#add-new-question");
 
-addNewQuestionBtn.addEventListener("click", addNewQuestion);
+
+addNewQuestionBtn.addEventListener("click", addQuestion);
 wrapQuestionsElem.addEventListener('input', changeQuestion);
 
-function addNewQuestion() {
+function addQuestion() {
   createQuestionIcon();
+  setLastQuestionIconAsChecked();
+  createQuestionObject();
+  showElement(panel);
+  drawQuestion();
 }
 
 function createQuestionIcon() {
-  let newQuestionElem = `<span><input type="radio" id="question${numberOfQuestions()}" checked data-questionindex="${actualQuestionIndex}" name="question">
+  let newQuestionElem = `<span><input type="radio" id="question${numberOfQuestions()}" name="question">
     <label for="question${numberOfQuestions()}">${numberOfQuestions()}</label></span>`;
   let addQuestion = document.querySelector("#add-new-question");
   addQuestion.insertAdjacentHTML("beforebegin", newQuestionElem);
@@ -23,71 +30,24 @@ function createQuestionObject() {
   questions.push(new Question([], 1, null));
 }
 
-
 function changeQuestion(e) {
   console.log(e.target);
-}
-
-function deleteQuestion() {
-
-}
-
-function removeQuestionIcon() {
-
+  questionNumber.textContent = valueOfQuestion();
 }
 
 function numberOfQuestions() {
   return wrapQuestionsElem.querySelectorAll('input').length + 1;
 }
 
-class Test {
-  constructor(testTitle, questions, maps, isActive, marksRange, completeUntil) {
-    this.testTitle = testTitle;
-    this.questions = questions;
-    this.maps = maps;
-    this.isActive = isActive;
-    this.marksRange = marksRange;
-    this.completeUntil = completeUntil;
-  }
+function hideElement(elem) {
+  elem.style.visibility = "hidden"
 }
 
-class Question {
-  constructor(answers, points, map) {
-    this.answers = answers;
-    this.points = points;
-    this.map = map;
-  }
+function showElement(elem) {
+  elem.style.visibility = "visible"; 
+} 
+
+function setLastQuestionIconAsChecked() {
+  wrapQuestionsElem.querySelector('span:last-of-type input').checked = true;
 }
 
-class Answer {
-  constructor(term, isCorrect) {
-    this.term = term;
-    this.isCorrect = isCorrect;
-  }
-
-  // Metoda pro nastavení hodnoty term
-  setTerm(term) {
-    this.term = term;
-  }
-
-  // Metoda pro nastavení hodnoty isCorrect
-  setIsCorrect(isCorrect) {
-    this.isCorrect = isCorrect;
-  }
-
-  // Metoda pro získání hodnoty term
-  getTerm() {
-    return this.term;
-  }
-
-  // Metoda pro získání hodnoty isCorrect
-  getIsCorrect() {
-    return this.isCorrect;
-  }
-}
-
-class Map {
-  constructor(data) {
-    this.data = data;
-  }
-}

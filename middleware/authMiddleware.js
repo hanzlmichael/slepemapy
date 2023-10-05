@@ -43,4 +43,54 @@ const requireAuth = (req, res, next) => {
   }
 };
 
-module.exports = { checkUser, requireAuth };
+
+const checkAuthor = async (req, res, next) => {
+  console.log('dostal se sem')
+  let testId = req.url.substring(1, req.url.length)
+  if (testId.length > 24) {
+    testId = testId.slice(0,24)
+  }
+
+  // check if user has a valid token
+  console.log('dostal se sem1')
+  const token = req.cookies.jwt;
+  if (token) {
+    jwt.verify(token, 'net ninja secret', async (err, decodedToken) => {
+      if (err) {
+        res.locals.author = null;
+        next();
+      } else {
+        let user, teacherRef;
+        
+        // use Promise.all() to wait for both queries to complete
+        await Promise.all([
+          User.findById(decodedToken.id).select("_id").exec(),
+          Test.findById(testId).select("teacherRef").exec()
+        ])
+          .then(([userDoc, testDoc]) => {
+            user = userDoc._id.toString();
+            teacherRef = testDoc.teacherRef.toString();
+          })
+          .catch((err) => {
+            
+            console.log(err);
+          });
+
+        if (user == teacherRef) {
+          console.log('--------------------------------', user)
+
+          res.locals.author = user;
+        } else {
+          res.locals.author = null;
+        }
+
+        next();
+      }
+    });
+  } else {
+    res.locals.author = null;
+    next();
+  }
+}
+
+module.exports = { checkUser, requireAuth, checkAuthor };

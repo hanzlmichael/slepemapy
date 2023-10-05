@@ -48,7 +48,7 @@
   }
 
   function editTest(id) {
-    location.assign(`/tests/${id.value}`);
+    location.assign(`/tests/${id.value}/edit`);
   }
 
   async function publishTest(id) {
@@ -185,55 +185,6 @@
   }
 
 
-  //* TABS funkcionalita */
-  let tabTests = document.querySelector('.tab-tests');
-  let tabResults = document.querySelector('.tab-results');
-  tabTests.addEventListener('click', loadTests);
-  tabResults.addEventListener('click', loadResults);
-
-  function loadTests(e) {
-    handleActiveClass(e);
-  }
-
-  function loadResults(e) {
-    handleActiveClass(e);
-  }
-
-  function handleActiveClass(e) {
-    if (e.target.classList.contains('active')) {
-      return;
-    }
-    deleteActiveClass(findActiveTab());
-    e.target.classList.add('active');
-  }
-
-  function findActiveTab() {
-    return document.querySelector('.active');
-  }
-
-  function deleteActiveClass(tab) {
-    tab.classList.remove('active');
-  }
-
-  let testsDiv = document.querySelector('#tests-page');
-  let resultsDiv = document.querySelector('#results-page');
-
-  function hideTests() {
-    testsDiv.style.display = 'none';
-  }
-
-  function hideResults() {
-    resultsDiv.style.display = 'none';
-  }
-  function showTests() {
-    hideResults();
-    testsDiv.style.display = 'grid';
-  }
-  function showResults() {
-    console.log('yes')
-    hideTests();
-    resultsDiv.style.display = 'grid';
-  }
 
   // Tiptiools
   tippy('#delete', {

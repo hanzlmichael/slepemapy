@@ -13,6 +13,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap" rel="stylesheet">
+  <script defer src="/inits/definitions.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.1/fabric.min.js"></script>
   <script defer src="/components/pageSwitcher.js"></script>
   <script defer src="/components/mapLoader.js"></script>
   <script defer src="/components/classes.js"></script>
@@ -21,6 +23,9 @@
   <script defer src="/components/points.js"></script>
   <script defer src="/components/answer.js"></script>
   <script defer src="/components/question.js"></script>
+  <script defer src="/components/addShapes.js" type="module"></script>
+  <script defer src="/draw/globalPrototypeSetting.js"></script>
+  <script defer src="/components/saveTestBtn.js"></script>
 </head>
 
 <body>  
@@ -67,15 +72,15 @@
                     </div>
                     <div class="maps-wrap">
                       <% if (test) { %>
-                        <% for (let i=0; i < test.test.maps.length; i++) { %>
-                          <div class="map-wrap" id="<%= test.test.maps[i].mapId%>">
+                        <% for (let i=0; i < test.maps.length; i++) { %>
+                          <div class="map-wrap" id="<%= test.maps[i].mapId %>">
                             <div class="map-image">
-                              <img src="<%= test.test.maps[i].src%>" alt="map">
+                              <img src="<%= test.maps[i].data %>" alt="map">
                               <span class="close-map">✖</span>
                             </div>
                             <div class="map-info">
                               <div class="placeholder">Název mapy</div>
-                              <input type="text" value="<%=test.test.maps[i].title%>">
+                              <input type="text" value="<%=test.maps[i].mapId%>">
                             </div>
                           </div>
                           <% } %>
@@ -85,14 +90,11 @@
               <div class="create-test-page" id="create-test-questions">
                   <div class="wrap-questions">
                       <% if (test) { %>
-                          <% for (let i=0; i < test.test.questions.length; i++) { %>
+                          <% for (let i = 0; i < test.questions.length; i++) { %>
                               <span>
-                                  <input <% if (i==0) { %> checked <% } %> type="radio" id="question<%=i+1%>" data-questionindex="
-                                          <%=i%>" name="question">
-                                              <label for="question<%=i+1%>">
-                                                  <%=i+1%>
-                                                }
-                                              </label>
+                                  <input <% if (i==0) { %> checked <% } %> type="radio" id="question<%=i+1%>" name="question">
+                                  <label for="question<%=i+1%>"> <%= i+1 %>
+                                  </label>
                               </span>
                               <% } %>
                                   <% } %>
@@ -100,7 +102,7 @@
                   </div>
                   <div class="wrap-testing">  
                     <div class="canvas-wrap-testing">
-                      <canvas class="canvas-testing"></canvas>
+                      <canvas class="canvas-testing" id="canvas"></canvas>
                     </div>
                     <div class="panel-testing">
                       <div class="question-heading-wrap">
@@ -114,7 +116,40 @@
                         <div class="wrap-heading-small">Mapa</div>
                         <select name="choose-from-map" id="select-map">
                           <option value="null" disabled selected>Vyberte mapu</option>
+                          <% if (test) { %>
+                            <% if (test.maps.length > 0) { %>
+                              <% for (let i = 0; i < test.maps.length; i++) { %>
+                                <option value="<%=test.maps[0].mapId%>"><%=test.maps[0].mapId%></option>
+                              <% } %>
+                            <% } %>
+                          <% } %>
                         </select>
+                        <div class="wrap-heading-small shapes-heading">Přidat tvar</div>
+                        <div class="shapes-wrap">
+                          <label for="point-shape">
+                            <input type="radio" id="point-shape" name="select-shape">
+                            <span>bod</span>
+                          </label>
+                          <label for="line-shape">
+                            <input type="radio" id="line-shape" name="select-shape">
+                            <span>linie</span>
+                          </label>
+                          <label for="polygon-shape">
+                            <input type="radio" id="polygon-shape" name="select-shape">
+                            <span>polygon</span>
+                          </label>
+                          <span class="material-symbols-outlined close-shape hidden" id="remove-selection-from-input">close</span>
+                        </div>
+                        <div class="canvas-icons">
+                          <div class="canvas-icon-wrap">
+                            <span class="material-symbols-outlined">delete</span>
+                            <span  class="icon-text">Vymazat obsah mapy</span>
+                          </div>
+                          <div class="canvas-icon-wrap">
+                            <span class="material-symbols-outlined" id="zoomOutBtn">zoom_out_map</span>
+                            <span class="icon-text">Původní pozice</span>
+                          </div>
+                        </div>
                       </div>
                       <div class="line-separator"></div>
                       <div>
@@ -134,7 +169,186 @@
                     </div>
                   </div>
               </div>
-              <div class="create-test-page" id="create-test-details">dokončení</div>
+              <div class="create-test-page" id="create-test-details">
+                <div id="test-name-wrap">
+                  <h4 class="wrap-heading-small">Název testu</h4>
+                  <% if (test) { %>
+                    <input type="text" value="<%= test.title %>">
+                    <% } else { %>
+                      <input type="text">
+                      <% } %>
+                </div>
+  
+  
+                <div class="marks-wrap">
+                  <h4 class="wrap-heading-small">nastavení známkování</h4>
+                  <table>
+                    <thead>
+                      <tr class="head-row">
+                        <td>známka</td>
+                        <td>body</td>
+                      </tr>
+                    </thead>
+  
+                    <% if (test) { %>
+                      <tr>
+                        <td>
+                          <span class="mark-number">1</span>
+                        </td>
+                        <td>
+                          <input class="table-input-number" type="number" value="<%=test.marksBoundaries[0]%>">
+                          <span class="dash">–</span>
+                          <input class="table-input-number" type="number" value="<%=test.marksBoundaries[1]%>">
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <span class="mark-number">2</span>
+                        </td>
+                        <td>
+                          <input class="table-input-number" type="number" value="<%=test.marksBoundaries[2]%>">
+                          <span class="dash">–</span>
+                          <input class="table-input-number" type="number" value="<%=test.marksBoundaries[3]%>">
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <span class="mark-number">3</span>
+                        </td>
+                        <td>
+                          <input class="table-input-number" type="number" value="<%=test.marksBoundaries[4]%>">
+                          <span class="dash">–</span>
+                          <input class="table-input-number" type="number" value="<%=test.marksBoundaries[5]%>">
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <span class="mark-number">4</span>
+                        </td>
+                        <td>
+                          <input class="table-input-number" type="number" value="<%=test.marksBoundaries[6]%>">
+                          <span class="dash">–</span>
+                          <input class="table-input-number" type="number" value="<%=test.marksBoundaries[7]%>">
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <span class="mark-number">5</span>
+                        </td>
+                        <td>
+                          <input class="table-input-number" type="number" value="<%=test.marksBoundaries[8]%>">
+                          <span class="dash">–</span>
+                          <input class="table-input-number" type="number" value="<%=test.marksBoundaries[9]%>">
+                        </td>
+                      </tr>
+                    <% } else { %>
+                      <tr>
+                        <td>
+                          <span class="mark-number">1</span>
+                        </td>
+                        <td>
+                          <input class="table-input-number" type="number" value="0">
+                          <span class="dash">–</span>
+                          <input class="table-input-number" type="number" value="0">
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <span class="mark-number">2</span>
+                        </td>
+                        <td>
+                          <input class="table-input-number" type="number" value="0">
+                          <span class="dash">–</span>
+                          <input class="table-input-number" type="number" value="0">
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <span class="mark-number">3</span>
+                        </td>
+                        <td>
+                          <input class="table-input-number" type="number" value="0">
+                          <span class="dash">–</span>
+                          <input class="table-input-number" type="number" value="0">
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <span class="mark-number">4</span>
+                        </td>
+                        <td>
+                          <input class="table-input-number" type="number" value="0">
+                          <span class="dash">–</span>
+                          <input class="table-input-number" type="number" value="0">
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <span class="mark-number">5</span>
+                        </td>
+                        <td>
+                          <input class="table-input-number" type="number" value="0">
+                          <span class="dash">–</span>
+                          <input class="table-input-number" type="number" value="0">
+                        </td>
+                      </tr>
+                      <% } %>
+                  </table>
+                  <div class="total-points-wrap">
+                    <span>Celkový počet bodů je: </span>
+                    <span id="total-points-value">0</span>
+                  </div>
+                </div>
+                <div class="time-limit-wrap">
+                  <h4 class="wrap-heading-small">Časový limit</h4>
+                  <% if (test) { %>
+                    <select name="time-limit" id="selectTimeLimit">
+                      <option value="null" <% if (test.timeLimit === null) { %> selected <% } %>>Bez limitu</option>
+                      <option value="5" <% if (test.timeLimit == 5) { %> selected <% } %>>5 minut</option>
+                      <option value="10" <% if (test.timeLimit == 10) { %> selected <% } %>>10 minut</option>
+                      <option value="15" <% if (test.timeLimit == 15) { %> selected <% } %>>15 minut</option>
+                      <option value="20" <% if (test.timeLimit == 20) { %> selected <% } %>>20 minut</option>
+                      <option value="25" <% if (test.timeLimit == 25) { %> selected <% } %>>25 minut</option>
+                      <option value="30" <% if (test.timeLimit == 30) { %> selected <% } %>>30 minut</option>
+                      <option value="35" <% if (test.timeLimit == 35) { %> selected <% } %>>35 minut</option>
+                      <option value="40" <% if (test.timeLimit == 40) { %> selected <% } %>>40 minut</option>
+                      <option value="45" <% if (test.timeLimit == 45) { %> selected <% } %>>45 minut</option>
+                      <option value="50" <% if (test.timeLimit == 50) { %> selected <% } %>>50 minut</option>
+                      <option value="55" <% if (test.timeLimit == 55) { %> selected <% } %>>55 minut</option>
+                      <option value="60" <% if (test.timeLimit == 60) { %> selected <% } %>>60 minut</option>
+                    </select>
+                    <% } else { %>
+                      <select name="time-limit" id="selectTimeLimit">
+                        <option value="null">Bez limitu</option>
+                        <option value="5">5 minut</option>
+                        <option value="10">10 minut</option>
+                        <option value="15">15 minut</option>
+                        <option value="20">20 minut</option>
+                        <option value="25">25 minut</option>
+                        <option value="30">30 minut</option>
+                        <option value="35">35 minut</option>
+                        <option value="40">40 minut</option>
+                        <option value="45">45 minut</option>
+                        <option value="50">50 minut</option>
+                        <option value="55">55 minut</option>
+                        <option value="60">60 minut</option>
+                      </select>                   
+                      <% } %>
+                  <!-- <div>
+                    <label for="shuffleQuestions">
+                      <h4 class="wrap-heading">Zamíchat otázky:</h4>
+                    </label>
+                    <input type="checkbox" id="shuffleQuestions">
+                  </div> -->
+                </div>
+                <button id="saveTest" class="btn btn--icon--before btn--blue btn--large">
+                  <svg xmlns="http://www.w3.org/2000/svg" height="48" width="48">
+                    <path
+                      d="M42 13.85V39q0 1.2-.9 2.1-.9.9-2.1.9H9q-1.2 0-2.1-.9Q6 40.2 6 39V9q0-1.2.9-2.1Q7.8 6 9 6h25.15Zm-3 1.35L32.8 9H9v30h30ZM24 35.75q2.15 0 3.675-1.525T29.2 30.55q0-2.15-1.525-3.675T24 25.35q-2.15 0-3.675 1.525T18.8 30.55q0 2.15 1.525 3.675T24 35.75ZM11.65 18.8h17.9v-7.15h-17.9ZM9 15.2V39 9Z" />
+                  </svg>
+                  uložit test
+                </button>
+              </div>
           </div>
           
 
@@ -420,14 +634,12 @@
 
 
 .canvas-wrap-testing {
-  background:rgb(237, 209, 156); 
   width:750px;
   overflow-x:auto;
   visibility: hidden;
 }
 .canvas-testing {
   overflow-x:auto;
-  background:rgb(187, 241, 190);
   width:750px;
 }
 .panel-testing {
@@ -636,5 +848,258 @@
   margin-top: 0.5rem;
 }
 
-</style>
+/* Nastavení tvaru*/
+.shapes-wrap input{
+  display:none;
+}
+.shapes-wrap span:hover {
+  background:rgb(240,240,240);
+  cursor:pointer;
+}
+.shapes-wrap span {
+  padding: 0.45rem 0.85rem;
+    text-transform: uppercase;
+    border-radius: 0.35rem;
+    font-weight: 500;
+    font-size: 0.9rem;
+    color: #6e6e6e;
+    letter-spacing: 0.05rem;
+}
+.shapes-wrap input:checked + span {
+  background: rgb(121 153 229);
+    color: white;
+}
+.shapes-wrap .close-shape {
+  position:relative;
+  position: relative;
+    top: 0.1rem;
+    text-align: end;
+    width: min-content;
 
+}
+.hidden {
+  visibility:hidden;
+}
+.shapes-wrap {
+  background: #e9e9e9;
+  padding: 0.5rem 0.35rem 0.5rem 0.35rem;
+  border-radius: 0.35rem;
+  display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap:0.5rem;
+}
+.shapes-heading {
+  margin-top: 0.5rem;
+}
+
+/* canvas-icons */
+.canvas-icons {
+  display: flex;
+  margin-top: 0.5rem;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.canvas-icon-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.canvas-icon-wrap .material-symbols-outlined {
+  background: #e9e9e9;
+    padding: 0.5rem;
+    border-radius: 0.35rem;
+    cursor:pointer;
+}
+
+.canvas-icon-wrap .material-symbols-outlined:hover {
+  background: #d8d8d8;
+}
+
+.canvas-icon-wrap .icon-text {
+  font-size: 0.9rem;
+    /* border-radius: 0.5rem; */
+    font-weight: 500;
+    color: #545151;
+}
+
+/* Dokončení */
+
+#test-name-wrap, .time-limit-wrap {
+  background-color: rgb(245,245,245);
+  padding: 1rem;
+  border-radius: 0.5rem;
+}
+#test-name-wrap input {
+  border: none;
+  width: 100%;
+  font-size: 1.75rem;
+  font-weight: 400;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  background: rgb(235,235,235);
+  color: #474747;
+  outline:none;
+}
+/* tabulka */
+.marks-wrap {
+  padding: 1rem;
+  background-color: rgb(245,245,245);
+  border-radius: 0.5rem;
+  margin: 1rem 0;
+}
+.marks-wrap {
+  width: 100%;
+  max-width: 40rem;
+}
+table {
+  background-color: rgb(255 255 255);
+  border-collapse: collapse;
+  border-radius: 0.5rem;
+  width: 100%;
+}
+.marks-wrap tbody {
+  background-color: white;
+}
+thead {
+  text-transform:uppercase;
+  font-weight:bold;  
+}
+tr,td {
+  border-radius:0.25rem;
+  background-color: white;
+}
+.head-row td {
+  border-radius:0;
+  color: #4f4f4f;
+  background-color:rgb(235,235,235);
+}
+tbody tr {
+  background-color:rgb(242,242,242);
+}
+
+table tr:not(:last-child) {
+  border-bottom:2px solid rgb(232,232,232);;
+}
+
+td {
+  text-align:center;
+  width:15rem;
+}
+.table-input-number {
+  width:3rem;
+  background-color: rgb(235,235,235);
+}
+table .dash {
+  font-weight:bold;
+  position:relative;
+}
+table input {
+  border:none;
+  font-size:1rem;
+  text-align:center;
+  border-radius:0.25rem;
+  outline:none;
+  color: #4f4f4f;
+  font-weight:450;
+  font-size:1.25rem;
+}
+tr {
+  height:2.5rem;
+}
+.mark-number {
+  width:2.5rem;
+  display:inline-block;
+  text-align:center;
+  font-weight:450;
+  font-size:1.25rem;
+  border-radius:0.5rem;
+  background: #d9faf8;
+    color: #099d96;
+}
+
+.marks-wrap input::-webkit-outer-spin-button,
+.marks-wrap input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+/* Firefox */
+.marks-wrap input[type=number] {
+  -moz-appearance: textfield;
+}
+/* konec tabulka */
+
+.time-limit-wrap div {
+  display: flex;
+    margin-top: 0.5rem;
+}
+.time-limit-wrap input {
+  accent-color: white;
+  margin-left: 0.5rem;
+  width: 1.5rem;
+  position: relative;
+  top: -0.25rem;
+}
+.total-points-wrap {
+  display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background-color: rgb(255 255 255);
+    padding: 0.5rem;
+    width: fit-content;
+    border-radius: 0.5rem;
+    margin-top: 1rem;
+    color: #4f4f4f;
+}
+.total-points-wrap span:first-of-type {
+  color: #626262;
+    font-weight: 600;
+}
+
+#total-points-value {
+  padding: 0 0.5rem;
+    background: #ffffff;
+    border-radius: 0.25rem;
+    font-weight: 700;
+    font-size: 1.5rem;
+    text-align: center;
+    color: #3c88d9;
+}
+
+#saveTest svg {
+  fill: #ffffff;
+  transform:scale(0.5);
+}
+
+.wrap-heading-small {
+  text-transform: uppercase;
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #545454;
+  margin-bottom: 0.5rem;
+}
+
+#saveTest {
+  margin-top: 1rem;
+  height: 3rem;
+    width: 100%;
+    max-width: 20rem;
+    padding: 0.5rem 1rem 0.5rem 0;
+    color: #fefffe;
+    background-color: #618cd3;
+    outline: none;
+    border: none;
+    font-weight: 600;
+    font-size: 14px;
+    letter-spacing: 1.25px;
+    text-transform: uppercase;
+    border-radius: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+#saveTest:hover {
+  background-color: #4983e0;
+}
+</style>

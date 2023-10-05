@@ -1,8 +1,8 @@
 class Test {
-  constructor(testTitle, questions, maps, isActive, marksRange, completeUntil) {
+  constructor(testTitle, maps, questions, isActive, marksRange, completeUntil) {
     this.testTitle = testTitle;
-    this.questions = questions;
     this.maps = maps;
+    this.questions = questions;
     this.isActive = isActive;
     this.marksRange = marksRange;
     this.completeUntil = completeUntil;
@@ -10,10 +10,11 @@ class Test {
 }
 
 class Question {
-  constructor(answers, points, map) {
+  constructor(answers, points, map, shapes) {
     this.answers = answers;
     this.points = points;
     this.map = map;
+    this.shapes = shapes;
   }
 }
 
@@ -45,7 +46,8 @@ class Answer {
 }
 
 class Map {
-  constructor(data) {
+  constructor(mapId, data) {
+    this.mapId = mapId;
     this.data = data;
   }
 }

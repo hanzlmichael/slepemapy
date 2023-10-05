@@ -56,11 +56,6 @@ function deleteMap(e) {
   }
 }
 
-
-/* Nahrátí mapy a následné přidání do select-map */
-let selectMap = document.querySelector('#select-map');
-let mapsWrap = document.querySelector('.maps-wrap');
-
 // sledovane zmeny
 const config = {
   childList: true
@@ -76,11 +71,14 @@ function observe() {
       if (mutation.type === 'childList') {
         if (mutation.addedNodes[0]) {  
           console.log("here ", mutation.addedNodes[0]) 
-          let mapName = mutation.addedNodes[0].querySelector('input').value
-          selectMap.add(new Option(`${mapName}`,`${mutation.addedNodes[0].id}`))
+          let mapName = mutation.addedNodes[0].querySelector('input').value;
+          createUniqueMapId();
+          selectMap.add(new Option(`${mapName}`,`${maps[maps.length - 1].mapId}`))
         }
         if (mutation.removedNodes[0]) {
           let mapIdToDelete = mutation.removedNodes[0].id;
+          console.log('mapId ', mapIdToDelete);
+          maps.push(new Map());
           selectMap.removeChild(selectMap.querySelector(`option[value="${mapIdToDelete}"]`));
         }
       }
@@ -91,3 +89,23 @@ function observe() {
 }
 
 observe();
+
+const randomId = function(length = 6) {
+  return Math.random().toString(36).substring(2, length+2);
+};
+
+function createUniqueMapId() {
+  for (let i = 0; i < 100; i++) {
+    let newId = randomId();
+    if (!checkDuplicitiesInMaps(newId)) {
+      console.log('heeeere')
+      let lastAddedMapSrc = document.querySelector('.map-image img[src]:last-of-type').getAttribute("src");
+      maps.push(new Map(newId, lastAddedMapSrc));
+      return;
+    }
+  }
+}
+
+function checkDuplicitiesInMaps(id) {
+  return maps.find(element => element === id);
+}

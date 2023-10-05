@@ -35,6 +35,8 @@ connectDB().then(() => {
   })
 })
 
+//mongoose.connect( `mongodb+srv://hanzlmichael:${process.env.PW}@cluster0.5wsws.mongodb.net/slepemapy`)
+
 app.get('*', checkUser);
 app.get('/', (req, res) => res.render('index'));
 app.use('/tests', testRoutes);

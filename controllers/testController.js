@@ -32,6 +32,61 @@ module.exports.getTests = async (req, res) => {
   });
 }
 
+module.exports.getTestById = async (req, res) => {
+  console.log('yy')
+  let testId = req.params.testId;
+  console.log('here')
+  try {
+    const test = await Test.findById(testId);
+    if (test) {
+      console.log('foundTest: ', testId)
+      console.log(test)
+      res.render('new', { test });
+    }
+  }
+  catch(err) {
+    console.log(err)
+  }
+}
+
+module.exports.getTestByIdTest = async (req, res) => {
+  let testId = req.params.testId;
+  try {
+    const test = await Test.findById(testId);
+    if (test) {
+      res.json({ test });
+    }
+  }
+  catch(err) {
+    console.log(err)
+  }
+}
+
+
+module.exports.postTest = async (req, res) => {
+  const { title, maps, questions, marksBoundaries, timeLimit } = req.body;
+
+  const token = req.cookies.jwt;
+
+  jwt.verify(token, process.env.JWT_SECRET_KEY, async (err, decodedToken) => {
+    if (err) {
+      // Handle token verification error
+      res.sendStatus(403);
+    } else {
+      let teacherRef = decodedToken.id;
+      try {
+        const createdTest = await Test.create({ teacherRef, title, maps, questions, marksBoundaries, timeLimit})
+        if (createdTest) {
+          console.log('createdTest: ', createdTest)
+          res.redirect('/tests');
+        }
+      }
+      catch (err) {
+        console.log(err);
+      }
+    }
+  });  
+}
 
 
 module.exports.deleteTest = async (req, res) => {

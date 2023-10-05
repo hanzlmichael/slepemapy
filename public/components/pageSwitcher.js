@@ -9,7 +9,7 @@ let createTestPages = document.querySelectorAll('.create-test-page');
 
 function prevState() {
   headingNumber--;
-  isCreateOfQuestionsActive();
+  /* isCreateOfQuestionsActive(); */
   handleChangePages("dec");
   if (headingNumber < 0) {
       headingNumber = 0;            
@@ -21,7 +21,8 @@ function prevState() {
 
 function nextState() {
   headingNumber++;
-  isCreateOfQuestionsActive();
+  isPageCreateTestDetailsActive();
+  isCreateOfQuestionsActive() 
   handleChangePages("inc");
   if (headingNumber == progressBarHeadingsCount) {
       headingNumber = progressBarHeadingsCount - 1;
@@ -32,10 +33,40 @@ function nextState() {
 }
 
  // return true if page "Tvorba otázek" is displayed
-function isCreateOfQuestionsActive(progressBarHeadingsIndex) {
+function isCreateOfQuestionsActive() {
+  debugger;
   if (headingNumber == 1) {
     console.log("tvorba otázek");
   }
+  if (test.questions.length > 0) {
+    showElement(panel);
+    if (test.questions[0].map) {
+      showElement(canvasWrap);
+      /* drawQuestion(); */
+    }
+  }
+  
+}
+
+function isPageCreateTestDetailsActive() {
+  debugger;
+  if (headingNumber == 2) {
+    console.log("create-test-details");
+
+    saveQuestion();
+    drawQuestion();
+
+    document.querySelector('#total-points-value').textContent = sumOfQuestionsPoints(); 
+
+  }
+}
+
+function sumOfQuestionsPoints() {
+  let sum = 0;
+  for (let i = 0; i < questions.length; i++) {
+    sum = sum + questions[i].points;
+  }
+  return sum;
 }
 
 function handleChangePages(operation) {

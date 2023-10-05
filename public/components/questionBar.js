@@ -5,18 +5,40 @@ let panel = document.querySelector('.panel-testing');
 let canvasWrap = document.querySelector('.canvas-wrap-testing');
 let maps = [];
 let questions = [];
-let test = new Test("", questions, maps, false, [], null);
+let test = new Test("", maps, questions, false, [], null);
+let actualQuestionIndex = test.questions.length === 0 ? -1 : 0;
 
 
 addNewQuestionBtn.addEventListener("click", addQuestion);
 wrapQuestionsElem.addEventListener('input', changeQuestion);
 
-function addQuestion() {
+function addQuestion() {  
+  let mapWraps = document.querySelectorAll('.map-wrap');
+  debugger;
+  if (test.questions.length > 0) {
+    saveQuestion();
+  }
+  canvas.clear();
   createQuestionIcon();
   setLastQuestionIconAsChecked();
-  createQuestionObject();
+  actualQuestionIndex = test.questions.length;
+  /* createQuestionObject(); */
   showElement(panel);
+
+  if (mapWraps.length === 1) {
+    selectMap.selectedIndex = "1";
+    createQuestionObject(getMap());
+    simulateSelectMapEvent();
+  } else {
+    createQuestionObject(null);
+  }
   drawQuestion();
+}
+
+function simulateSelectMapEvent() { 
+  selectMap.selectedIndex = "1";
+  let event = new Event('change');
+  selectMap.dispatchEvent(event);
 }
 
 function createQuestionIcon() {
@@ -26,28 +48,14 @@ function createQuestionIcon() {
   addQuestion.insertAdjacentHTML("beforebegin", newQuestionElem);
 }
 
-function createQuestionObject() {
-  questions.push(new Question([], 1, null));
+function createQuestionObject(map) {
+  questions.push(new Question([], 1, map, null));
 }
 
 function changeQuestion(e) {
-  console.log(e.target);
+  saveQuestion();
   questionNumber.textContent = valueOfQuestion();
-}
-
-function numberOfQuestions() {
-  return wrapQuestionsElem.querySelectorAll('input').length + 1;
-}
-
-function hideElement(elem) {
-  elem.style.visibility = "hidden"
-}
-
-function showElement(elem) {
-  elem.style.visibility = "visible"; 
-} 
-
-function setLastQuestionIconAsChecked() {
-  wrapQuestionsElem.querySelector('span:last-of-type input').checked = true;
+  actualQuestionIndex = indexOfQuestion();
+  drawQuestion();
 }
 

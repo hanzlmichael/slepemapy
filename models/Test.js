@@ -8,9 +8,8 @@ const testSchema = new mongoose.Schema({
     type: String,
     required: [true, 'Chybí název testu']
   },
-  categories: [],
   maps: [],
-  test: {},
+  questions: [],
   marksBoundaries: [],
   timeLimit: String,
   isActive: {
@@ -18,7 +17,7 @@ const testSchema = new mongoose.Schema({
     default: false
   },
   completeUntil: Date,
-  password: String
+  accesCode: String
 }, { timestamps: true });
 
 const Test = mongoose.model('test', testSchema);

@@ -5,10 +5,10 @@ document.querySelector('#answers-wrap').addEventListener('click', removeAnswerWr
 addAnswerWrapBtn.addEventListener('click', appendAnswerToDom);
 
 function appendAnswerToDom() {
-  answersWrap.appendChild(createNewAnswer());
+  answersWrap.appendChild(createNewAnswer("", false));
 }
 
-function createNewAnswer() {
+function createNewAnswer(term, isCorrect) {
   // Create the main div with class "answer-wrap"
   const answerWrap = document.createElement("div");
   answerWrap.className = "answer-wrap";
@@ -17,6 +17,7 @@ function createNewAnswer() {
   const answerInput = document.createElement("input");
   answerInput.className = "answer-text";
   answerInput.placeholder = "Odpověď";
+  answerInput.value = term;
 
   // Create the button element with class "close-term" and text "×"
   const closeButton = document.createElement("button");
@@ -31,6 +32,7 @@ function createNewAnswer() {
   const checkboxInput = document.createElement("input");
   checkboxInput.type = "checkbox";
   checkboxInput.name = "check";
+  checkboxInput.checked = isCorrect;
   checkboxInput.setAttribute("onclick", "onlyOne(this)");
 
   // Create the span element with text "správná odpověď"
@@ -53,7 +55,6 @@ function createNewAnswer() {
 }
 
 function onlyOne(checkbox) {
-  debugger;
   var checkboxes = document.getElementsByName('check')
   let closestAnswerWrapElem = checkbox.closest('.answer-wrap')
   if (closestAnswerWrapElem.classList.contains('answer-wrap-green')) {

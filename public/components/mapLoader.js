@@ -69,16 +69,23 @@ function observe() {
   const callback = mutations => {
     mutations.forEach(mutation => {
       if (mutation.type === 'childList') {
+        debugger;
         if (mutation.addedNodes[0]) {  
           console.log("here ", mutation.addedNodes[0]) 
           let mapName = mutation.addedNodes[0].querySelector('input').value;
-          createUniqueMapId();
+          createUniqueMapId(mutation.addedNodes[0].querySelector('img').getAttribute('src'));
           selectMap.add(new Option(`${mapName}`,`${maps[maps.length - 1].mapId}`))
+          maps[maps.length-1].title = mapName;
+          mutation.addedNodes[0].setAttribute('id', maps[maps.length -1 ].mapId)
         }
         if (mutation.removedNodes[0]) {
+          debugger;
           let mapIdToDelete = mutation.removedNodes[0].id;
           console.log('mapId ', mapIdToDelete);
-          maps.push(new Map());
+          
+          // smazat z pole maps mapu ktera ma id smazaneho nodu
+          test.maps = maps.filter(map =>  map.mapId != mapIdToDelete)
+
           selectMap.removeChild(selectMap.querySelector(`option[value="${mapIdToDelete}"]`));
         }
       }
@@ -94,13 +101,11 @@ const randomId = function(length = 6) {
   return Math.random().toString(36).substring(2, length+2);
 };
 
-function createUniqueMapId() {
+function createUniqueMapId(lastAddedMapSrc) {
   for (let i = 0; i < 100; i++) {
     let newId = randomId();
     if (!checkDuplicitiesInMaps(newId)) {
-      console.log('heeeere')
-      let lastAddedMapSrc = document.querySelector('.map-image img[src]:last-of-type').getAttribute("src");
-      maps.push(new Map(newId, lastAddedMapSrc));
+      maps.push(new Map(newId, "", lastAddedMapSrc));
       return;
     }
   }
@@ -108,4 +113,8 @@ function createUniqueMapId() {
 
 function checkDuplicitiesInMaps(id) {
   return maps.find(element => element === id);
+}
+
+function mapTitle() {
+  return 
 }

@@ -80,7 +80,7 @@
                             </div>
                             <div class="map-info">
                               <div class="placeholder">Název mapy</div>
-                              <input type="text" value="<%=test.maps[i].mapId%>">
+                              <input type="text" value="<%=test.maps[i].title%>">
                             </div>
                           </div>
                           <% } %>
@@ -119,7 +119,7 @@
                           <% if (test) { %>
                             <% if (test.maps.length > 0) { %>
                               <% for (let i = 0; i < test.maps.length; i++) { %>
-                                <option value="<%=test.maps[0].mapId%>"><%=test.maps[0].mapId%></option>
+                                <option value="<%=test.maps[i].mapId%>"><%=test.maps[i].title%></option>
                               <% } %>
                             <% } %>
                           <% } %>
@@ -142,7 +142,7 @@
                         </div>
                         <div class="canvas-icons">
                           <div class="canvas-icon-wrap">
-                            <span class="material-symbols-outlined">delete</span>
+                            <span class="material-symbols-outlined" id="deleteAllObjectsFromMapBtn">delete</span>
                             <span  class="icon-text">Vymazat obsah mapy</span>
                           </div>
                           <div class="canvas-icon-wrap">

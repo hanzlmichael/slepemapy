@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+</head>
+<body>
+  <div class="layout">
+    <div class="overlay-wrapper">
+      <div class="title-wrap">
+        <h2>Test: oprava</h2>
+        <div>Čas na splnění: 25 minut</div>
+      </div>
+      <div class="info">
+          <label for="firstName">Jméno</label>
+          <input type="text" id="firstName" placeholder="" required="">
+          <label for="lastName">Příjmení</label>
+          <input type="text" id="lastName" placeholder="" required="">
+          <label for="email">Emailová adresa</label>
+          <input type="text" id="email" placeholder="" required="">
+          <button class="btn" id="startTestBtn">spustit test</button>        
+      </div>              
+    </div>
+  </div>
+</body>
+</html>
+
+<style>
+  * {
+    font-family: 'Poppins', sans-serif;
+    box-sizing:border-box;
+    margin:0;
+    padding:0;  
+  }
+
+  body, html, .layout {
+    height: 100%;
+  }
+
+  .layout {
+    background-color: rgb(235, 235, 235);
+    display: grid;
+    place-items: center;
+    overflow-y: auto;
+  }
+
+  /* Overlay informace o studentovi */
+  .overlay-wrapper {
+    padding: 1rem;
+    background: white;
+    max-width: 25rem;
+    box-shadow: rgba(17, 12, 46, 0.15) 0px 48px 100px 0px;
+    border-radius: 0.5rem;
+  }
+
+  .overlay-wrapper .info {
+    padding: 1rem 0 0 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .overlay-wrapper .title-wrap div {
+    font-weight: 600;
+    color: brown;
+    padding-bottom: 1rem;
+    padding-top: 1rem;
+    border-bottom: 2px solid rgb(225,222,225);
+} 
+  .overlay-wrapper label {
+    color: #787878;
+    font-weight: 500;
+  }
+
+  .overlay-wrapper input {
+    display: block;
+    width: 100%;
+    background-color: rgb(235, 235, 235);
+    border: none;
+    outline: none;
+    height: 3rem;
+    font-size: 1.25rem;
+    padding: 0.5rem 1rem;
+    border-radius: 0.25rem;
+    margin-bottom: 0.35rem;
+  }
+
+  .overlay-wrapper button {
+    background: rgb(36 124 237);
+    margin-top: 1.25rem;
+    height: 3rem;
+    font-weight: 500;
+    font-size: 1rem;
+    text-transform: uppercase;
+    color: #ffffff;
+    letter-spacing: 0.1rem;
+    border-radius: 0.5rem;
+  }
+
+  .overlay-wrapper button:hover {
+    background: rgb(26, 108, 215);
+    cursor: pointer;
+  }
+
+  .overlay-wrapper button {
+    outline: none;
+    border:none;
+  }
+
+</style>

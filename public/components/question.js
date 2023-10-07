@@ -36,6 +36,7 @@ function removeQuestion() {
 }
 
 function drawQuestion() {
+  
   questionNumber.textContent = valueOfQuestion();  
 
   // vykreslit hodnotu bodu
@@ -114,10 +115,12 @@ function setShapes() {
 
 function saveQuestion() {
   debugger;
-  test.questions[actualQuestionIndex].answers = getAnswers();
-  test.questions[actualQuestionIndex].points = getPointValue();
-  test.questions[actualQuestionIndex].map = getMap();
-  saveShapes();
+  if (questions) {
+    test.questions[actualQuestionIndex].answers = getAnswers();
+    test.questions[actualQuestionIndex].points = getPointValue();
+    test.questions[actualQuestionIndex].map = getMap();
+    saveShapes();
+  }
 }
 
 function resetSelectMap() {

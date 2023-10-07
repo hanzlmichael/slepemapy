@@ -51,11 +51,11 @@ function isCreateOfQuestionsActive() {
 function isPageCreateTestDetailsActive() {
   debugger;
   if (headingNumber == 2) {
-    console.log("create-test-details");
-
-    saveQuestion();
-    drawQuestion();
-
+    if (questions.length > 0) {
+      saveQuestion();
+      drawQuestion();
+    }
+    // vykreslit soucet bodu ze vsech otazek
     document.querySelector('#total-points-value').textContent = sumOfQuestionsPoints(); 
 
   }

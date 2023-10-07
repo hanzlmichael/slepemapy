@@ -40,6 +40,7 @@ function indexOfQuestion() {
 if (testBSON(window.location.href)) {
   debugger;
   document.addEventListener('DOMContentLoaded', getTestByIdTest)
+
 }
 
 function testNewPath() {
@@ -72,6 +73,8 @@ function getTestById() {
         test = data.test;
         console.log('test OBJ : ', test);
         actualQuestionIndex = 0;
+        
+
         if (test.questions.length > 0) {
           drawQuestion();
         } else {
@@ -92,11 +95,19 @@ function getTestByIdTest() {
       .then(data=> {
         debugger;
         console.log(data);
-        test = data.test;
+        /* test = data.test; */
         questions = data.test.questions;
         maps = data.test.maps;
+        test = new Test( data.test.title, maps, questions, data.test.isActive, data.test.marksBoundaries, data.test.timeLimit )
+
+        // let test = new Test("", maps, questions, false, [], null);
+
         console.log('test OBJ : ', test);
         actualQuestionIndex = 0;
+
+        // inicializace poctu nahratych map
+        mapCount = maps.length;
+
         if (test.questions.length > 0) {
           drawQuestion();
         } else {

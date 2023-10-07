@@ -16,7 +16,9 @@ function handleTestInDb() {
   if (lastString == 'new') {
     saveTestToDb();
   } else {
-    updateTestInDb(lastString);
+    let urlArray = url.split('/');
+    const testId = urlArray[urlArray.length - 2];
+    updateTestInDb(testId);
   }
 }
 
@@ -42,6 +44,25 @@ async function saveTestToDb() {
   }
 }
 
-function updateTestInDb() {
-
+async function updateTestInDb(testId) {
+  try {
+    let title = testTitle.value;
+    let timeLimit = document.querySelector('#selectTimeLimit').value;
+    let marksBoundaries = getMarksBoundaries();   
+    let maps = test.maps;
+    let questions = test.questions; 
+    let fetchUrl = '/tests/' + testId;
+    const res = await fetch(fetchUrl, {
+      method: 'PUT', 
+      body: JSON.stringify( { title, maps, questions, marksBoundaries, timeLimit } ),
+      headers: {'Content-Type': 'application/json'},
+      credentials: 'include'
+    })
+    if (res) {
+      location.assign('/tests')
+    }
+  }
+  catch (err) {
+    console.log(err)
+  }
 }

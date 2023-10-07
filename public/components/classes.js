@@ -46,8 +46,9 @@ class Answer {
 }
 
 class Map {
-  constructor(mapId, data) {
+  constructor(mapId, title, data) {
     this.mapId = mapId;
+    this.title = title;
     this.data = data;
   }
 }

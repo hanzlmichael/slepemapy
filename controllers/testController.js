@@ -88,15 +88,42 @@ module.exports.postTest = async (req, res) => {
   });  
 }
 
+module.exports.updateTestById = async (req, res) => {
+  const { title, maps, questions, timeLimit, marksBoundaries } = req.body;
+  const testId = req.params.testId;
+  
+  const token = req.cookies.jwt;
+  let teacherRef;
+
+  jwt.verify(token, process.env.JWT_SECRET_KEY, async (err, decodedToken) => {
+    if (err) {
+      // Handle token verification error
+      res.sendStatus(403);
+    } else {
+      let teacherRef = decodedToken.id;
+      try {
+        const updatedTest = await Test.findByIdAndUpdate(testId, {title, maps, questions, timeLimit, marksBoundaries }, {
+          new: true, // returns the updated test instead of the original one
+          runValidators: true, // validates the updated test against the schema
+        });
+        if (updatedTest) {
+          res.redirect('/tests');
+        }
+      }
+      catch (err) {
+        console.log(err);
+      }
+    }
+  });  
+}
+
 
 module.exports.deleteTest = async (req, res) => {
   let testId = req.params.testId;
-  console.log('testId', testId)
 
   try {
     const test = await Test.findByIdAndRemove(testId);
     if (test) {
-      console.log('deletedTest: ', testId)
       res.redirect('/tests');
     }
   }

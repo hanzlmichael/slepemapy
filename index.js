@@ -6,6 +6,7 @@ require('dotenv').config();
 const { checkUser } = require('./middleware/authMiddleware');
 const authRoutes = require('./routes/authRoutes');
 const testRoutes = require('./routes/testRoutes');
+const examRoutes = require('./routes/examRoutes');
 
 const app = express()
 const PORT =  process.env.PORT || 3213;
@@ -40,4 +41,5 @@ connectDB().then(() => {
 app.get('*', checkUser);
 app.get('/', (req, res) => res.render('index'));
 app.use('/tests', testRoutes);
+app.use('/exam', examRoutes);
 app.use(authRoutes);

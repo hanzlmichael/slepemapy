@@ -150,3 +150,17 @@ module.exports.publishTest = async (req, res) => {
     res.status(500);
   }
 }
+
+module.exports.getExam = async (req, res) => {
+  let testId = req.params.testId;
+  try {
+    const test = await Test.findById(testId);
+    if (test) {
+      res.render('exam', {test})
+      /* res.json({ test }); */
+    }
+  }
+  catch(err) {
+    console.log(err)
+  }
+}

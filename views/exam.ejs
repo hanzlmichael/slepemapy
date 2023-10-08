@@ -1,46 +1,84 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0" />
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-</head>
-<body>
-  <div class="layout">
-    <div class="overlay-wrapper">
-      <div class="title-wrap">
-        <h2>Test: oprava</h2>
-        <div>Čas na splnění: 25 minut</div>
-      </div>
-      <div class="info">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.1/fabric.min.js"></script>
+  </head>
+  <body>
+    <div class="layout">
+      <div class="overlay-wrapper">
+        <div class="title-wrap">
+          <h2><%=test.title%></h2>
+          <div>Časový limit: <%=test.timeLimit%> minut</div>
+        </div>
+        <div class="info">
           <label for="firstName">Jméno</label>
-          <input type="text" id="firstName" placeholder="" required="">
+          <input type="text" id="firstName" placeholder="" required="" />
           <label for="lastName">Příjmení</label>
-          <input type="text" id="lastName" placeholder="" required="">
+          <input type="text" id="lastName" placeholder="" required="" />
           <label for="email">Emailová adresa</label>
-          <input type="text" id="email" placeholder="" required="">
-          <button class="btn" id="startTestBtn">spustit test</button>        
-      </div>              
+          <input type="text" id="email" placeholder="" required="" />
+          <button class="btn" id="startTestBtn">spustit test</button>
+        </div>
+      </div>
+      <div class="overlay-test">
+        <div class="title-wrap">
+          <h2>Test: <%=test.title%></h2>
+          <% if (test.timeLimit) { %>
+            <div id="countdown" data-timelimit="<%=test.timeLimit%>"></div>
+          <% } %>             
+        </div>
+        <div class="questions-wrap">
+          <% for (let i=0; i < test.questions.length; i++) { %> <!--  test.test.questions.length -->
+            <div class="<%= i === 0 ? 'question active' : 'question' %>">
+              <%=i+1%>
+            </div>
+            <% } %>
+        </div> 
+        <% for (let i=0; i < test.questions.length; i++) { %>
+          <div class="<%= i === 0 ? 'question-content-active' : 'question-content' %>">
+            <div class="options">
+              <% for (let j=0; j < test.questions[i].answers.length; j++) { %>
+                <button class="btn btn--answer">
+                  <%= test.questions[i].answers[j].term %>
+                </button>
+                <% } %>
+            </div>
+            <div class="canvas-wrap">
+              <canvas id="canvas<%= i %>"></canvas>
+            </div>
+          </div>
+          <% } %>
+      </div>
     </div>
-  </div>
-</body>
+  </body>
 </html>
 
 <style>
   * {
-    font-family: 'Poppins', sans-serif;
-    box-sizing:border-box;
-    margin:0;
-    padding:0;  
+    font-family: "Poppins", sans-serif;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
   }
 
-  body, html, .layout {
+  body,
+  html,
+  .layout {
     height: 100%;
   }
 
@@ -67,12 +105,16 @@
   }
 
   .overlay-wrapper .title-wrap div {
-    font-weight: 600;
-    color: brown;
-    padding-bottom: 1rem;
-    padding-top: 1rem;
-    border-bottom: 2px solid rgb(225,222,225);
-} 
+    font-weight: 500;
+    color: #29c328;
+    padding-bottom: 0.5rem;
+    padding-top: 0.5rem;
+    border-bottom: 2px solid rgb(225, 222, 225);
+  }
+  .overlay-wrapper h2 {
+    color: #5e5e5e;
+  }
+
   .overlay-wrapper label {
     color: #787878;
     font-weight: 500;
@@ -110,7 +152,324 @@
 
   .overlay-wrapper button {
     outline: none;
-    border:none;
+    border: none;
   }
 
+  .missing-input {
+    color: #c90303;
+    font-size: small;
+  }
+
+  /* Spusteny test */
+  .overlay-test {
+    height: 100%;
+    width: 100%;
+    max-width: 70rem;
+    padding: 0 1rem 1rem 1rem;
+    background: rgb(255 255 255);
+    display: none;
+    grid-template-rows: auto auto 1fr;
+  }
+
+  .overlay-test .title-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 2px solid #dededed9;
+    margin-bottom: 1rem;
+  }
+
+  .overlay-test h2 {
+    padding: 1.5rem 0.5rem 1rem 0.5rem;
+    font-size: 2rem;
+  }
+
+  #countdown {
+    background-color: rgb(245,245,245);
+    width: 5.75rem;
+    padding: 0.25rem 1.25rem;
+    border-radius: 0.5rem;
+    font-size: 1.25rem;
+    font-weight: 500;
+  }
+
+  .questions-wrap {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(2.5rem,1fr));
+    gap: 1rem;
+    padding: 1rem;
+    background-color: rgb(248, 248, 248);
+    border-radius: 0.5rem;
+  }
+
+  .question {
+    background-color: rgb(236, 236, 236);
+    width: 3rem;
+    height: 3rem;
+    border-radius: 0.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    cursor: pointer;
+}
+
+  .active, .question:hover {
+    outline: 2px solid #ff8318;
+  }
+  
+  .done {
+    background-color: #51cdd38f;
+  }
+
+  .question-content {
+    display: none;
+  }
+
+  .question-content-active {
+    display: block;
+    overflow-x: hidden;
+  }
+
+  .options {
+    display: grid;
+    gap: 0.5rem;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-auto-rows: 1fr;
+    margin: 1rem 0;
+}
+
+  .options .btn--checked {
+    background: #51cdd38f;
+  }
+
+  .btn:hover {
+    background: #51cdd38f;
+  }
+
+  .btn {
+    background: rgb(239, 239, 239);
+    border-radius: 0.25rem;
+    padding: 1rem 0.1rem;
+    min-height: 4rem;
+    width: auto;
+    max-width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+    user-select: none;
+    cursor: pointer;
+    word-break: break-all;
+    outline: none;
+    border: none;
+  }
+
+  .canvas-wrap {
+    margin: 1.5rem auto 0 auto;
+    display: flex;
+    justify-content: center;
+    max-width: 100%;
+    overflow-x: auto;
+  }
+  canvas {
+    border-radius: 0.5rem;
+  }
+
+  .canvas-wrap {
+      width: 100%;
+      position: relative;
+  }
+
+  .canvas-container {
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 6px -1px, rgba(0, 0, 0, 0.06) 0px 2px 4px -1px;
+    margin: 0.5rem 0 1rem;
+  }
+
+  .upper-canvas, .lower-canvas, .canvas-container {
+      pointer-events: none;
+      border-radius: 0.5rem;
+  }
+
+  #evaluateTest {
+    margin: 1rem auto 1rem auto;
+    max-width: 30rem;
+    padding: 0 2rem 0 1rem;
+  } 
+
 </style>
+
+<script>
+
+
+  // start testu
+  let startTestBtn = document.querySelector("#startTestBtn");
+  startTestBtn.addEventListener("click", startTest);
+
+  function startTest() {
+    const firstName = document.querySelector(".info #firstName");
+    const lastName = document.querySelector(".info #lastName");
+    const email = document.querySelector(".info #email");
+    const firstNameLabel = document.querySelector('label[for="firstName"]');
+    const lastNameLabel = document.querySelector('label[for="lastName"]');
+    const emailLabel = document.querySelector('label[for="email"]');
+    let allInputsValid = true;
+
+    if (!firstName.value) {
+      firstNameLabel.innerHTML = `Jméno <span class="missing-input">(*povinné pole)</span">`;
+      allInputsValid = false;
+    } else {
+      firstNameLabel.innerHTML = "Jméno";
+    }
+
+    if (!lastName.value) {
+      lastNameLabel.innerHTML = `Příjmení <span class="missing-input">(*povinné pole)</span">`;
+      allInputsValid = false;
+    } else {
+      lastNameLabel.innerHTML = "Příjmení";
+    }
+
+    if (!email.value) {
+      emailLabel.innerHTML = `Emailová adresa <span class="missing-input">(*povinné pole)</span">`;
+      allInputsValid = false;
+    } else {
+      emailLabel.innerHTML = "Emailová adresa";
+    }
+    if (allInputsValid) {
+      initTime(Number(document.querySelector('#countdown').getAttribute('data-timelimit')));
+      startTime();
+      document.querySelector(".overlay-wrapper").style.display = "none";
+      document.querySelector(".overlay-test").style.display = "grid";
+    }
+  }
+
+  let inSeconds = Number(document.querySelector('#countdown').getAttribute('data-timelimit')) * 60;
+  let timeId = document.querySelector('#countdown');
+
+  function initTime(x) {
+    let timeString = "";
+    timeString = setPadding(x) 
+    countdown.innerHTML = timeString
+  }
+  
+  function setPadding(x) {
+    if (x > 5) {
+      return `${x}:00`;
+    } else {
+      return `0${x}:00`;
+    }
+  }
+
+  function startTime() {
+    let interval = setInterval(function() {
+      let minutes = Math.floor(inSeconds/60);
+      let seconds = inSeconds % 60;
+      timeId.innerHTML = `${ minutes < 10 ? "0" + minutes : minutes}:${inSeconds%60 < 10 ? "0" + seconds : seconds}`;
+      inSeconds = inSeconds - 1;
+      if (inSeconds === -1) {
+        //evaluateTest(); 
+        clearInterval(interval);
+      }
+    }, 1000); 
+  }
+
+  function evaluateTest() {
+    //document.querySelector(".overlay-test").style.display = "none";
+    console.log('evaluateTest')
+  }
+
+  /* Question bar */
+
+  function selectQuestion(e) {
+    debugger;
+    console.log('yes')
+    document.querySelector('.question.active').classList.remove('active')
+    e.target.classList.add('active')
+    document.querySelector('.question-content-active').classList.replace('question-content-active', 'question-content')
+    let questionNumToChange = Number(e.target.innerText);
+    let test = document.querySelectorAll('.question-content')[questionNumToChange - 1];
+    test.classList.replace('question-content', 'question-content-active')
+   }
+
+   function markAsChecked(e) {
+    let parent = e.target.closest('.options');
+    if (parent.querySelector('.btn--checked') == e.target) {
+      e.target.classList.toggle('btn--checked');
+      markQuestionIconAsChecked()
+      return;
+    }
+    if (parent.querySelector('.btn--checked')) {
+      parent.querySelector('.btn--checked').classList.toggle('btn--checked')
+      markQuestionIconAsChecked()
+    }
+    markQuestionIconAsChecked()
+    e.target.classList.toggle('btn--checked');
+  }
+  function markQuestionIconAsChecked() {
+    document.querySelector('.question.active').classList.toggle('done');
+  }
+
+  function initQuestions() {
+    console.log('draw')
+    debugger;
+    let allQuestion = document.querySelectorAll('.question')
+    console.log('all q ', allQuestion)
+    allQuestion.forEach(el => el.addEventListener('click', selectQuestion))
+    let answerBtns = document.querySelectorAll('.btn.btn--answer').forEach(el => el.addEventListener('click', markAsChecked));
+  }
+
+
+  function drawCanvases() {
+    console.log('Draw canvnases')
+    debugger;
+    let url = window.location.href;
+    let urlArray = url.split('/');
+    const testId = urlArray[urlArray.length - 2];
+    fetch(`/tests/${testId}`, {
+        method: 'GET',
+        credentials: 'include'
+      }).then(response => response.json())
+        .then(data=> {
+          debugger;
+          let questions = data.test.questions;
+          let maps = data.test.maps;
+          console.log('questions: ', questions);
+          console.log('maps: ', maps);
+          
+          let canvases = []
+          for (let i = 0; i < questions.length; i++) {
+            this["canvas"+i] = new fabric.Canvas(this["canvas"+i]);
+                        fabric.Image.fromURL(`${maps[0].data}`, function (img) {
+                          console.log('width of image: ', img.getScaledWidth(), img.getScaledHeight())
+                          img.scaleToWidth(804, true);
+                          this["canvas"+i].setDimensions({ width: 800.78, height: img.getScaledHeight() })
+                          this["canvas"+i].add(img);
+                          this["canvas"+i].perPixelTargetFind = true;
+                          this["canvas"+i].allowTouchScrolling = true;
+                          img.selectable = false;
+                          img.hoverCursor = "default";
+                          console.log(questions[i].shapes);
+                          this["shapes"+i] = JSON.stringify(questions[i].shapes);
+                          console.log('shapes: ',  this["shapes"+i] )
+                          this["canvas"+i].loadFromJSON(`${this["shapes"+i]}`);
+                          this["canvas"+i].sendToBack(img);
+                          this["canvas"+i].forEachObject(function (obj) {
+                            obj.selectable = false;
+                            obj.hoverCursor = "default";
+                          });
+                        });
+        }
+      })} 
+  
+      window.addEventListener("load", (event) => {
+        console.log("page is fully loaded");
+        initQuestions();
+        drawCanvases();
+      });
+
+</script>

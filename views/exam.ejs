@@ -63,6 +63,25 @@
             </div>
           </div>
           <% } %>
+          <button class="btn btn--icon--before" id="evaluateTest">
+            <svg xmlns="http://www.w3.org/2000/svg" height="48" viewBox="0 96 960 960" width="48"><path d="M400 738 247 585l42-42 111 111 271-271 42 42-313 313Z"/></svg>
+            vyhodnotit test
+          </button>
+      </div>
+      <div class="overlay-result">
+        <img src="https://imageupload.io/ib/06LSYaiwhfumcYR_1696850581.png" alt="">
+        <h2>Váš výsledek:</h2>
+        <div>
+          <span>Známka: </span>
+          <span id="result-mark">2</span>
+        </div>
+        <div>
+          <span>Body: </span>
+          <span id="result-total-points">20/25</span>
+        </div>
+        <div>
+          <a href="">zobrazit výsledek</a>
+        </div>
       </div>
     </div>
   </body>
@@ -302,6 +321,43 @@
     padding: 0 2rem 0 1rem;
   } 
 
+  .overlay-result {
+    display:none;
+    padding:1rem;
+    background:white;
+    max-width: 25rem;
+    width: 20rem;
+    box-shadow: rgba(17, 12, 46, 0.15) 0px 48px 100px 0px;
+    border-radius: 0.5rem;
+    justify-items: center;
+  }
+
+  .overlay-result img {
+    width: 100%;
+    max-width: 10rem;
+    justify-self: center;
+    margin-bottom: 1rem;
+  }
+  .overlay-result a {
+    background-color: #a2efe0;
+    border-radius: 0.5rem;
+    padding: 0.5rem;
+    margin-top: 0.5rem;
+    color: #1d9d4b;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+    font-weight: 500;
+    width: 15rem;
+    height: 3.5rem;
+    text-decoration: none;
+    display: grid;
+    place-items: center;
+  }
+
+  .overlay-result a:hover {
+    background-color: #8dedda;
+  }
+
 </style>
 
 <script>
@@ -378,9 +434,12 @@
     }, 1000); 
   }
 
+  let evaluateTestBtn = document.querySelector('#evaluateTest');
+  evaluateTestBtn.addEventListener('click', evaluateTest);
+
   function evaluateTest() {
-    //document.querySelector(".overlay-test").style.display = "none";
-    console.log('evaluateTest')
+    document.querySelector('.overlay-test').style.display = "none";
+    document.querySelector('.overlay-result').style.display = "grid";
   }
 
   /* Question bar */
@@ -423,6 +482,26 @@
     let answerBtns = document.querySelectorAll('.btn.btn--answer').forEach(el => el.addEventListener('click', markAsChecked));
   }
 
+  function getobjsTest(cnvs) {
+    //let cnvs = document.querySelector('#canvas0')
+    let ress = canvas0.getObjects();
+    console.log("objs: ", ress);
+  }
+
+  var canvases = []
+  var shapes = []
+  var canvasesTest = []
+
+  function loadQuestionMap(maps, mapId) {
+    maps.forEach(map => {
+      console.log('map.mapId', map.mapId);
+      console.log('mapId ', mapId)
+      if (map.mapId == mapId) {
+        console.log('heeeeeeeeeeeeeere', map.data);
+        return map.data;
+      }
+    })
+  }
 
   function drawCanvases() {
     console.log('Draw canvnases')
@@ -441,32 +520,37 @@
           console.log('questions: ', questions);
           console.log('maps: ', maps);
           
-          let canvases = []
           for (let i = 0; i < questions.length; i++) {
-            this["canvas"+i] = new fabric.Canvas(this["canvas"+i]);
-                        fabric.Image.fromURL(`${maps[0].data}`, function (img) {
-                          console.log('width of image: ', img.getScaledWidth(), img.getScaledHeight())
-                          img.scaleToWidth(804, true);
-                          this["canvas"+i].setDimensions({ width: 800.78, height: img.getScaledHeight() })
-                          this["canvas"+i].add(img);
-                          this["canvas"+i].perPixelTargetFind = true;
-                          this["canvas"+i].allowTouchScrolling = true;
-                          img.selectable = false;
-                          img.hoverCursor = "default";
-                          console.log(questions[i].shapes);
-                          this["shapes"+i] = JSON.stringify(questions[i].shapes);
-                          console.log('shapes: ',  this["shapes"+i] )
-                          this["canvas"+i].loadFromJSON(`${this["shapes"+i]}`);
-                          this["canvas"+i].sendToBack(img);
-                          this["canvas"+i].forEachObject(function (obj) {
-                            obj.selectable = false;
-                            obj.hoverCursor = "default";
-                          });
-                        });
-        }
+            canvases.push(document.querySelector(`#canvas${i}`))
+          }
+
+
+
+          for (let i = 0; i < questions.length; i++) {
+            canvasesTest.push(new fabric.Canvas(canvases[i]));
+            let mapData = loadQuestionMap(maps, questions[i].map);
+            console.log('mapData ', mapData);
+
+            let mapIndex = maps.findIndex( map => map.mapId == questions[i].map)
+
+            fabric.Image.fromURL(maps[mapIndex].data, function (img) {
+              console.log('width of image: ', img.getScaledWidth(), img.getScaledHeight())
+              img.scaleToWidth(750, true);
+              canvasesTest[i].setDimensions({ width: 750, height: img.getScaledHeight() })
+              canvasesTest[i].add(img);
+              console.log(questions[i].shapes);
+              console.log('heere')
+              shapes[i] = JSON.stringify(questions[i].shapes);
+              console.log('shapes: ',  shapes[i] )
+              canvasesTest[i].loadFromJSON(questions[i].shapes);
+              canvasesTest[i].sendToBack(img);
+              console.log('objs: ',  canvasesTest[i].getObjects());
+            });
+        } 
       })} 
   
       window.addEventListener("load", (event) => {
+        debugger;
         console.log("page is fully loaded");
         initQuestions();
         drawCanvases();

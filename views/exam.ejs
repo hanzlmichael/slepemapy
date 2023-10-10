@@ -50,12 +50,12 @@
             <% } %>
         </div> 
         <% for (let i=0; i < test.questions.length; i++) { %>
-          <div class="<%= i === 0 ? 'question-content-active' : 'question-content' %>">
+          <div data-points="<%=test.questions[i].points%>" class="<%= i === 0 ? 'question-content-active question-data' : 'question-content question-data' %>">
             <div class="options">
               <% for (let j=0; j < test.questions[i].answers.length; j++) { %>
-                <button class="btn btn--answer">
-                  <%= test.questions[i].answers[j].term %>
-                </button>
+                <button class="btn btn--answer" <% if (test.questions[i].answers[j].isCorrect) { %>
+                  data-isCorrect="true"
+                <% } %>><%=test.questions[i].answers[j].term%></button>
                 <% } %>
             </div>
             <div class="canvas-wrap">
@@ -69,16 +69,19 @@
           </button>
       </div>
       <div class="overlay-result">
-        <img src="https://imageupload.io/ib/06LSYaiwhfumcYR_1696850581.png" alt="">
         <h2>Váš výsledek:</h2>
+        <img src="https://imageupload.io/ib/06LSYaiwhfumcYR_1696850581.png" alt="">
         <div>
-          <span>Známka: </span>
-          <span id="result-mark">2</span>
+          <div class="gray-text">
+            <span>Známka: </span>
+            <span id="result-mark"></span>
+          </div>
+          <div class="gray-text">
+            <span>Body: </span>
+            <span id="result-total-points">20/25</span>
+          </div>
         </div>
-        <div>
-          <span>Body: </span>
-          <span id="result-total-points">20/25</span>
-        </div>
+        
         <div>
           <a href="">zobrazit výsledek</a>
         </div>
@@ -358,6 +361,24 @@
     background-color: #8dedda;
   }
 
+  .overlay-result h2 {
+    color: #747474;
+    margin-bottom: 1rem;
+  }
+
+  .overlay-result .gray-text {
+    text-transform: uppercase;
+    color: #686867;
+    font-weight: 600;
+  }
+  #result-mark, #result-total-points {
+    color: #5bd7ad;
+    position: relative;
+    font-size: 2rem;
+    top: 0.25rem;
+    left: 0.5rem;
+  }
+
 </style>
 
 <script>
@@ -440,6 +461,78 @@
   function evaluateTest() {
     document.querySelector('.overlay-test').style.display = "none";
     document.querySelector('.overlay-result').style.display = "grid";
+
+    // zjistit zodpovezene otazky a porovnat se spravnymi 
+
+    // vykreslit celkovy pocet bodu z testu
+    setTotalPoints();
+
+  }
+
+  let answers = document.querySelectorAll('.question-content .btn--checked')
+  let points = document.querySelectorAll('.question');
+  let pointsValues = [];
+  let boundaries = [];
+
+  function getStudentAnswers() {
+    return document.querySelectorAll('.options');
+  }
+
+  function getAchievedPoints() {
+    debugger;
+    let answers = getStudentAnswers();
+    getPointsFromQuestions();
+    let achievedPoints = 0;
+    for (let i = 0; i < answers.length; i++) {
+      if (answers[i].querySelector('.btn--checked')) {
+        let checkedAnswer = answers[i].querySelector('.btn--checked');
+        if (checkedAnswer.dataset.iscorrect == "true") {
+          achievedPoints += pointsValues[i];
+        }
+      }
+    }
+    return achievedPoints;
+  }
+
+  function getPointsFromQuestions() {
+    let points = document.querySelectorAll('.question-data');
+    let sumPoints = 0;
+    for (let i = 0; i < points.length; i++) {
+      pointsValues[i] = Number(points[i].dataset.points);
+      sumPoints = sumPoints + pointsValues[i];
+    }
+    return sumPoints;
+  }
+
+  function setTotalPoints() {
+    debugger;
+    let totalPointsElement = document.querySelector('#result-total-points');
+    let totalPoints = getPointsFromQuestions();
+    let achievedPoints = getAchievedPoints();
+    totalPointsElement.innerText = `${achievedPoints}/${totalPoints}`;
+    setMark();
+  }
+
+  function setMark() {
+    let resultMarkElement = document.querySelector('#result-mark');
+    resultMarkElement.innerText = calculateMark(getAchievedPoints(), boundaries);
+  }
+
+
+  // Vypocita vyslednou znamku
+  function calculateMark(points, boundaries) {
+    let boundariesCount = boundaries.length - 1;
+    let mark = 1;
+    for (let i = 1; i < boundariesCount; i+=2) {
+      if (points >= boundaries[i]) {
+        return mark;
+      } else {
+        mark++;
+        if (mark == 5) {
+          return mark;
+        }
+      }
+    }
   }
 
   /* Question bar */
@@ -517,8 +610,10 @@
           debugger;
           let questions = data.test.questions;
           let maps = data.test.maps;
+          boundaries = data.test.marksBoundaries;
           console.log('questions: ', questions);
           console.log('maps: ', maps);
+          console.log('boundaries ', boundaries);
           
           for (let i = 0; i < questions.length; i++) {
             canvases.push(document.querySelector(`#canvas${i}`))

@@ -78,12 +78,12 @@
           </div>
           <div class="gray-text">
             <span>Body: </span>
-            <span id="result-total-points">20/25</span>
+            <span id="result-total-points"></span>
           </div>
         </div>
         
         <div>
-          <a href="">zobrazit výsledek</a>
+          <a id="redirectToResult" href="">zobrazit výsledek</a>
         </div>
       </div>
     </div>
@@ -459,6 +459,7 @@
   evaluateTestBtn.addEventListener('click', evaluateTest);
 
   function evaluateTest() {
+    debugger;
     document.querySelector('.overlay-test').style.display = "none";
     document.querySelector('.overlay-result').style.display = "grid";
 
@@ -467,6 +468,8 @@
     // vykreslit celkovy pocet bodu z testu
     setTotalPoints();
 
+    saveResultToDb(); 
+    
   }
 
   let answers = document.querySelectorAll('.question-content .btn--checked')
@@ -575,12 +578,6 @@
     let answerBtns = document.querySelectorAll('.btn.btn--answer').forEach(el => el.addEventListener('click', markAsChecked));
   }
 
-  function getobjsTest(cnvs) {
-    //let cnvs = document.querySelector('#canvas0')
-    let ress = canvas0.getObjects();
-    console.log("objs: ", ress);
-  }
-
   var canvases = []
   var shapes = []
   var canvasesTest = []
@@ -614,12 +611,11 @@
           console.log('questions: ', questions);
           console.log('maps: ', maps);
           console.log('boundaries ', boundaries);
+          console.log('testRef ', data.test._id);
           
           for (let i = 0; i < questions.length; i++) {
             canvases.push(document.querySelector(`#canvas${i}`))
           }
-
-
 
           for (let i = 0; i < questions.length; i++) {
             canvasesTest.push(new fabric.Canvas(canvases[i]));
@@ -650,5 +646,90 @@
         initQuestions();
         drawCanvases();
       });
+
+
+
+  /* Ulozit Result do databaze */
+  async function saveResultToDb() {
+    debugger;
+    try {
+
+      let testRef = getTestRef();
+      let firstName = getFirstName();
+      let lastName = getLastName();
+      let email = getEmail();
+      let answersIndexes = getAnswersIndexes();
+      let mark = getMark();
+      let points = getPoints();
+
+      const res = await fetch(`/result/${testRef}`, {
+        method: 'POST', 
+        body: JSON.stringify( { testRef, firstName, lastName, email, answersIndexes, mark, points } ),
+        headers: {'Content-Type': 'application/json'},
+        credentials: 'include'
+      })
+      if (res.ok) {
+        console.log('res : ', res)
+        
+        const resultData = await res.json();
+        const resultId = resultData._id; // Získání _id z odpovědi
+        console.log('Nově vytvořený ObjectId:', resultId);
+        let redirectElement = document.querySelector('#redirectToResult');
+        redirectElement.setAttribute('href', `/result/${resultId}`);
+
+      } else {
+        console.log('Chyba při ukládání výsledku');
+      }
+    }
+    catch (err) {
+      console.log(err)
+    }
+  }
+
+  function getTestRef() {
+    let url = window.location.href;
+    let splittedUrl = url.split('/');
+    return splittedUrl[splittedUrl.length - 2];
+  }
+
+  function getFirstName() {
+    return document.querySelector('#firstName').value;
+  } 
+
+  function getLastName() {
+    return document.querySelector('#lastName').value;
+  }
+
+  function getEmail() {
+    return document.querySelector('#email').value;
+  }
+
+  function getAnswersIndexes() {
+    debugger;
+    let options = document.querySelectorAll('.options');
+    let answerIndexes = [];
+    for (let i = 0; i < options.length; i++) {
+      for (let j = 0; j < options[i].children.length; j++) {
+        if (options[i].children[j].classList.contains('btn--checked')) {
+          answerIndexes[i] = j;
+          break;
+        } else {
+          answerIndexes[i] = null;
+        }
+      }
+    }
+    return answerIndexes;
+  }
+
+  function getMark() {
+    return document.querySelector('#result-mark').innerText;
+  }
+
+  function getPoints() {
+    let points = document.querySelector('#result-total-points').innerText;
+    points.split('/');
+    return points.split('/')[0];
+  }
+
 
 </script>

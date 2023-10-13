@@ -592,6 +592,7 @@
       }
     })
   }
+  
 
   function drawCanvases() {
     console.log('Draw canvnases')
@@ -662,7 +663,7 @@
       let mark = getMark();
       let points = getPoints();
 
-      const res = await fetch(`/result/${testRef}`, {
+      const res = await fetch(`/results/${testRef}`, {
         method: 'POST', 
         body: JSON.stringify( { testRef, firstName, lastName, email, answersIndexes, mark, points } ),
         headers: {'Content-Type': 'application/json'},
@@ -675,7 +676,7 @@
         const resultId = resultData._id; // Získání _id z odpovědi
         console.log('Nově vytvořený ObjectId:', resultId);
         let redirectElement = document.querySelector('#redirectToResult');
-        redirectElement.setAttribute('href', `/result/${resultId}`);
+        redirectElement.setAttribute('href', `/results/${resultId}`);
 
       } else {
         console.log('Chyba při ukládání výsledku');

@@ -43,5 +43,5 @@ app.get('*', checkUser);
 app.get('/', (req, res) => res.render('index'));
 app.use('/tests', testRoutes);
 app.use('/exam', examRoutes);
-app.use('/result', resultRoutes);
+app.use('/results', resultRoutes);
 app.use(authRoutes);

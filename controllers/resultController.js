@@ -1,10 +1,11 @@
 const Result = require("../models/Result");
+const Test = require("../models/Test");
 const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
 
 module.exports.postResult = async (req, res) => {
   const { testRef, firstName, lastName, email, answersIndexes, mark, points } = req.body;
-
+  console.log('posREsult')
   try {
     const result = await Result.create({ testRef, firstName, lastName, email, answersIndexes, mark, points});
     if (result) {
@@ -16,9 +17,18 @@ module.exports.postResult = async (req, res) => {
   }
 }
 
-module.exports.getResult = async (req, res) => {
+module.exports.getResultById = async (req, res) => {
+
+  const resultId = req.params.resultId;
+  console.log('reusltId: ', resultId);
   try {
-    res.render('result');
+    const result = await Result.findById(resultId);
+    console.log('result.testREf: ', result.testRef);
+    const test = await Test.findById(result.testRef);
+    console.log('test: ', test)
+    const data = { result: result, test: test};
+    console.log('data ', data)
+    res.render('result', { data });
   }
   catch (err) {
     console.log(err);

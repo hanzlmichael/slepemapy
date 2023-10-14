@@ -37,15 +37,14 @@
           <div id="result-tab">
             <div class="overlay-result">
               <h2><%= data.result.firstName %> <%= data.result.lastName %> </h2>
-              <img src="https://imageupload.io/ib/06LSYaiwhfumcYR_1696850581.png" alt="Test" height="160">
-              <div>
+              <div class="result-info-wrap">
                 <div class="gray-text">
                   <span>Známka: </span>
                   <span id="result-mark"><%= data.result.mark %></span>
                 </div>
                 <div class="gray-text">
                   <span>Body: </span>
-                  <span id="result-total-points"><%= data.result.points %></span>
+                  <span id="result-total-points"><%= data.result.points %>/</span>
                 </div>
               </div>
             </div>
@@ -62,11 +61,8 @@
               <div data-points="<%=data.test.questions[i].points%>" class="<%= i === 0 ? 'question-content-active question-data' : 'question-content question-data' %>">
                 <div class="options">
                   <% for (let j=0; j < data.test.questions[i].answers.length; j++) { %>
-                    <button <% if (data.test.questions[i].answers[j].isCorrect) { %>
-                      data-isCorrect="true" class="btn btn--answer green"
-                    <% } else { %>
-                      class="btn btn--answer"
-                    <% } %>><%=data.test.questions[i].answers[j].term%></button>
+                    <button class="btn btn--answer" <% if (data.test.questions[i].answers[j].isCorrect === true) { %>
+                      data-isCorrect="1" <% } %>><%=data.test.questions[i].answers[j].term%></button>
                     <% } %>
                 </div>
                 <div class="canvas-wrap">
@@ -125,20 +121,10 @@
 
   .overlay-result {
     padding:1rem;
-    background:white;
-    max-width: 25rem;
-    width: 20rem;
-    box-shadow: rgba(17, 12, 46, 0.15) 0px 48px 100px 0px;
     border-radius: 0.5rem;
     justify-items: center;
   }
 
-  .overlay-result img {
-    width: 100%;
-    max-width: 10rem;
-    justify-self: center;
-    margin-bottom: 1rem;
-  }
   .overlay-result a {
     background-color: #a2efe0;
     border-radius: 0.5rem;
@@ -162,17 +148,25 @@
   .overlay-result h2 {
     color: #747474;
     margin-bottom: 1rem;
+    font-size: 2.75rem;
+  }
+
+  .result-info-wrap {
+    border-radius: 0.5rem;
+    background-color: #f3f3f3;
+    padding:2rem 4rem;
   }
 
   .overlay-result .gray-text {
     text-transform: uppercase;
     color: #686867;
     font-weight: 600;
+    font-size: 2rem;
   }
   #result-mark, #result-total-points {
     color: #5bd7ad;
     position: relative;
-    font-size: 2rem;
+    font-size: 3rem;
     top: 0.25rem;
     left: 0.5rem;
   }
@@ -203,7 +197,7 @@
 }
 
   .active, .question:hover {
-    outline: 2px solid #ff8318;
+    outline: 3px solid #46b3d1;
   }
   
   .done {
@@ -319,6 +313,54 @@
     //let answerBtns = document.querySelectorAll('.btn.btn--answer').forEach(el => el.addEventListener('click', markAsChecked));
   }
 
+  /* nahrátí zodpovězených otázek */
+  let answerIndexes = JSON.parse('<%= JSON.stringify(data.result.answersIndexes) %>');
+  let allOptions = document.querySelectorAll('.options');
+  let userIndexes;
+  let questionIcons = document.querySelectorAll('.question');
+
+  function initUserAnswers() {
+    debugger;
+    userIndexes = findWhereDataIsCorrect(); 
+    let len = answerIndexes.length;
+    
+    for (let i = 0; i < len; i++) {
+      if (answerIndexes[i] == userIndexes[i]) {
+        colorGreen(allOptions[i].children[userIndexes[i]]);
+        questionIcons[i].style.background = 'rgb(172 245 164)';
+        continue;
+      }
+      if (answerIndexes[i] === null) {
+        colorRed(allOptions[i].children[userIndexes[i]]);
+        questionIcons[i].style.background = 'rgb(255 169 169)';
+        continue;
+      }
+      colorGreen(allOptions[i].children[userIndexes[i]]);
+      colorRed(allOptions[i].children[answerIndexes[i]]);
+      questionIcons[i].style.background = 'rgb(255 169 169)';
+    }
+  }
+
+  function findWhereDataIsCorrect() {
+    let indexes = []
+    for (let i = 0; i < allOptions.length; i++) {
+      for (let j = 0; j < allOptions[i].children.length; j++) {
+        if (allOptions[i].children[j].dataset.iscorrect == 1) {
+          indexes[i] = j;
+        }
+      }
+    }
+    return indexes;
+  }
+
+  function colorGreen(elem) {
+    elem.classList.add('green');
+  }
+
+  function colorRed(elem) {
+    elem.classList.add('red');
+  }
+
   var canvases = []
   var shapes = []
   var canvasesTest = []
@@ -334,8 +376,27 @@
     })
   }
 
+  // secte vsechny body z otazek, ziskam tim celkovy pocet bodu z testu
+  function getPointsFromQuestions() {
+    let pointsValues = [];
+    let points = document.querySelectorAll('.question-data');
+    let sumPoints = 0;
+    for (let i = 0; i < points.length; i++) {
+      pointsValues[i] = Number(points[i].dataset.points);
+      sumPoints = sumPoints + pointsValues[i];
+    }
+    return sumPoints;
+  }
+
+  function initPoints() {
+    let resultPoints = document.querySelector('#result-total-points');
+    console.log('INIT POINTS');
+    
+    let totalPoints = getPointsFromQuestions();
+    resultPoints.textContent += totalPoints;
+  }
+
   let testId = '<%= data.result.testRef %>';
-  let answerIndexes = '<%= data.result.answersIndexes %>';
 
   function drawCanvases() {
     console.log('Draw canvnases')
@@ -386,7 +447,9 @@
         debugger;
         console.log("page is fully loaded");
         initQuestions();
+        initUserAnswers(); 
         drawCanvases();
+        initPoints();
       });
 
 </script>

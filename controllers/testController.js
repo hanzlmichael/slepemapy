@@ -1,4 +1,5 @@
 const Test = require("../models/Test");
+const Result = require("../models/Result");
 const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
 
@@ -158,6 +159,18 @@ module.exports.getExam = async (req, res) => {
     if (test) {
       res.render('exam', {test})
       /* res.json({ test }); */
+    }
+  }
+  catch(err) {
+    console.log(err)
+  }
+}
+
+module.exports.getResults = async (req, res) => {
+  try {
+    const results = await Result.find({ testRef: req.params.testId });
+    if (results) {
+      res.render('results', { results })
     }
   }
   catch(err) {

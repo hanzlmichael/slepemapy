@@ -24,3 +24,31 @@ body, html {
   justify-items: center;
   height: 100%;
 }
+
+/* Go back navigace */
+.go-back-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.go-back-wrapper a {
+  font-size: 3rem;
+  background-color: rgb(255 255 255);
+  color: rgb(122 122 122);
+  border-radius: 9999px;
+  text-decoration: none;
+}
+
+.go-back-wrapper a:hover {
+  font-size: 3rem;
+  background-color: rgb(235,235,235);
+} 
+
+.go-back-wrapper span {
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  letter-spacing: 0.07rem;
+  color: #4e4e4e;
+}

@@ -127,7 +127,7 @@
                 </div>
                 <div class="btns">
                   <button id="delete" value="<%= tests[i]._id %>" onclick="deleteTest(this)" class="material-symbols-outlined">delete</button>
-                  <button id="results" class="material-symbols-outlined" value="<%= tests[i]._id%>">data_table</button>
+                  <a id="results" href="/tests/<%=tests[i]._id%>/results" class="material-symbols-outlined" value="<%= tests[i]._id%>">data_table</a>
                 </div> 
                 <% } else { %>
                   <div class="test-activation-wrap">
@@ -140,7 +140,7 @@
                   <div class="btns">
                     <button id="edit" value="<%= tests[i]._id %>" onclick="editTest(this)" class="material-symbols-outlined">edit</button>
                     <button id="delete" value="<%= tests[i]._id %>" onclick="deleteTest(this)" class="material-symbols-outlined">delete</button>
-                    <button id="results" class="material-symbols-outlined" value="<%= tests[i]._id%>">data_table</button>
+                    <a id="results" href="/tests/<%=tests[i]._id%>/results" class="material-symbols-outlined" value="<%= tests[i]._id%>">data_table</a>
                   </div> 
                   <% } %>
   
@@ -386,7 +386,14 @@ tippy('#results', {
   display: flex;
   gap: 0.35rem;
 }
-.btns button {
+
+.btns a {
+  text-decoration: none;
+  color: rgb(35,35,35);
+  font-weight: 600;
+}
+
+.btns button, .btns a {
   outline:none;
   border:none;
   background-color:rgb(230,230,230);
@@ -397,7 +404,7 @@ tippy('#results', {
   width:3rem;
   height:3rem;
 }
-.btns button:hover {
+.btns button:hover, .btns a:hover {
   background-color:rgb(220,220,220);
   cursor:pointer;
 }

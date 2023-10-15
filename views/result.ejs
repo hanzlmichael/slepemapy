@@ -23,6 +23,12 @@
     <div class="layout">
       <%- include('partials/navbar'); %>
       <div class="result-wrapper">
+        <% if (user) { %>
+          <div class="go-back-wrapper">
+            <a href="/tests/<%= data.result.testRef %>/results" class="material-symbols-outlined gray80">chevron_left</a>
+            <span class="fs06">Zpět</span>
+          </div>
+          <% }  %>
         <div class="tabs-navigation">
           <label for="result-tab-btn">
             <input type="radio" id="result-tab-btn" name="tabs-navigation" checked>
@@ -84,7 +90,7 @@
   }
 
   .tabs-navigation {
-    margin-bottom: 1rem;
+    margin: 1rem 0;
   }
 
   .tabs-navigation input {
@@ -120,7 +126,7 @@
   /* result */
 
   .overlay-result {
-    padding:1rem;
+    padding:0 1rem;
     border-radius: 0.5rem;
     justify-items: center;
   }

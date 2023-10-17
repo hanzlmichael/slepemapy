@@ -8,6 +8,8 @@ const authRoutes = require('./routes/authRoutes');
 const testRoutes = require('./routes/testRoutes');
 const examRoutes = require('./routes/examRoutes');
 const resultRoutes = require('./routes/resultRoutes');
+const userRoutes = require('./routes/userRoutes');
+const { requireAuth, isAdmin } = require('./middleware/authMiddleware');
 
 const app = express()
 const PORT =  process.env.PORT || 3213;
@@ -44,4 +46,6 @@ app.get('/', (req, res) => res.render('index'));
 app.use('/tests', testRoutes);
 app.use('/exam', examRoutes);
 app.use('/results', resultRoutes);
+app.get('/admin', requireAuth, isAdmin, (req, res) => res.render('admin'));
+app.use('/users', userRoutes);
 app.use(authRoutes);

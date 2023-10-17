@@ -19,6 +19,10 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: [true, 'Zadejte heslo'],
     minlength: [6, 'Minimální délka hesla je 6 znaků'],
+  },
+  isAdmin: {
+    type: Boolean,
+    default: false
   }
 });
 

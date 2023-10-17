@@ -1,3 +1,5 @@
+import { removeSelection } from '../components/addShapes.js'
+
 export function startDrawPoint() {
 	canvas.on('mouse:down', drawCircle)
 	canvas.on('mouse:move', drawTempCircle)
@@ -12,6 +14,7 @@ function drawCircle(e) {
   console.log('mouse clicked');
   createCircle(e, false)
   stopDraw();
+  removeSelection();
 }
 
 function drawTempCircle(e) {

@@ -1,4 +1,4 @@
-let c = console.log.bind(console)
+import { removeSelection } from '../components/addShapes.js'
 
 let points = [];
 let clicks = 0;
@@ -35,8 +35,9 @@ function finishShape() {
   canvas.off("mouse:down");
  /*  removeTempObjects() 
   removeStartCircle() */
-  drawFinalPolygon()
-  resetValues()
+  drawFinalPolygon();
+  resetValues();
+  removeSelection();
 }
 
 export function startDrawPolygon() {

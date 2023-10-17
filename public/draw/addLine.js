@@ -1,3 +1,5 @@
+import { removeSelection } from '../components/addShapes.js'
+
 let pointsCount = 0
 let polylinePoints = []
 
@@ -96,6 +98,9 @@ function createPolyline(e, isTemp) {
     pointsCount = 0
     canvas.off('mouse:move')
     canvas.off('mouse:down')
+
+    // smaze oznaceni tlacitek v panelu nastaveni
+    removeSelection();
   }
 
   function removeAllCircles() {

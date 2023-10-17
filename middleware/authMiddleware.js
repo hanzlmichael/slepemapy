@@ -93,4 +93,29 @@ const checkAuthor = async (req, res, next) => {
   }
 }
 
-module.exports = { checkUser, requireAuth, checkAuthor };
+
+const isAdmin = async (req, res, next) => {
+  const token = req.cookies.jwt;
+  jwt.verify(token, process.env.JWT_SECRET_KEY, async (err, decodedToken) => {
+    if (err) {
+      res.redirect("/");
+    } else {
+      const user = await User.findById(decodedToken.id);
+      if (user) {
+        const isAdmin = user.isAdmin;
+        if (isAdmin) {
+          next();
+        } else {
+          console.log("Nedostatečná autorizace");
+          res.redirect("/");
+        }
+      } else {
+        res.redirect("/");
+      }
+    }
+  });
+};
+
+
+
+module.exports = { checkUser, requireAuth, checkAuthor, isAdmin };

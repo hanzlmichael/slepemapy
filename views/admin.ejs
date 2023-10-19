@@ -38,9 +38,12 @@
           <span class="material-symbols-outlined">library_add</span>
           <button>knihovna</button>
         </div>
-        
+        <div class="render-content" data-render="admin">
+          <span class="material-symbols-outlined">admin_panel_settings</span>
+          <button>administrace</button>
+        </div>
       </div>
-      <div class="content-wrapper">
+      <div class="content-wrapper users">
         <h2>Uživatelé</h2>
         <div class="table-wrapper">
           <table id="dtBasicExample" class="table">
@@ -59,6 +62,41 @@
           </table>
           </div>
       </div>
+      <div class="content-wrapper tests" data>
+        <h2>Testy</h2>
+        <div class="table-wrapper">
+          <table id="dtBasicExample" class="table">
+            <thead>
+              <tr class="row100 head">
+                <th class="cell100 column1">Autor
+                </th>
+                <th class="cell100 column2">Název testu
+                </th>
+                <th class="cell100 column3">
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+            </tbody>
+          </table>
+          </div>
+      </div>
+      <div class="content-wrapper map">
+        <h2>Katalog map</h2>        
+      </div>
+      <div class="content-wrapper library">
+        <h2>Knihovna pojmů</h2>        
+      </div>
+      <div class="content-wrapper admin">
+        <h2>Administrace</h2>
+        <h3>Vyhledat uživatele podle emailu</h3>
+        <div class="searchbar">
+          <input type="text" placeholder="Email uživatele">
+          <button class="material-symbols-outlined" onclick="getUserByEmail()">search_check</button>
+        </div>
+        <div id="found-user">
+
+        </div>
     </div>
   </div>
 
@@ -70,6 +108,26 @@
     background-color: white;
     display:grid;
     grid-template-columns: 300px 1fr;
+  }
+
+  .btn {
+    border: none;
+    outline: none;
+    border-radius: 0.25rem;
+    padding: 0.65rem 1rem;
+    font-size: 0.8rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+
+  .btn--blue {
+    background-color: #4d3df7;
+    color: #e9e9e9;
+  }
+
+  .btn--blue:hover {
+    background-color: #4333f5;
   }
 
   .panel {
@@ -129,10 +187,16 @@
     padding:2rem;
   }
 
+  .content-wrapper.tests, .content-wrapper.map,.content-wrapper.library,.content-wrapper.admin  {
+    display:none;
+  }
+
   .content-wrapper h2 {
     color: rgb(83, 83, 83);
     font-size: 2.5rem;
     margin-bottom: 1rem;
+    border-bottom: 4px solid #f3f3f3;
+    padding-bottom: 1rem;
   }
   /* TABLE */
 
@@ -195,22 +259,90 @@
   tr td:nth-of-type(3) {
     text-align: center;
   }
+
+  .styled-table tbody tr {
+    box-shadow: 0px 0px 9px 0px rgba(0,0,0,0.1);
+  }
+
+  .searchbar {
+    background-color:rgb(235,235,235);
+    max-width:20rem;
+    display:flex;
+    justify-content:space-between;
+    border-radius:0.3rem;
+    padding:0.5rem;  
+  }
+  .searchbar input {
+    outline:none;
+    border:none;
+    font-size:1rem;
+    font-weight:600;
+    background-color:inherit;
+    color:rgb(70,70,70);
+    flex:1;
+  }
+  
+  .searchbar button {
+    outline:none;
+    border:none;
+    color:rgb(110,110,110);
+    background-color:inherit;
+    cursor:pointer;
+    font-weight:600;
+  }
+
+  .content-wrapper h3 {
+    font-size: 1.25rem;
+    color: #707070;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+  }
+  .red-bg {
+    color: red;
+    padding: 0.5rem;
+    max-width: 20rem;
+    border-radius: 0.25rem;
+    margin-top: 0.5rem;
+  }
+
+  .green-bg {
+    color: #06d207;
+    padding: 0.5rem;
+    max-width: 20rem;
+    border-radius: 0.25rem;
+    margin-top: 0.5rem;
+  }
+
+  .content-wrapper input::placeholder {
+    font-weight: 400;
+  }
+
+ #found-user .btn {
+    margin-top: 0.5rem;
+ }
+
+
   
 </style>
 
 <script>
+  document.addEventListener('DOMContentLoaded', function() {    
+    showContentWrapper("users");
+    getUsers();
+  });
+
   let btns = document.querySelectorAll('.render-content')
   btns.forEach(btn => btn.addEventListener('click', findParentElement))
 
   function findParentElement(e) {
     let clickedElement = e.target;
-    return clickedElement.closest('.render-content');
+    let clickedElementData = clickedElement.closest('.render-content').dataset.render;
+    hideAllContentWrappers();
+    showContentWrapper(clickedElementData);
+    //renderData(clickedElementData);
   }
 
-
-
   async function getUsers() {
-    debugger;
     try {
       const res = await fetch('/users/', {
         method: 'GET',
@@ -226,19 +358,122 @@
     }
   }
 
-  document.addEventListener('DOMContentLoaded', function() {
-    debugger;
-    renderHeading();
-    renderData("users");
-  });
+  async function getUserByEmail() {
+    const email = document.querySelector('.searchbar input').value;
 
-  function renderHeading() {
+    // Vytvořte objekt JSON
+    const data = {
+      email
+    };
+    try {
+      const res = await fetch('/users/email', {
+        method: 'POST',
+        body: JSON.stringify(data),
+        headers: { 'Content-Type': 'application/json' }
+      })
+      if (res) {
+        const user = await res.json();
+        console.log(user)
+        if (user.length === 0) {
+          console.log('yes')
+          foundUserElement.innerHTML = '<div class="red-bg">Uživatel nenalezen </div>';
+        } else {
+          foundUserElement.innerHTML = `<div class="green-bg">Uživatel nalezen </div> <table class="styled-table">
+            <thead>
+                <tr>
+                    <th>Uživatel</th>
+                    <th>Role</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>${user[0].email}</td>
+                    <td>${user[0].isAdmin ? 'Admin' : 'Uživatel'}</td>
+                </tr>
+            </tbody>
+        </table> <button class="btn btn--blue">${user[0].isAdmin ? 'Odebrat administrátorská práva' : 'Přidělit administrátorská práva'}</button>`;
+        }
 
+      }
+    }
+    catch (err) {
+      console.log(err);
+    }
+  }
+
+  async function getAllTests() {
+    try {
+      const res = await fetch('/tests/all', {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' }
+      })
+      if (res) {
+        const tests = await res.json();
+        console.log(tests);
+      }
+    }
+    catch (err) {
+      console.log(err);
+    }
+  }
+  let foundUserElement = document.querySelector('#found-user')
+
+  function renderHeading(heading) {
+    let headingElement = document.querySelector('.content-wrapper h2');
+    if (heading === "users") {
+      headingElement.innerText = "Uživatelé";
+      return;
+    }
+    if (heading === "tests") {
+      headingElement.innerText = "Testy";
+      return;
+    }
+    if (heading === "map") {
+      headingElement.innerText = "Katalog map";
+      return;
+    }
+    if (heading === "library") {
+      headingElement.innerText = "Knihovna pojmů";
+      return;
+    }
+    if (heading === "admin") {
+      headingElement.innerText = "Administrace";
+    }
+  }
+
+  /* Stránky které se budou rendrovat */
+  let contentWrappers = document.querySelectorAll('.content-wrapper')
+
+  function hideAllContentWrappers() {
+    contentWrappers.forEach(contentWrapper => contentWrapper.style.display = 'none')
+  }
+
+  // argument contentWrapper bude z pole ["users", "tests", "map", "library", "admin"] 
+  function showContentWrapper(contentWrapper) {    
+    for (const element of contentWrappers) {
+      if (element.classList.contains(contentWrapper)) {
+        element.style.display = 'block';
+        break;
+      }
+    }
   }
 
   function renderData(data) {
     if (data === "users") {
-      getUsers();      
+      renderHeading(data);
+      getUsers();            
+    }
+    if (data === "tests") {
+      renderHeading(data);
+    }
+    if (data === "map") {
+      renderHeading(data);
+    }
+    if (data === "library") {
+      renderHeading(data);
+    }
+    if (data === "admin") {
+      renderHeading(data);
     }
   }
 
@@ -246,7 +481,7 @@
     let tableBody = document.querySelector('table tbody');
     tableBody.innerHTML = "";
 
-    for (let i = 0; data.length; i++) {
+    for (let i = 0; i < data.length; i++) {
       addRow(data[i], tableBody);
     }
 
@@ -258,7 +493,6 @@
   }
 
   function addRow(data, tableBody) {
-    console.log('DATA ROLE: ', data.role);
     const row = document.createElement('tr');
     row.appendChild(document.createElement('td')).textContent = data.email;
     row.appendChild(document.createElement('td')).textContent = data.isAdmin ? "Admin" : "Uživatel";

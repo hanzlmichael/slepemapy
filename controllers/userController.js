@@ -28,3 +28,17 @@ module.exports.deleteUser = async (req, res) => {
     res.status(500).json({ message: 'Nastala chyba při mazání uživatele' });
   }
 }
+
+module.exports.getUserByEmail = async (req, res) => {
+  const email = req.body.email;
+  console.log('EMAIL: ', email);
+  try {
+    const user = await User.find({email: email});
+    if (user) {
+      res.json(user);
+    }
+  }
+  catch(err) {
+    console.log(err)
+  }
+}

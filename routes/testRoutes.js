@@ -6,6 +6,7 @@ const { requireAuth, checkAuthor } = require('../middleware/authMiddleware');
 const router = Router();
 
 router.get('/', requireAuth, testController.getTests);
+router.get('/all', requireAuth, testController.getAllTests);
 router.get('/new', requireAuth, testController.getNewTest);
 router.put('/:testId/publish', requireAuth, testController.publishTest);
 router.post('/new', requireAuth, testController.postTest);

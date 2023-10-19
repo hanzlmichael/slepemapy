@@ -3,21 +3,6 @@ const Result = require("../models/Result");
 const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
 
-/* module.exports.getTests = async (req, res) => {
-  let token = req.cookies.jwt;
-  jwt.verify(token, process.env.JWT_SECRET_KEY, async (err, decodedToken) => {
-    if (err) {
-      console.log(err);
-    } else {
-      let teacherRef = decodedToken.id;
-      console.log('teacherRef ', teacherRef)
-      let tests = await Test.find({ teacherRef: new mongoose.Types.ObjectId(`${teacherRef}`)}).sort({ createdAt: -1});
-      res.render('dashboard', { tests })      
-    }
-  });
-} */
-
-/* fetch version /tests  */
 module.exports.getTests = async (req, res) => {
   let token = req.cookies.jwt;
   jwt.verify(token, process.env.JWT_SECRET_KEY, async (err, decodedToken) => {
@@ -31,6 +16,18 @@ module.exports.getTests = async (req, res) => {
       res.render('dashboard', { tests });  
     }
   });
+}
+
+module.exports.getAllTests = async (req, res) => {
+  try {
+    const tests = await Test.find({});
+    if (tests) {
+      res.json({tests});
+    }
+  }
+  catch(err) {
+    console.log(err)
+  }
 }
 
 module.exports.getTestById = async (req, res) => {

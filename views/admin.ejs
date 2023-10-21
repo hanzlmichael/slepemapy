@@ -46,7 +46,7 @@
       <div class="content-wrapper users">
         <h2>Uživatelé</h2>
         <div class="table-wrapper">
-          <table id="dtBasicExample" class="table">
+          <table id="user-table" class="table">
             <thead>
               <tr class="row100 head">
                 <th class="cell100 column1">Email
@@ -65,7 +65,7 @@
       <div class="content-wrapper tests" data>
         <h2>Testy</h2>
         <div class="table-wrapper">
-          <table id="dtBasicExample" class="table">
+          <table id="test-table" class="table">
             <thead>
               <tr class="row100 head">
                 <th class="cell100 column1">Autor
@@ -334,6 +334,10 @@
   let btns = document.querySelectorAll('.render-content')
   btns.forEach(btn => btn.addEventListener('click', findParentElement))
 
+  /* Tabulky */
+  let testTable = document.querySelector('#test-table');
+  let userTable = document.querySelector('#user-table');
+
   function findParentElement(e) {
     let clickedElement = e.target;
     let clickedElementData = clickedElement.closest('.render-content').dataset.render;
@@ -350,7 +354,7 @@
       })
       if (res) {
         const users = await res.json();
-        fillTable(users.results);
+        fillTable(users.results, userTable);
       }
     }
     catch (err) {
@@ -401,45 +405,26 @@
     }
   }
 
+  // fetch(`/users?position=${position}&batchSize=${batchSize}`)
   async function getAllTests() {
+    debugger;
     try {
-      const res = await fetch('/tests/all', {
+      const res = await fetch(`/tests/all?count=${10}&position=${0}`, {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' }
       })
       if (res) {
         const tests = await res.json();
         console.log(tests);
+        fillTestTable(tests.tests, testTable);
       }
     }
     catch (err) {
       console.log(err);
     }
   }
-  let foundUserElement = document.querySelector('#found-user')
 
-  function renderHeading(heading) {
-    let headingElement = document.querySelector('.content-wrapper h2');
-    if (heading === "users") {
-      headingElement.innerText = "Uživatelé";
-      return;
-    }
-    if (heading === "tests") {
-      headingElement.innerText = "Testy";
-      return;
-    }
-    if (heading === "map") {
-      headingElement.innerText = "Katalog map";
-      return;
-    }
-    if (heading === "library") {
-      headingElement.innerText = "Knihovna pojmů";
-      return;
-    }
-    if (heading === "admin") {
-      headingElement.innerText = "Administrace";
-    }
-  }
+  let foundUserElement = document.querySelector('#found-user')
 
   /* Stránky které se budou rendrovat */
   let contentWrappers = document.querySelectorAll('.content-wrapper')
@@ -458,33 +443,37 @@
     }
   }
 
-  function renderData(data) {
-    if (data === "users") {
-      renderHeading(data);
-      getUsers();            
-    }
-    if (data === "tests") {
-      renderHeading(data);
-    }
-    if (data === "map") {
-      renderHeading(data);
-    }
-    if (data === "library") {
-      renderHeading(data);
-    }
-    if (data === "admin") {
-      renderHeading(data);
+  function fillTestTable(data, table) {
+    let tableBody = table.querySelector('tbody');
+    tableBody.innerHTML = "";
+
+    for (let i = 0; i < data.length; i++) {
+      addTestRow(data[i], tableBody);
     }
   }
 
-  function fillTable(data) {
-    let tableBody = document.querySelector('table tbody');
+  function addTestRow(data, tableBody) {
+    debugger;
+    const row = document.createElement('tr');
+    row.appendChild(document.createElement('td')).textContent = data.teacherRef.email;
+    row.appendChild(document.createElement('td')).textContent = data.title;
+    const button = document.createElement('button');
+    button.textContent = 'Smazat';
+    button.value = data._id;
+    button.setAttribute('onclick', 'deleteUser(this)');
+    row.appendChild(document.createElement('td')).appendChild(button);
+
+    // Přidejte řádek do těla tabulky
+    tableBody.appendChild(row);
+  }
+
+  function fillTable(data, table) {
+    let tableBody = table.querySelector('tbody');
     tableBody.innerHTML = "";
 
     for (let i = 0; i < data.length; i++) {
       addRow(data[i], tableBody);
     }
-
   }
 
   function noData() {

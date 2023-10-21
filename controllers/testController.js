@@ -1,4 +1,5 @@
 const Test = require("../models/Test");
+const User = require("../models/User");
 const Result = require("../models/Result");
 const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
@@ -19,16 +20,33 @@ module.exports.getTests = async (req, res) => {
 }
 
 module.exports.getAllTests = async (req, res) => {
+  const { position, count } = req.query;
   try {
-    const tests = await Test.find({});
+    /* const tests = await Test.find().skip(parseInt(position)).limit(parseInt(count)).select('email title');
+    */ 
+    /* const tests = await Test.findOne().select('teacherRef title');
+
+    console.log(tests);
+
+    User.populate('tests').exec(function (err, user) {
+      if (err) return HandleError(err);
+      console.log('The author is %s', user.tests.email);
+      if (tests) {
+        res.json({tests});
+      }
+    }) */
+
+    const tests = await Test.find().populate('teacherRef', 'email').skip(parseInt(position)).limit(parseInt(count)).select('teacherRef title');
     if (tests) {
       res.json({tests});
     }
   }
   catch(err) {
     console.log(err)
+    res.status(500).json({ error: 'Chyba při získávání uživatelů' });
   }
 }
+
 
 module.exports.getTestById = async (req, res) => {
   console.log('yy')

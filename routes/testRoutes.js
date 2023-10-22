@@ -15,6 +15,6 @@ router.get('/:testId', checkAuthor, testController.getTestByIdTest);
 router.delete('/:testId', requireAuth, testController.deleteTest);
 router.put('/:testId', requireAuth, checkAuthor, testController.updateTestById);
 router.get('/:testId/exam', testController.getExam);
-router.get('/:testId/results', testController.getResults);
+router.get('/:testId/results', requireAuth, checkAuthor, testController.getResults);
 
 module.exports = router;

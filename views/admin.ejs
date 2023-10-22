@@ -45,6 +45,12 @@
       </div>
       <div class="content-wrapper users">
         <h2>Uživatelé</h2>
+        <h3>Vyhledat uživatele podle emailu</h3>
+        <div class="searchbar">
+          <input type="text" placeholder="Email uživatele">
+          <button class="material-symbols-outlined" onclick="getUserByEmail()">search_check</button>
+        </div>
+        <div id="found-user"></div>
         <div class="table-wrapper">
           <table id="user-table" class="table">
             <thead>
@@ -80,6 +86,7 @@
             </tbody>
           </table>
           </div>
+          <button id="load-more-tests" class="btn btn--gray" onclick="getAllTests()">Načíst další</button>
       </div>
       <div class="content-wrapper map">
         <h2>Katalog map</h2>        
@@ -94,9 +101,7 @@
           <input type="text" placeholder="Email uživatele">
           <button class="material-symbols-outlined" onclick="getUserByEmail()">search_check</button>
         </div>
-        <div id="found-user">
-
-        </div>
+        <div id="found-user"></div>
     </div>
   </div>
 
@@ -130,10 +135,24 @@
     background-color: #4333f5;
   }
 
+  .btn--gray:hover {
+    background-color: #e7e7e7;
+  }
+
+  #load-more-tests {
+    margin-top: 1rem;
+    min-width: 12rem;
+    height: 3rem;
+    font-size: 0.9rem;
+  }
+
+
   .panel {
     background: rgb(245,245,245);
     padding: 1rem;
   }
+
+ 
 
   .panel button {
     border: none;
@@ -204,7 +223,9 @@
     overflow-x:auto;
     box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
     max-width: 50rem;
+    margin-top: 0.5rem;
   }
+
   table {
       border-collapse: collapse;
       width: 100%;
@@ -329,6 +350,7 @@
   document.addEventListener('DOMContentLoaded', function() {    
     showContentWrapper("users");
     getUsers();
+    getAllTests();
   });
 
   let btns = document.querySelectorAll('.render-content')
@@ -365,6 +387,10 @@
   async function getUserByEmail() {
     const email = document.querySelector('.searchbar input').value;
 
+    if (email === '') {
+      getUsers();
+      return;
+    }
     // Vytvořte objekt JSON
     const data = {
       email
@@ -381,21 +407,10 @@
         if (user.length === 0) {
           console.log('yes')
           foundUserElement.innerHTML = '<div class="red-bg">Uživatel nenalezen </div>';
+          fillTable(user, userTable);
         } else {
-          foundUserElement.innerHTML = `<div class="green-bg">Uživatel nalezen </div> <table class="styled-table">
-            <thead>
-                <tr>
-                    <th>Uživatel</th>
-                    <th>Role</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>${user[0].email}</td>
-                    <td>${user[0].isAdmin ? 'Admin' : 'Uživatel'}</td>
-                </tr>
-            </tbody>
-        </table> <button class="btn btn--blue">${user[0].isAdmin ? 'Odebrat administrátorská práva' : 'Přidělit administrátorská práva'}</button>`;
+          foundUserElement.innerHTML = `<div class="green-bg">Uživatel nalezen </div>`;
+          fillTable(user, userTable);
         }
 
       }
@@ -406,22 +421,32 @@
   }
 
   // fetch(`/users?position=${position}&batchSize=${batchSize}`)
+  const count = 2;
+  let position = 0;
   async function getAllTests() {
-    debugger;
     try {
-      const res = await fetch(`/tests/all?count=${10}&position=${0}`, {
+      const res = await fetch(`/tests/all?count=${count}&position=${position}`, {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' }
       })
       if (res) {
         const tests = await res.json();
         console.log(tests);
+        if (tests.tests.length === 0) {
+          document.querySelector('#load-more-tests').style.display = 'none'
+        }
         fillTestTable(tests.tests, testTable);
+        position = position + 2;
+        
       }
     }
     catch (err) {
       console.log(err);
     }
+  }
+
+  function loadMoreTests() {
+    getAllTests();
   }
 
   let foundUserElement = document.querySelector('#found-user')
@@ -445,7 +470,6 @@
 
   function fillTestTable(data, table) {
     let tableBody = table.querySelector('tbody');
-    tableBody.innerHTML = "";
 
     for (let i = 0; i < data.length; i++) {
       addTestRow(data[i], tableBody);
@@ -453,14 +477,13 @@
   }
 
   function addTestRow(data, tableBody) {
-    debugger;
     const row = document.createElement('tr');
     row.appendChild(document.createElement('td')).textContent = data.teacherRef.email;
     row.appendChild(document.createElement('td')).textContent = data.title;
     const button = document.createElement('button');
     button.textContent = 'Smazat';
     button.value = data._id;
-    button.setAttribute('onclick', 'deleteUser(this)');
+    button.setAttribute('onclick', 'deleteTest(this)');
     row.appendChild(document.createElement('td')).appendChild(button);
 
     // Přidejte řádek do těla tabulky
@@ -503,6 +526,24 @@
       })
       if (res) {
         const rowElement = userId.closest('tr');
+        if (rowElement) {
+          rowElement.remove();
+        }
+      }
+    }
+    catch (err) {
+      console.log(err);
+    }
+  }
+
+  async function deleteTest(testId) {
+    try {
+      const res = await fetch(`/tests/${testId.value}`, {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' }
+      })
+      if (res) {
+        const rowElement = testId.closest('tr');
         if (rowElement) {
           rowElement.remove();
         }

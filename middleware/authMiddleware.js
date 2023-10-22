@@ -47,32 +47,38 @@ const requireAuth = (req, res, next) => {
 const checkAuthor = async (req, res, next) => {
   console.log('dostal se sem')
   let testId = req.url.substring(1, req.url.length)
+  console.log('testId ', testId)
   if (testId.length > 24) {
     testId = testId.slice(0,24)
+    console.log('sliced ', testId)
   }
 
   // check if user has a valid token
   console.log('dostal se sem1')
   const token = req.cookies.jwt;
   if (token) {
-    jwt.verify(token, 'net ninja secret', async (err, decodedToken) => {
+    jwt.verify(token, process.env.JWT_SECRET_KEY, async (err, decodedToken) => {
       if (err) {
+        console.log('err1')
         res.locals.author = null;
         next();
       } else {
         let user, teacherRef;
-        
+
+        console.log('decodedid ', decodedToken.id);
         // use Promise.all() to wait for both queries to complete
         await Promise.all([
           User.findById(decodedToken.id).select("_id").exec(),
           Test.findById(testId).select("teacherRef").exec()
         ])
           .then(([userDoc, testDoc]) => {
+            console.log('err2')
             user = userDoc._id.toString();
             teacherRef = testDoc.teacherRef.toString();
+            console.log('srovnani ', user, teacherRef)
           })
           .catch((err) => {
-            
+            console.log('err3')
             console.log(err);
           });
 
@@ -81,14 +87,17 @@ const checkAuthor = async (req, res, next) => {
 
           res.locals.author = user;
         } else {
-          res.locals.author = null;
+          console.log('err4')
+          //res.locals.author = null;
+          res.redirect('/tests')
         }
 
         next();
       }
     });
   } else {
-    res.locals.author = null;
+    //res.locals.author = null;
+    res.redirect('/tests')
     next();
   }
 }

@@ -1,7 +1,5 @@
 const mongoose = require('mongoose');
 
-
-
 const testSchema = new mongoose.Schema({
   teacherRef: {
     type: mongoose.Schema.Types.ObjectId,

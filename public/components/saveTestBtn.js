@@ -34,13 +34,17 @@ async function saveTestToDb() {
       headers: {'Content-Type': 'application/json'},
       credentials: 'include'
     })
-    if (res) {
-      console.log('res : ', res)
-      location.assign('/tests')
+    if (res.status === 400) {
+      const errorData = await res.json();
+      console.log('Chyba: ' + errorData.error);
+    } else if (res.ok) {
+      location.assign('/tests');
+    } else {
+      console.log('Něco se pokazilo.');
     }
   }
   catch (err) {
-    console.log(err)
+    console.log(err.errors);
   }
 }
 

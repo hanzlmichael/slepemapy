@@ -53,6 +53,22 @@
                   <span id="result-total-points"><%= data.result.points %>/</span>
                 </div>
               </div>
+              <button class="m-top1" id="editResult">Upravit výsledek</button>
+
+              <dialog id="editResultDialog">
+                <form method="dialog">
+                  <div>
+                    <label for="new-result-mark">Známka</label>
+                    <input class="input-form" id="new-result-mark" type="text">
+                  </div>
+                  <div>
+                    <label for="new-result-points">Body</label>
+                    <input class="input-form" id="new-result-mark" type="text">
+                  </div>                 
+                  <button class="btn btn--gray material-symbols-outlined" id="close">close</button>
+                  <button class="m-top1 btn btn--gray" id="save-changes">Uložit</button>
+                </form>
+              </dialog>
             </div>
           </div>
           <div id="answers-tab">
@@ -218,7 +234,6 @@
     display: block;
     overflow-x: hidden;
   }
-
   
   .options {
     display: grid;
@@ -228,7 +243,7 @@
     margin: 1rem 0;
 }
 
-  .btn {
+  #answers-tab .btn {
     background: rgb(239, 239, 239);
     border-radius: 0.25rem;
     padding: 1rem 0.1rem;
@@ -248,11 +263,11 @@
     border: none;
   }
 
-  .btn.red {
+  #answers-tab .btn.red {
     background: rgb(255 169 169);
   }
   
-  .btn.green {
+  #answers-tab .btn.green {
     background: rgb(172 245 164);
   }
 
@@ -277,6 +292,37 @@
   .upper-canvas, .lower-canvas, .canvas-container {
       pointer-events: none;
   }
+
+  /* DIALOG */
+
+  #editDialogResult {
+    position: relative;
+  }
+
+  :modal {
+    background-color: rgb(255, 255, 255);
+    border-radius: 0.25rem;
+    border:none;
+    padding:2.5rem;
+    margin: auto;
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
+  }
+
+  #save-changes {
+
+  }
+  #close {
+    position: absolute;
+    right:1rem;
+    top:1rem;
+    border-radius: 9999px;
+    border:none;
+    cursor: pointer;
+    padding: 0.5rem;
+    font-size: 1rem;
+  }
+
+
 
 
 </style>
@@ -456,6 +502,16 @@
         initUserAnswers(); 
         drawCanvases();
         initPoints();
+      });
+
+
+      /* EDIT DIALOG */
+      const editResult = document.getElementById('editResult');
+      const favDialog = document.getElementById('editResultDialog');
+
+      editResult.addEventListener('click', () => {
+
+        editResultDialog.showModal();
       });
 
 </script>

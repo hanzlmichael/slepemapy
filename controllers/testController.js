@@ -82,6 +82,10 @@ module.exports.getTestByIdTest = async (req, res) => {
 module.exports.postTest = async (req, res) => {
   const { title, maps, questions, marksBoundaries, timeLimit } = req.body;
 
+  if (!title) {
+    return res.status(400).json({ error: 'Chybí název testu' });
+  }
+
   const token = req.cookies.jwt;
 
   jwt.verify(token, process.env.JWT_SECRET_KEY, async (err, decodedToken) => {
@@ -98,7 +102,7 @@ module.exports.postTest = async (req, res) => {
         }
       }
       catch (err) {
-        console.log(err);
+        console.log('err here ', err.errors.title);
       }
     }
   });  

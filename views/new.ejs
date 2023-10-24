@@ -170,12 +170,13 @@
               </div>
               <div class="create-test-page" id="create-test-details">
                 <div id="test-name-wrap">
-                  <h4 class="wrap-heading-small">Název testu</h4>
+                  <h4 class="wrap-heading-small">Název testu</h4>                  
                   <% if (test) { %>
                     <input type="text" value="<%= test.title %>">
                     <% } else { %>
                       <input type="text">
                       <% } %>
+                      <span class="error" id="missing-title">Chybí název testu</span>
                 </div>
   
   
@@ -1101,5 +1102,13 @@ tr {
 }
 #saveTest:hover {
   background-color: #4983e0;
+}
+
+.error {
+  color:rgb(253, 43, 43);
+  font-size: 0.9rem;
+}
+#missing-title {
+  display:none;
 }
 </style>

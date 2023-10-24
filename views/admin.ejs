@@ -160,15 +160,15 @@
     background-color: inherit;
     color: rgb(83, 83, 83);
     font-weight: 500;
-    font-size: 1.5rem;
+    font-size: 1.1rem;
     text-transform: capitalize;
   }
 
   .panel div {
     display: flex;
-    padding: 0.5rem 1.5rem;
+    padding: 0.75rem 1.5rem;
     align-items: center;
-    gap: 1.2rem;
+    gap: 1rem;
     text-transform: capitalize;
   }
 
@@ -421,9 +421,10 @@
   }
 
   // fetch(`/users?position=${position}&batchSize=${batchSize}`)
-  const count = 2;
+  const count = 10;
   let position = 0;
   async function getAllTests() {
+    debugger;
     try {
       const res = await fetch(`/tests/all?count=${count}&position=${position}`, {
         method: 'GET',
@@ -436,7 +437,7 @@
           document.querySelector('#load-more-tests').style.display = 'none'
         }
         fillTestTable(tests.tests, testTable);
-        position = position + 2;
+        position = position + count;
         
       }
     }

@@ -1108,7 +1108,21 @@ tr {
   color:rgb(253, 43, 43);
   font-size: 0.9rem;
 }
+
 #missing-title {
   display:none;
 }
+
+@media only screen and (max-width: 1000px){
+  .maps-wrap {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media screen and (max-width:600px) {
+  .maps-wrap {
+    grid-template-columns: 1fr;
+  }
+}
+
 </style>

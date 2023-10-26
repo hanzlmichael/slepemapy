@@ -24,7 +24,9 @@
         <div class="title-wrap">
           <h2><%=test.title%></h2>
           
-          <div>Časový limit: <%=test.timeLimit%> minut</div>
+          <% if (test.timeLimit !== "null") { %>
+            <div>Časový limit: <%=test.timeLimit%> minut</div>
+          <% } %>    
         </div>
         <div class="info">
           <label for="firstName">Jméno</label>
@@ -39,7 +41,7 @@
       <div class="overlay-test">
         <div class="title-wrap">
           <h2>Test: <%=test.title%></h2>
-          <% if (test.timeLimit) { %>
+          <% if (test.timeLimit !== "null") { %>
             <div id="countdown" data-timelimit="<%=test.timeLimit%>"></div>
           <% } %>             
         </div>
@@ -419,15 +421,20 @@
       emailLabel.innerHTML = "Emailová adresa";
     }
     if (allInputsValid) {
-      initTime(Number(document.querySelector('#countdown').getAttribute('data-timelimit')));
-      startTime();
+      if (countElement) {
+        initTime(Number(document.querySelector('#countdown').getAttribute('data-timelimit')));
+        startTime();
+      }
       document.querySelector(".overlay-wrapper").style.display = "none";
       document.querySelector(".overlay-test").style.display = "grid";
     }
   }
 
-  let inSeconds = Number(document.querySelector('#countdown').getAttribute('data-timelimit')) * 60;
-  let timeId = document.querySelector('#countdown');
+  let countElement = document.querySelector('#countdown');
+  if (countElement) {
+    let inSeconds = Number(document.querySelector('#countdown').getAttribute('data-timelimit')) * 60;
+    let timeId = document.querySelector('#countdown');
+  }
 
   function initTime(x) {
     let timeString = "";

@@ -63,22 +63,6 @@
       console.log(err)
     }
   }
-  
- 
- /*  async function publishTest(id) {
-    console.log('yes')
-    await fetch(`/tests/${id.value}/publish`, { method: 'PUT' })
-      .then(response => response.json())
-      .then(data => {
-        if (data.refresh) {
-          console.log('yeee')
-          location.assign('tests')
-        }
-      })
-      .catch((err) => {
-        console.error(err); 
-      })
-  } */
 
 </script>
 
@@ -489,5 +473,26 @@ tippy('#results', {
   width: 100%;
   max-width: 70rem;
   margin: 0 auto;
+}
+
+@media only screen and (max-width: 1000px){
+  .tests-wrap {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  #add-new-test {
+    grid-column: span 2;
+  }
+}
+
+@media screen and (max-width:600px) {
+  .tests-wrap {
+    grid-template-columns: 1fr;
+  }
+
+  #add-new-test {
+    grid-column: span 1;
+    width: 100%;
+  }
 }
 </style>

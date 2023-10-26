@@ -8,6 +8,7 @@ const router = Router();
 router.post('/:testId', resultController.postResult);
 router.get('/:resultId', checkUser, resultController.getResultById);
 router.delete('/:resultId', resultController.deleteResultById);
+router.put('/:resultId', resultController.updateResultById);
 //router.get('/:testId/exam', testController.getExam);
 
 module.exports = router;

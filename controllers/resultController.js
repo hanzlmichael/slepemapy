@@ -48,3 +48,34 @@ module.exports.deleteResultById = async (req, res) => {
     res.status(500).json({ message: 'Nastala chyba při mazání dokumentu' });
   }
 }
+
+
+
+module.exports.updateResultById = async (req, res) => {
+  const { newMarkValue, newPointsValue } = req.body;
+  const resultId = req.params.resultId;
+  
+  const token = req.cookies.jwt;
+
+  jwt.verify(token, process.env.JWT_SECRET_KEY, async (err, decodedToken) => {
+    if (err) {
+      // Handle token verification error
+      res.sendStatus(403);
+    } else {
+      let teacherRef = decodedToken.id;
+      try {
+        const updatedResult = await Result.findByIdAndUpdate(resultId, { mark:newMarkValue, points: newPointsValue}, {
+          new: true, // returns the updated test instead of the original one
+          runValidators: true, // validates the updated test against the schema
+        });
+        if (updatedResult) {
+          console.log('updatedResult ', updatedResult)
+          res.status(200).json(updatedResult);
+        }
+      }
+      catch (err) {
+        console.log(err);
+      }
+    }
+  });  
+}

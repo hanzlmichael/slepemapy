@@ -70,9 +70,11 @@ body, html {
 .btn {
   border: none;
   outline: none;
+  display: flex;
+  align-items: center;
   border-radius: 0.25rem;
   padding: 0.65rem 1rem;
-  font-size: 0.8rem;
+  font-size: 1rem;
   font-weight: 500;
   text-transform: uppercase;
   cursor: pointer;
@@ -83,12 +85,33 @@ body, html {
   color: #e9e9e9;
 }
 
+.btn--gray {
+  color: #686867;
+}
+
 .btn--blue:hover {
   background-color: #4333f5;
 }
 
 .btn--gray:hover {
   background-color: #e7e7e7;
+}
+
+.btn--icon-before::before {
+  content: "";
+  display: inline-block;
+  width: 24px; /* Šířka ikony */
+  height: 24px; /* Výška ikony */
+  background-size: cover;
+  margin-right: 5px; /* Můžete přizpůsobit mezery podle potřeby */
+}
+
+.btn--icon-before-edit::before {
+  background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' height='24' viewBox='0 -960 960 960' width='24'><path d='M560-80v-123l221-220q9-9 20-13t22-4q12 0 23 4.5t20 13.5l37 37q8 9 12.5 20t4.5 22q0 11-4 22.5T903-300L683-80H560Zm300-263-37-37 37 37ZM620-140h38l121-122-18-19-19-18-122 121v38ZM240-80q-33 0-56.5-23.5T160-160v-640q0-33 23.5-56.5T240-880h320l240 240v120h-80v-80H520v-200H240v640h240v80H240Zm280-400Zm241 199-19-18 37 37-18-19Z' fill='%23686867'/></svg>");
+}
+
+.btn--icon-before-save::before {
+  background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' height='24' viewBox='0 -960 960 960' width='24'><path d='M840-680v480q0 33-23.5 56.5T760-120H200q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h480l160 160Zm-80 34L646-760H200v560h560v-446ZM480-240q50 0 85-35t35-85q0-50-35-85t-85-35q-50 0-85 35t-35 85q0 50 35 85t85 35ZM240-560h360v-160H240v160Zm-40-86v446-560 114Z' fill='%23686867'/></svg>");
 }
 
 .input-form {

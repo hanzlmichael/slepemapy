@@ -26,12 +26,16 @@
   <script defer src="/components/addShapes.js" type="module"></script>
   <script defer src="/draw/globalPrototypeSetting.js"></script>
   <script defer src="/components/saveTestBtn.js"></script>
+  <script defer src="/components/loader.js"></script>
 </head>
 
 <body>  
   <div class="layout">
     <%- include('partials/navbar'); %>
     <main class="new-test-main">
+      <div class="loader-overlay" id="load-test-overlay">
+        <div class="loader"></div>
+      </div>
       <div class="new-test-wrapper">
           <div class="go-back-wrapper">
               <a href="/tests" class="material-symbols-outlined gray80">chevron_left</a>
@@ -372,6 +376,7 @@
     display: grid;
     overflow-y: auto;
     width: 100%;
+    position: relative;
   }
   
 /*Navigace new test*/

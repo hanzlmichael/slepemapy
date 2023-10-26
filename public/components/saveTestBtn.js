@@ -24,6 +24,7 @@ function handleTestInDb() {
 
 async function saveTestToDb() {
   debugger;
+  showLoader(loadTestOverlay);
   try {
     let title = testTitle.value;
     let timeLimit = document.querySelector('#selectTimeLimit').value;
@@ -46,9 +47,13 @@ async function saveTestToDb() {
   catch (err) {
     console.log(err.errors);
   }
+  finally {
+    hideLoader(loadTestOverlay);
+  }
 }
 
 async function updateTestInDb(testId) {
+  showLoader(loadTestOverlay);
   try {
     let title = testTitle.value;
     let timeLimit = document.querySelector('#selectTimeLimit').value;
@@ -68,5 +73,8 @@ async function updateTestInDb(testId) {
   }
   catch (err) {
     console.log(err)
+  }
+  finally {
+    hideLoader(loadTestOverlay);
   }
 }

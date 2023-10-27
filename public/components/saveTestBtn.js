@@ -5,6 +5,11 @@ let testTitle = document.querySelector('#test-name-wrap input');
 saveTestBtn.addEventListener('click', handleTestInDb)
 
 function getMarksBoundaries() {
+  debugger;
+  marksBoundariesInputs = Array.from(marksBoundariesInputs);
+  console.log('1 ', marksBoundariesInputs)
+  marksBoundariesInputs = marksBoundariesInputs.slice(marksBoundariesInputs.length/2)
+  console.log('1 ', marksBoundariesInputs)
   let marksBoundaries = [];
   marksBoundariesInputs.forEach( mark => marksBoundaries.push(mark.value));
   return marksBoundaries;

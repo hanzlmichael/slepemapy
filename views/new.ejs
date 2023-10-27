@@ -186,6 +186,80 @@
   
                 <div class="marks-wrap">
                   <h4 class="wrap-heading-small">nastavení známkování</h4>
+                  <dialog id="editResultDialog">
+                    <form method="dialog">
+                      <div>
+                        - Body se nesmí překrývat
+                      </div>
+                      <div>
+                        - Příklad správného nastavení pro 20 bodů:
+                        <table class="m-top1">
+                          <thead>
+                            <tr class="head-row">
+                              <td>známka</td>
+                              <td>body</td>
+                            </tr>
+                          </thead>
+                            <tr>
+                              <td>
+                                <span class="mark-number">1</span>
+                              </td>
+                              <td>
+                                <input class="table-input-number" type="number" value="19" readonly>
+                                <span class="dash">–</span>
+                                <input class="table-input-number" type="number" value="20" readonly>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <span class="mark-number">2</span>
+                              </td>
+                              <td>
+                                <input class="table-input-number" type="number" value="17" readonly>
+                                <span class="dash">–</span>
+                                <input class="table-input-number" type="number" value="18" readonly>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <span class="mark-number">3</span>
+                              </td>
+                              <td>
+                                <input class="table-input-number" type="number" value="15" readonly>
+                                <span class="dash">–</span>
+                                <input class="table-input-number" type="number" value="16" readonly>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <span class="mark-number">4</span>
+                              </td>
+                              <td>
+                                <input class="table-input-number" type="number" value="13"readonly>
+                                <span class="dash">–</span>
+                                <input class="table-input-number" type="number" value="14"readonly>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <span class="mark-number">5</span>
+                              </td>
+                              <td>
+                                <input class="table-input-number" type="number" value="0"readonly>
+                                <span class="dash">–</span>
+                                <input class="table-input-number" type="number" value="12"readonly>
+                              </td>
+                            </tr>
+                        </table>
+                        <div class="total-points-wrap">
+                          <span>Celkový počet bodů je: </span>
+                          <span class="total-points-value">20</span>
+                        </div>
+                      </div>                 
+                      <button class="btn btn--gray material-symbols-outlined" id="close">close</button>
+                     
+                    </form>
+                  </dialog>
                   <table>
                     <thead>
                       <tr class="head-row">
@@ -958,6 +1032,21 @@
   width: 100%;
   max-width: 40rem;
 }
+
+.marks-wrap h4::after {
+  content: '\e887';
+  font-family: 'Material Symbols Outlined';
+  margin-left:0.5rem;
+  cursor:Pointer;
+  color: rgb(39 126 237);
+  font-size: 1.5rem;
+}
+
+.marks-wrap h4 {
+  display:flex;
+  align-items:center;
+}
+
 table {
   background-color: rgb(255 255 255);
   border-collapse: collapse;
@@ -1062,7 +1151,7 @@ tr {
     font-weight: 600;
 }
 
-#total-points-value {
+#total-points-value, .total-points-value {
   padding: 0 0.5rem;
     background: #ffffff;
     border-radius: 0.25rem;
@@ -1130,4 +1219,47 @@ tr {
   }
 }
 
+#editDialogResult {
+  position: relative;
+}
+
+:modal {
+  background-color: rgb(255, 255, 255);
+  border-radius: 0.25rem;
+  border:none;
+  padding:2.5rem;
+  margin: auto;
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
+}
+
+#save-changes {
+
+}
+#close {
+  position: absolute;
+  right:1rem;
+  top:1rem;
+  border-radius: 9999px;
+  border:none;
+  cursor: pointer;
+  padding: 0.5rem;
+  font-size: 1rem;
+}
+
 </style>
+
+<script>
+  let marksInfoIconBtn = document.querySelector('.marks-wrap h4');
+  marksInfoIconBtn.addEventListener('click', showModalTableClue);
+
+      const closeDialogBtn = document.querySelector('#close');
+
+      closeDialogBtn.addEventListener('click', () => {
+        editResultDialog.close();
+      })
+
+
+  function showModalTableClue() {
+    editResultDialog.showModal();
+  }
+</script>

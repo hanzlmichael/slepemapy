@@ -15,8 +15,9 @@ function startDraw(o) {
     clicks--;
     points[clicks] = points[0]
     points.pop()
-    drawFinalPolygon() 
-    resetValues()    
+    drawFinalPolygon();
+    resetValues();
+    removeSelection();    
     return;
   }
   canvas.on("mouse:move", drawFinal)

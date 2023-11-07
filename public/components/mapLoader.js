@@ -1,11 +1,18 @@
-const MAX_MAP_COUNT = 5;
+import { selectMap, mapsWrap } from '../inits/definitions.js';
+import { test, maps, actualQuestionIndex } from '../components/questionBar.js';
+import { Map } from '../components/classes.js';
 
-/* Nahrávání map PAGE 1 */
-document.querySelector('#map-upload').addEventListener('change', handleMap);
-document.querySelector('.maps-wrap').addEventListener('click', deleteMap);
-    
-let mapCount = 0;
+export const MAX_MAP_COUNT = 5;
+export let mapCount = 0;
+export const setMapCoundToMapsLength = (value) => mapCount = value;
 let resultImage = document.querySelector(".maps-wrap");
+
+export function initMapLoader() {
+  /* Nahrávání map PAGE 1 */
+  document.querySelector('#map-upload').addEventListener('change', handleMap);
+  document.querySelector('.maps-wrap').addEventListener('click', deleteMap);
+  observe();  
+}
 
 function handleMap(e) {  
 	let input = e.target;
@@ -45,9 +52,14 @@ function handleMap(e) {
 }
 
 function deleteMap(e) {
+  debugger;
   if (e.target.matches('.close-map')) {
     document.querySelector('#map-upload').value = null;
-    let clickedMap = e.target.closest('.map-wrap');
+    let clickedMap = e.target.closest('.map-wrap');    
+    if (checkIfQuestionContainsMap(clickedMap.id)) {
+      alert('Mapu nelze smazat, protože je vykreslena v některých otázkách');      
+      return;
+    }
     clickedMap.remove();
     mapCount--;
   }
@@ -56,13 +68,30 @@ function deleteMap(e) {
   }
 }
 
+function checkIfQuestionContainsMap(mapId) {
+  debugger;
+  let questionsWhichContainsMapId = [];
+  for (let i = 0; i < test.questions.length; i++) {
+    if (mapId === test.questions[i].map) {
+      questionsWhichContainsMapId.push(i+1);
+    }
+  }
+  if (selectMap.children[selectMap.selectedIndex].value === mapId) {
+    questionsWhichContainsMapId.push(actualQuestionIndex+1);
+  }
+  if (questionsWhichContainsMapId.length === 0) {
+    return false;
+  }
+  return true;
+}
+
 // sledovane zmeny
 const config = {
   childList: true
 }
 
 // sledovany node
-const targetNode = mapsWrap;
+const targetNode = resultImage;
 console.log("targetNOde: ", targetNode);
 
 function observe() {
@@ -95,8 +124,6 @@ function observe() {
   observer.observe(targetNode, config);
 }
 
-observe();
-
 const randomId = function(length = 6) {
   return Math.random().toString(36).substring(2, length+2);
 };
@@ -113,8 +140,4 @@ function createUniqueMapId(lastAddedMapSrc) {
 
 function checkDuplicitiesInMaps(id) {
   return maps.find(element => element === id);
-}
-
-function mapTitle() {
-  return 
 }

@@ -9,6 +9,7 @@ const testRoutes = require('./routes/testRoutes');
 const examRoutes = require('./routes/examRoutes');
 const resultRoutes = require('./routes/resultRoutes');
 const userRoutes = require('./routes/userRoutes');
+const passwordRoutes = require('./routes/passwordRoutes');
 const { requireAuth, isAdmin } = require('./middleware/authMiddleware');
 
 const app = express()
@@ -49,3 +50,31 @@ app.use('/results', resultRoutes);
 app.get('/admin', requireAuth, isAdmin, (req, res) => res.render('admin'));
 app.use('/users', userRoutes);
 app.use(authRoutes);
+app.use(passwordRoutes);
+
+
+app.get('/forgot-password', (req, res, next) => {
+  res.render('forgot-password');
+})
+app.post('/forgot-password', (req, res, next) => {
+  const { email } = req.body;
+ 
+  // zjistit jestli uzivatel existuje v databazi, pokud ne tak return
+
+
+  // uzivatel existuje tka vytvorim jednorazovy link platny po dobu x minut
+
+
+
+})
+app.get('/reset-password/:id/:token', (req, res, next) => {
+  const { id, token } = req.params;
+  
+  // zkontrolovat jestli tohle id uzivatele existuje v databazi
+
+
+  // pokud id existuje, tak zkontrolujeme token
+})
+app.post('/reset-password', (req, res, next) => {
+  
+})

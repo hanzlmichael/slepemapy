@@ -1,7 +1,9 @@
 import { removeSelection } from '../components/addShapes.js'
+import { canvas } from '../inits/canvas.js';
 
 let pointsCount = 0
 let polylinePoints = []
+const fillColor = '#ff757d';
 
 export function startDrawLine() {
 	canvas.on('mouse:down', drawCircle)  

@@ -2,6 +2,7 @@
 <div class="navbar">
   <div class="navbar-wrap">
     <% if (user) { %>
+      <!-- <button id="menu" class="material-symbols-outlined">menu</button> -->
       <a class="logo" href="/tests">blankmaps</a>
       <% } else { %>
         <a class="logo" href="/">blankmaps</a>
@@ -16,6 +17,20 @@
 </div>
 
 <style>
+  #menu {
+    color: white;
+    background: transparent;
+    position: relative;
+    border:none;
+    cursor:pointer;
+    outline:none;
+    font-size: 2rem;
+    display:none;
+  }
+  #menu:hover {
+    background-color: #494949;
+  }
+
   .black-line {
     height: 4rem;
     width: 100%;
@@ -69,5 +84,16 @@
   .login:hover {
     background-color: #494949;
   }
+
+  @media screen and (max-width:900px) {
+    #menu {
+      display: unset;
+    }
+    .navbar-wrap {
+      display: flex;
+      align-items: center;
+    }
+  }
+  
 
 </style>

@@ -1,46 +1,49 @@
-var canvas = new fabric.Canvas('canvas');
+import { Test } from '../components/classes.js';
+import { wrapQuestionsElem, questions, maps, test, actualQuestionIndex, setActualQuestionIndexToZero, setActualQuestionIndexToMinusOne, assignQuestions, assignMaps, assignTest} from '../components/questionBar.js';
+import { drawQuestion } from '../components/question.js';
+import { mapCount, setMapCoundToMapsLength } from '../components/mapLoader.js';
 
-let selectMap = document.querySelector('#select-map');
-let mapsWrap = document.querySelector('.maps-wrap');
+export let selectMap = document.querySelector('#select-map');
+export let mapsWrap = document.querySelector('.maps-wrap');
 
-const deleteQuestionBtn = document.querySelector('#deleteQuestionBtn');
-const wrapQuestions = document.querySelector('.wrap-questions')
-const questionNumber = document.querySelector('#question-number');
+export const deleteQuestionBtn = document.querySelector('#deleteQuestionBtn');
+export const wrapQuestions = document.querySelector('.wrap-questions')
+export const questionNumber = document.querySelector('#question-number');
+
+export function initDefinitions() {
+  debugger;
+  if (testBSON(window.location.href)) {
+    document.addEventListener('DOMContentLoaded', getTestByIdTest)
+  }
+}
 
 
-function numberOfQuestions() {
+export function numberOfQuestions() {
   return wrapQuestionsElem.querySelectorAll('input').length + 1;
 }
 
-function hideElement(elem) {
+export function hideElement(elem) {
   elem.style.visibility = "hidden"
 }
 
-function showElement(elem) {
+export function showElement(elem) {
   elem.style.visibility = "visible"; 
 } 
 
-function setLastQuestionIconAsChecked() {
+export function setLastQuestionIconAsChecked() {
   wrapQuestionsElem.querySelector('span:last-of-type input').checked = true;
 }
 
-function sumOfQuestions() {
+export function sumOfQuestions() {
   return questions.length;
 }
 
-function valueOfQuestion() {
+export function valueOfQuestion() {
   return Number(wrapQuestions.querySelector('input:checked + label').textContent);
 }
 
-function indexOfQuestion() {
+export function indexOfQuestion() {
   return Number(wrapQuestions.querySelector('input:checked + label').textContent - 1);
-}
-
-
-if (testBSON(window.location.href)) {
-  debugger;
-  document.addEventListener('DOMContentLoaded', getTestByIdTest)
-
 }
 
 function testNewPath() {
@@ -49,7 +52,7 @@ function testNewPath() {
   if (lastPart == 'new') return true;
   return false;
 }
-function testBSON(inputString) {
+export function testBSON(inputString) {
   const urlArray = inputString.split('/');
   let bsonPart = urlArray[urlArray.length - 2];
   if (/^[0-9a-fA-F]{24}$/.test(bsonPart)) {
@@ -58,7 +61,7 @@ function testBSON(inputString) {
   return false  
 }
 
-function getTestById() {
+export function getTestById() {
   debugger;
   let url = window.location.href;
   let urlArray = url.split('/');
@@ -83,7 +86,7 @@ function getTestById() {
       })     
 }
 
-function getTestByIdTest() {
+export function getTestByIdTest() {
   debugger;
   let url = window.location.href;
   let urlArray = url.split('/');
@@ -95,23 +98,27 @@ function getTestByIdTest() {
       .then(data=> {
         debugger;
         console.log(data);
-        /* test = data.test; */
-        questions = data.test.questions;
-        maps = data.test.maps;
-        test = new Test( data.test.title, maps, questions, data.test.isActive, data.test.marksBoundaries, data.test.timeLimit )
+
+        assignQuestions(data.test.questions)
+        assignMaps(data.test.maps);
+        let newTest = new Test( data.test.title, maps, questions, data.test.isActive, data.test.marksBoundaries, data.test.timeLimit);
+        assignTest(newTest);
 
         // let test = new Test("", maps, questions, false, [], null);
 
         console.log('test OBJ : ', test);
-        actualQuestionIndex = 0;
+        //actualQuestionIndex = 0;
+        setActualQuestionIndexToZero();
 
         // inicializace poctu nahratych map
-        mapCount = maps.length;
+        //mapCount = maps.length;
+        setMapCoundToMapsLength(maps.length);
 
         if (test.questions.length > 0) {
           drawQuestion();
         } else {
-          actualQuestionIndex = -1;
+          //actualQuestionIndex = -1;
+          setActualQuestionIndexToMinusOne();
         }
       })  
 }

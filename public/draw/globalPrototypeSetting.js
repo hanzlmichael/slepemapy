@@ -1,15 +1,17 @@
+import { canvas } from '../inits/canvas.js';
+
 function setDefaultCursor() {
   fabric.Object.prototype.moveCursor = "default"
   fabric.Object.prototype.hoverCursor = "default"
 }
 
-function turnOfControls(obj) {
-  let controls = ["tl", "tr", "br", "bl", "ml", "mt", "mr", "mb", "mtr"]
+export function turnOfControls(obj) {
+  let controls = [ "ml", "mt", "mr", "mb", "mtr"]
   /* controls.forEach((control) => obj.setControlVisible(control, false)) */
   controls.forEach(control => fabric.Object.prototype.setControlVisible(control, false))
-  fabric.Object.prototype.moveCursor = "default"
+  /* fabric.Object.prototype.moveCursor = "default" */
   //fabric.Object.prototype.hoverCursor = "default"
-  fabric.Object.prototype.hoverCursor = "default"
+  /* fabric.Object.prototype.hoverCursor = "default" */
 }
 
 function initObjectDeleteIcon() {
@@ -49,13 +51,22 @@ function initObjectDeleteIcon() {
   }
 }
 
-function activateSettings() {
-  fabric.Object.prototype.padding = 10;
+export function activateSettings() {
+  /* fabric.Object.prototype.padding = 10;
   fabric.Object.prototype.borderColor = "rgb(211,33,45)"
-  fabric.Object.prototype.borderDashArray = [5]
+  fabric.Object.prototype.borderDashArray = [5] */
+  fabric.Object.prototype.padding = 4;
+  fabric.Object.prototype.borderColor = "rgb(211,33,45)";
+  fabric.Object.prototype.borderDashArray = [3,3];
+  fabric.Object.prototype.transparentCorners= false;
+  fabric.Object.prototype.cornerColor ='white';
+  fabric.Object.prototype.cornerStrokeColor='red';
+  fabric.Object.prototype.borderColor= 'red';
+  fabric.Object.prototype.cornerSize= 6;
+  fabric.Object.prototype.cornerStyle='rect';
 }
 
-function activateZooming() {
+export function activateZooming() {
   canvas.on('mouse:wheel', function(opt) {
     var delta = opt.e.deltaY;
     var zoom = canvas.getZoom();
@@ -68,7 +79,11 @@ function activateZooming() {
   });
 }
 
-activateSettings();
-activateZooming();
-turnOfControls();
-initObjectDeleteIcon();
+export function initGlobalPrototypeSettings() {
+  activateSettings();
+  activateZooming();
+  turnOfControls();
+  initObjectDeleteIcon();
+  setDefaultCursor();
+}
+

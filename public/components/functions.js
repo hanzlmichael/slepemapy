@@ -1,3 +1,6 @@
+import { test, actualQuestionIndex } from '../components/questionBar.js';
+import { drawQuestion } from '../components/question.js';
+
 function getTestById() {
   let url = window.location.href;
   const lastString = url.split("/").pop();

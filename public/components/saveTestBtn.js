@@ -1,8 +1,14 @@
+import { showLoader, hideLoader, loadTestOverlay } from "./loader.js";
+import { test, questions, maps } from '../components/questionBar.js';
+
 let saveTestBtn = document.querySelector('#saveTest');
 let marksBoundariesInputs = document.querySelectorAll('.table-input-number');
 let testTitle = document.querySelector('#test-name-wrap input');
 
-saveTestBtn.addEventListener('click', handleTestInDb)
+
+export function initSaveBtn() {
+  saveTestBtn.addEventListener('click', handleTestInDb)
+}
 
 function getMarksBoundaries() {
   debugger;

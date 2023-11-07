@@ -1,16 +1,30 @@
+import { canvas } from '../inits/canvas.js';
+import { Test, Question } from '../components/classes.js';
+import { selectMap, questionNumber, numberOfQuestions, setLastQuestionIconAsChecked, valueOfQuestion, showElement, indexOfQuestion } from '../inits/definitions.js';
+import { saveQuestion, drawQuestion, getMap } from '../components/question.js';
+
 /* Vytváření otázek*/
-let wrapQuestionsElem = document.querySelector(".wrap-questions");
-let addNewQuestionBtn = document.querySelector("#add-new-question");
-let panel = document.querySelector('.panel-testing');
-let canvasWrap = document.querySelector('.canvas-wrap-testing');
-let maps = [];
-let questions = [];
-let test = new Test("", maps, questions, false, [], null);
-let actualQuestionIndex = test.questions.length === 0 ? -1 : 0;
+export let wrapQuestionsElem = document.querySelector(".wrap-questions");
+export let addNewQuestionBtn = document.querySelector("#add-new-question");
+export let panel = document.querySelector('.panel-testing');
+export let canvasWrap = document.querySelector('.canvas-wrap-testing');
+export let maps = [];
+export let questions = [];
+export let test = new Test("", maps, questions, false, [], null);
+export let actualQuestionIndex = test.questions.length === 0 ? -1 : 0;
+export const decActualQuestionIndex = () => actualQuestionIndex = actualQuestionIndex - 1;
+export const incActualQuestionIndex = () => actualQuestionIndex = actualQuestionIndex + 1;
+export const setActualQuestionIndexToZero = () => actualQuestionIndex = 0;
+export const setActualQuestionIndexToMinusOne = () => actualQuestionIndex = -1;
 
+export const assignQuestions = (dataQuestions) => questions = dataQuestions;
+export const assignMaps = (dataMaps) => maps = dataMaps;
+export const assignTest = (dataTest) => test = dataTest;
 
-addNewQuestionBtn.addEventListener("click", addQuestion);
-wrapQuestionsElem.addEventListener('input', changeQuestion);
+export function initQuestionBar() {
+  addNewQuestionBtn.addEventListener("click", addQuestion);
+  wrapQuestionsElem.addEventListener('input', changeQuestion);
+}
 
 function addQuestion() {  
   let mapWraps = document.querySelectorAll('.map-wrap');
@@ -25,13 +39,20 @@ function addQuestion() {
   /* createQuestionObject(); */
   showElement(panel);
 
-  if (mapWraps.length === 1) {
+  /* if (mapWraps.length === 1) {
     selectMap.selectedIndex = "1";
     createQuestionObject(getMap());
     simulateSelectMapEvent();
   } else {
     createQuestionObject(null);
+  } */
+  if (maps.length === 1) {
+    selectMap.selectedIndex = "1";
+    createQuestionObject(getMap());
+  } else {
+    createQuestionObject(null);
   }
+
   drawQuestion();
 }
 

@@ -1,13 +1,26 @@
-const progressBarHeadingsCount = 3;
-let progressBarHeadings = ["Nahrátí map", "Tvorba otázek", "Dokončení"];
-let progressBarHeading = document.querySelector("#progress-bar-heading");
-let headingNumber = 0;
-let rectangles = document.querySelectorAll('.rectangle')
-let actualPageIndex = 0;
-// Stránka pro vytváření map, vytváření otázek a dokončení testu
-let createTestPages = document.querySelectorAll('.create-test-page');
+import { showElement } from '../inits/definitions.js';
+import { drawQuestion, saveQuestion } from '../components/question.js';
+import { test, panel, canvasWrap } from '../components/questionBar.js';
 
-function prevState() {
+
+export const progressBarHeadingsCount = 3;
+export let progressBarHeadings = ["Nahrátí map", "Tvorba otázek", "Dokončení"];
+export let progressBarHeading = document.querySelector("#progress-bar-heading");
+export let headingNumber = 0;
+export let rectangles = document.querySelectorAll('.rectangle')
+export let actualPageIndex = 0;
+  // Stránka pro vytváření map, vytváření otázek a dokončení testu
+export let createTestPages = document.querySelectorAll('.create-test-page');
+
+let prevBtn = document.querySelector('#prev-btn');
+let nextBtn = document.querySelector('#next-btn');
+
+export function initPageSwitcher() {
+  prevBtn.addEventListener('click', prevState);
+  nextBtn.addEventListener('click', nextState);
+}
+
+export function prevState() {
   headingNumber--;
   /* isCreateOfQuestionsActive(); */
   handleChangePages("dec");
@@ -19,7 +32,7 @@ function prevState() {
   progressBarHeading.innerText = progressBarHeadings[headingNumber];
 }
 
-function nextState() {
+export function nextState() {
   headingNumber++;
   isPageCreateTestDetailsActive();
   isCreateOfQuestionsActive() 
@@ -40,7 +53,7 @@ function isCreateOfQuestionsActive() {
   }
   if (test.questions.length > 0) {
     showElement(panel);
-    if (test.questions[0].map) {
+    if (test.questions[0].map !== "null") {
       showElement(canvasWrap);
       /* drawQuestion(); */
     }
@@ -51,7 +64,7 @@ function isCreateOfQuestionsActive() {
 function isPageCreateTestDetailsActive() {
   debugger;
   if (headingNumber == 2) {
-    if (questions.length > 0) {
+    if (test.questions.length > 0) {
       saveQuestion();
       drawQuestion();
     }
@@ -63,8 +76,8 @@ function isPageCreateTestDetailsActive() {
 
 function sumOfQuestionsPoints() {
   let sum = 0;
-  for (let i = 0; i < questions.length; i++) {
-    sum = sum + questions[i].points;
+  for (let i = 0; i < test.questions.length; i++) {
+    sum = sum + test.questions[i].points;
   }
   return sum;
 }

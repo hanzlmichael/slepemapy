@@ -53,7 +53,9 @@
                   <span id="result-total-points"><%= data.result.points %>/</span>
                 </div>
               </div>
-              <button value="<%= data.result._id %>" class="m-top1 btn btn--icon-before btn--gray btn--icon-before-edit" id="editResult">Upravit výsledek</button>
+              <% if (isAuthor) { %>
+                <button value="<%= data.result._id %>" class="m-top1 btn btn--icon-before btn--gray btn--icon-before-edit" id="editResult">Upravit výsledek</button>
+              <% } %>
 
               <dialog id="editResultDialog">
                 <form method="dialog">

@@ -1,4 +1,7 @@
-import { removeSelection } from '../components/addShapes.js'
+import { removeSelection } from '../components/addShapes.js';
+import { canvas } from '../inits/canvas.js';
+
+const fillColor = '#ff757d';
 
 export function startDrawPoint() {
 	canvas.on('mouse:down', drawCircle)

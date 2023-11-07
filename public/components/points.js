@@ -2,10 +2,13 @@ const incPointBtn = document.querySelector('#inc-point');
 const decPointBtn = document.querySelector('#dec-point');
 const MAX_POINT_VALUE = 10;
 const MIN_POINT_VALUE = 1;
-let pointValue = document.querySelector('#point-value');
+export let pointValue = document.querySelector('#point-value');
 
-incPointBtn.addEventListener('click', incPointValue);
-decPointBtn.addEventListener('click', decPointValue);
+
+export function initPoints() {
+  incPointBtn.addEventListener('click', incPointValue);
+  decPointBtn.addEventListener('click', decPointValue);
+}
 
 function decPointValue(e) {
   validatePointValue(e);

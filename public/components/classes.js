@@ -1,4 +1,4 @@
-class Test {
+export class Test {
   constructor(testTitle, maps, questions, isActive, marksRange, completeUntil) {
     this.testTitle = testTitle;
     this.maps = maps;
@@ -9,7 +9,7 @@ class Test {
   }
 }
 
-class Question {
+export class Question {
   constructor(answers, points, map, shapes) {
     this.answers = answers;
     this.points = points;
@@ -18,7 +18,7 @@ class Question {
   }
 }
 
-class Answer {
+export class Answer {
   constructor(term, isCorrect) {
     this.term = term;
     this.isCorrect = isCorrect;
@@ -45,7 +45,7 @@ class Answer {
   }
 }
 
-class Map {
+export class Map {
   constructor(mapId, title, data) {
     this.mapId = mapId;
     this.title = title;

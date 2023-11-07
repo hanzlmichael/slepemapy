@@ -451,13 +451,15 @@
   }
 
   function startTime() {
+    let inSeconds = Number(document.querySelector('#countdown').getAttribute('data-timelimit')) * 60;
+    let timeId = document.querySelector('#countdown');
     let interval = setInterval(function() {
       let minutes = Math.floor(inSeconds/60);
       let seconds = inSeconds % 60;
       timeId.innerHTML = `${ minutes < 10 ? "0" + minutes : minutes}:${inSeconds%60 < 10 ? "0" + seconds : seconds}`;
       inSeconds = inSeconds - 1;
       if (inSeconds === -1) {
-        //evaluateTest(); 
+        evaluateTest(); 
         clearInterval(interval);
       }
     }, 1000); 

@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const Test = require('../models/Test');
+const Result = require('../models/Result') ;
 
 const checkUser = (req, res, next) => {
   const token = req.cookies.jwt;
@@ -102,6 +103,53 @@ const checkAuthor = async (req, res, next) => {
   }
 }
 
+const isAuthor = async (req, res, next) => {
+  const token = req.cookies.jwt;
+
+  if (token) {
+
+    jwt.verify(token, process.env.JWT_SECRET_KEY, async (err, decodedToken) => {
+      if (err) {
+        res.locals.isAuthor = null;
+        next();
+      } else {
+        const url = req.url;
+        const parts = url.split('/');
+        const resultId = parts[parts.length - 1];
+
+        let testRef;
+        let authorId;
+        try {
+          testRef = await Result.findById(resultId).select("testRef");
+          console.log('HERE - testRef: ', testRef)
+        } catch(err) {
+          console.log(err)
+        }
+        try {
+          console.log('testRef in HERE : ', testRef.testRef)
+          authorId = await Test.findById(testRef.testRef).select("teacherRef");
+          console.log('HERE - authorId: ', authorId.teacherRef)
+        } catch(err) {
+          console.log(err)
+        }
+        console.log('authorId.teacherRef === decodedToken.id', authorId.teacherRef, decodedToken.id);
+
+        if (authorId.teacherRef.toString() === decodedToken.id) {
+          res.locals.isAuthor = true;
+        } else {
+          res.locals.isAuthor = null;
+        }
+        next();
+      }
+    })
+  } else {
+    res.locals.isAuthor = null;
+    next();
+  }
+  
+
+}
+
 
 const isAdmin = async (req, res, next) => {
   const token = req.cookies.jwt;
@@ -127,4 +175,4 @@ const isAdmin = async (req, res, next) => {
 
 
 
-module.exports = { checkUser, requireAuth, checkAuthor, isAdmin };
+module.exports = { checkUser, requireAuth, checkAuthor, isAdmin, isAuthor};

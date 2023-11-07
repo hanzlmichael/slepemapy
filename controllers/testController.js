@@ -70,11 +70,16 @@ module.exports.getTestByIdTest = async (req, res) => {
   try {
     const test = await Test.findById(testId);
     if (test) {
-      res.json({ test });
+      console.log('get test by id test : ', test)
+      return res.json({ test });
+    } else {
+      // Pokud test nebyl nalezen, můžete poslat chybovou odpověď.
+      return res.status(404).json({ error: 'Test not found' });
     }
-  }
-  catch(err) {
-    console.log(err)
+  } catch (err) {
+    console.log(err);
+    // Pokud došlo k chybě, můžete také poslat chybovou odpověď.
+    return res.status(500).json({ error: 'Internal server error' });
   }
 }
 

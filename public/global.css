@@ -3,6 +3,11 @@
   box-sizing:border-box;
   margin:0;
   padding:0;  
+  /* cursor: url('../images/magicwand.png'), auto; */
+}
+
+.magic-wand {
+  cursor: url('../images/magicwandblack.png'), auto;
 }
 
 :root {

@@ -1,14 +1,17 @@
-const addAnswerWrapBtn = document.querySelector('#add-answer-wrap');
-const answersWrap = document.querySelector('#answers-wrap');
-document.querySelector('#answers-wrap').addEventListener('click', removeAnswerWrap)
 
-addAnswerWrapBtn.addEventListener('click', appendAnswerToDom);
+const addAnswerWrapBtn = document.querySelector('#add-answer-wrap');
+export const answersWrap = document.querySelector('#answers-wrap');
+
+export function initAnswer() {
+  answersWrap.addEventListener('click', removeAnswerWrap)  
+  addAnswerWrapBtn.addEventListener('click', appendAnswerToDom);
+}
 
 function appendAnswerToDom() {
   answersWrap.appendChild(createNewAnswer("", false));
 }
 
-function createNewAnswer(term, isCorrect) {
+export function createNewAnswer(term, isCorrect) {
   // Create the main div with class "answer-wrap"
   const answerWrap = document.createElement("div");
   answerWrap.className = "answer-wrap";
@@ -54,7 +57,7 @@ function createNewAnswer(term, isCorrect) {
   return answerWrap;
 }
 
-function onlyOne(checkbox) {
+export function onlyOne(checkbox) {
   var checkboxes = document.getElementsByName('check')
   let closestAnswerWrapElem = checkbox.closest('.answer-wrap')
   if (closestAnswerWrapElem.classList.contains('answer-wrap-green')) {

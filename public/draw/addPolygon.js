@@ -1,4 +1,6 @@
 import { removeSelection } from '../components/addShapes.js'
+import { canvas } from '../inits/canvas.js';
+import { turnOfControls } from '../draw/globalPrototypeSetting.js';
 
 let points = [];
 let clicks = 0;
@@ -44,7 +46,7 @@ function finishShape() {
 export function startDrawPolygon() {
   canvas.on('mouse:dblclick', finishShape)
   turnOfControls();
-  activateSettings() 
+  activateSettings();
   canvas.off('mouse:move')
   canvas.off('mouse:down')
 
@@ -103,7 +105,7 @@ function drawFinalPolygon() {
   let deepCopy = structuredClone(points)
   let poly = new fabric.Polyline(deepCopy, {
     fill: permColor,
-    stroke: permColor,
+    //stroke: permColor,
     shapeType: "permament"
   });
   canvas.add(poly)

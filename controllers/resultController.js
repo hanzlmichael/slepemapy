@@ -50,7 +50,6 @@ module.exports.deleteResultById = async (req, res) => {
 }
 
 
-
 module.exports.updateResultById = async (req, res) => {
   const { newMarkValue, newPointsValue } = req.body;
   const resultId = req.params.resultId;

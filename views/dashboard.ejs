@@ -70,14 +70,21 @@
   <div class="layout">
     <%- include('partials/navbar'); %>
     <main class="test-result-wrapper">
-      <div>
-      <div class="tests-wrap" id="tests-page">
-        
-        <a id="add-new-test" href="/tests/new">
+      <div class="navigation">
+        <a class="navigation-btn navigation-btn--blue" id="add-new-test" href="/tests/new">
           <span class="material-symbols-outlined">add</span>
           <span>nový test</span>
         </a>
+        <% if (admin) { %>
+          <a class="navigation-btn navigation-btn--gray" href="/admin">
+            <span>administrace</span>
+            <span class="material-symbols-outlined">keyboard_arrow_right</span>
+          </a>
+          <% } %>
       
+      </div>
+      <div>
+      <div class="tests-wrap" id="tests-page">
         <% if (tests.length == 0) { %>
           <div class="noTestWrap">Nemáte žádné vytvořené testy...</div>
         <% } %>
@@ -228,6 +235,45 @@ tippy('#results', {
   font-weight:600;
   letter-spacing:0.075rem;
   text-decoration: none;
+}
+
+.navigation {
+  display:flex;
+  padding:1rem 1rem 0 1rem;
+  gap:1rem;
+}
+
+.navigation-btn {
+  border:none;
+  outline:none;
+  grid-column: span 3;
+  justify-self: flex-start;
+  border-radius: 0.5rem;
+  padding:1rem;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+  gap:0.5rem;
+  width:15rem;
+  font-size:1rem;
+  text-transform:uppercase;
+  font-weight:600;
+  letter-spacing:0.075rem;
+  text-decoration: none;
+}
+.navigation-btn--blue {
+  background-color: rgb(171 183 241 / 68%);
+  color: rgb(75 16 203);
+}
+.navigation-btn--gray {
+  color: rgb(35 35 35);
+  background-color: rgb(230,230,230);
+}
+
+.navigation-btn--gray:hover {
+  color: rgb(35 35 35);
+  background-color: rgb(213, 213, 213);
 }
 
 #add-new-test:hover {

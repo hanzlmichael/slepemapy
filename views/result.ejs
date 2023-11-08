@@ -22,6 +22,7 @@
   <body>
     <div class="layout">
       <%- include('partials/navbar'); %>
+      <div class="main">
       <div class="result-wrapper">
         <% if (user) { %>
           <div class="go-back-wrapper">
@@ -97,14 +98,17 @@
           </div>
         </div>
       </div>
+    </div>
   </body>
 
 <style>
   .result-wrapper {
     box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
-    width: 70rem;
+    max-width: 70rem;
     background-color: white;
     padding: 1rem;
+    width: 100%;
+    margin: 0 auto;
   }
 
   .tabs-navigation {
@@ -372,6 +376,7 @@
   let questionIcons = document.querySelectorAll('.question');
 
   function initUserAnswers() {
+    debugger;
     userIndexes = findWhereDataIsCorrect(); 
     let len = answerIndexes.length;
     

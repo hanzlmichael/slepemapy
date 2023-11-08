@@ -160,6 +160,7 @@
                       <div>
                         <div class="wrap-heading-small">Odpovědi</div>
                         <button class="material-symbols-outlined" id="add-answer-wrap">add</button>
+                        <button class="material-symbols-outlined" id="shuffle-answers-btn">shuffle</button>
                         <div id="answers-wrap"></div>
                       </div>
                       <div class="line-separator"></div>
@@ -179,7 +180,7 @@
               </div>
               <div class="create-test-page" id="create-test-details">
                 <div id="test-name-wrap">
-                  <h4 class="wrap-heading-small">Název testu</h4>                  
+                  <h4 class="wrap-heading-small">Název testu (* povinné pole)</h4>                  
                   <% if (test) { %>
                     <input type="text" value="<%= test.title %>">
                     <% } else { %>
@@ -820,7 +821,7 @@
   height: 41px;
 }
 
-#add-answer-wrap {
+#add-answer-wrap, #shuffle-answers-btn {
   background-color: rgb(235,235,235);
     color: #4f98f4;
     font-weight: 600;
@@ -831,7 +832,7 @@
     border-radius: 0.5rem;
 }
 
-#add-answer-wrap:hover {
+#add-answer-wrap:hover, #shuffle-answers-btn:hover {
   background-color: rgb(225,225,225);
   cursor:pointer;
 }

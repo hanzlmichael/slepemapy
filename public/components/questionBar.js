@@ -2,6 +2,7 @@ import { canvas } from '../inits/canvas.js';
 import { Test, Question } from '../components/classes.js';
 import { selectMap, questionNumber, numberOfQuestions, setLastQuestionIconAsChecked, valueOfQuestion, showElement, indexOfQuestion } from '../inits/definitions.js';
 import { saveQuestion, drawQuestion, getMap } from '../components/question.js';
+import { validateAnswers } from '../components/answer.js';
 
 /* Vytváření otázek*/
 export let wrapQuestionsElem = document.querySelector(".wrap-questions");
@@ -27,6 +28,10 @@ export function initQuestionBar() {
 }
 
 function addQuestion() {  
+  if (questions.length > 0 && !validateAnswers()) {
+    alert("Označte správnou odpověď");
+    return;
+  }
   let mapWraps = document.querySelectorAll('.map-wrap');
   debugger;
   if (test.questions.length > 0) {
@@ -74,6 +79,10 @@ function createQuestionObject(map) {
 }
 
 function changeQuestion(e) {
+  if (!validateAnswers()) {
+    alert("Označte správnou odpověď");
+    return;
+  };
   saveQuestion();
   questionNumber.textContent = valueOfQuestion();
   actualQuestionIndex = indexOfQuestion();

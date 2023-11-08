@@ -149,6 +149,11 @@ module.exports.deleteTest = async (req, res) => {
   try {
     const test = await Test.findByIdAndRemove(testId);
     if (test) {
+
+      // smazat všechny resulty 
+      const testIdObjectId = new mongoose.Types.ObjectId(testId);
+      // Použijte testIdObjectId v deleteMany
+      await Result.deleteMany({ testRef: testIdObjectId });
       res.redirect('/tests');
     }
   }

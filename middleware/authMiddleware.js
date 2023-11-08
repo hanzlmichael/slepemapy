@@ -126,8 +126,13 @@ const isAuthor = async (req, res, next) => {
           console.log(err)
         }
         try {
+          if (testRef) {
+            authorId = await Test.findById(testRef.testRef).select("teacherRef");
+          } else {
+            next();
+            return;
+          }
           console.log('testRef in HERE : ', testRef.testRef)
-          authorId = await Test.findById(testRef.testRef).select("teacherRef");
           console.log('HERE - authorId: ', authorId.teacherRef)
         } catch(err) {
           console.log(err)
@@ -146,8 +151,6 @@ const isAuthor = async (req, res, next) => {
     res.locals.isAuthor = null;
     next();
   }
-  
-
 }
 
 
@@ -173,6 +176,29 @@ const isAdmin = async (req, res, next) => {
   });
 };
 
+const checkAdmin = async (req, res, next) => {
+  const token = req.cookies.jwt;
+  jwt.verify(token, process.env.JWT_SECRET_KEY, async (err, decodedToken) => {
+    if (err) {
+      res.locals.admin = null;
+      next();
+    } else {
+      const user = await User.findById(decodedToken.id);
+      if (user) {
+        const isAdmin = user.isAdmin;
+        if (isAdmin) {
+          res.locals.admin = true;
+          next();
+        } else {
+          res.locals.admin = null;
+          next();
+        }
+      } else {
+        res.locals.admin = null;
+        next();
+      }
+    }
+  });
+};
 
-
-module.exports = { checkUser, requireAuth, checkAuthor, isAdmin, isAuthor};
+module.exports = { checkUser, requireAuth, checkAuthor, isAdmin, isAuthor, checkAdmin};

@@ -635,6 +635,7 @@
 
             let mapIndex = maps.findIndex( map => map.mapId == questions[i].map)
 
+            /*
             fabric.Image.fromURL(maps[mapIndex].data, function (img) {
               console.log('width of image: ', img.getScaledWidth(), img.getScaledHeight())
               img.scaleToWidth(750, true);
@@ -647,7 +648,20 @@
               canvasesTest[i].loadFromJSON(questions[i].shapes);
               canvasesTest[i].sendToBack(img);
               console.log('objs: ',  canvasesTest[i].getObjects());
-            });
+            });*/
+
+            //test 
+              fabric.Image.fromURL(maps[mapIndex].data, function(img) {
+                img.scaleToWidth(750,true);
+                canvasesTest[i].setDimensions({width: 750, height: img.getScaledHeight()})
+                canvasesTest[i].add(img);
+                canvasesTest[i].sendToBack(img);
+                canvasesTest[i].renderAll();
+                testResizeMapToCanvas(canvasesTest[i], maps[mapIndex].data);
+              })
+              setShapes(canvasesTest[i], questions[i].shapes);
+              //testResizeMapToCanvas();
+            
         } 
       })} 
   
@@ -658,8 +672,21 @@
         drawCanvases();
       });
 
+function testResizeMapToCanvas(canvas, mapSrc) {
+  fabric.Image.fromURL(mapSrc, function(img) {
+    img.scaleToWidth(750,true);
+    img.selectable = false;
+    canvas.setDimensions({width: 750, height: img.getScaledHeight()})
+    canvas.add(img);
+    canvas.sendToBack(img);
+    canvas.renderAll();
+  })
+}
 
-
+function setShapes(canvas, shapes) {
+  canvas.loadFromJSON(shapes);
+  canvas.renderAll();
+}
   /* Ulozit Result do databaze */
   async function saveResultToDb() {
     debugger;

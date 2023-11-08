@@ -21,8 +21,7 @@
     <div class="main">
       <div class="panel">
         
-        <h2>
-          <span class="material-symbols-outlined">shield_person</span>ADMIN</h2>
+        <h2>ADMIN</h2>
         <div class="render-content" data-render="users">
           <span class="material-symbols-outlined">group</span>
           <button>uživatelé</button>
@@ -31,10 +30,10 @@
           <span class="material-symbols-outlined">quiz</span>
           <button>testy</button>
         </div>
-        <div class="render-content" data-render="map">
+        <!-- <div class="render-content" data-render="map">
           <span class="material-symbols-outlined">map</span>
           <button>katalog</button>
-        </div>
+        </div> -->
         <!-- <div class="render-content" data-render="library">
           <span class="material-symbols-outlined">library_add</span>
           <button>knihovna</button>
@@ -190,7 +189,7 @@
   .panel h2 {
     text-align: center;
     color: rgb(83, 83, 83);
-    font-size: 2rem;
+    font-size: 1rem;
     margin: 1rem;
     padding-bottom: 1rem;
     border-bottom: 4px solid rgb(236, 236, 236);
@@ -510,11 +509,14 @@
     const row = document.createElement('tr');
     row.appendChild(document.createElement('td')).textContent = data.email;
     row.appendChild(document.createElement('td')).textContent = data.isAdmin ? "Admin" : "Uživatel";
-    const button = document.createElement('button');
-    button.textContent = 'Smazat';
-    button.value = data._id;
-    button.setAttribute('onclick', 'deleteUser(this)');
-    row.appendChild(document.createElement('td')).appendChild(button);
+    if (!data.isAdmin) {
+      const button = document.createElement('button');
+      button.textContent = 'Smazat';
+      button.value = data._id;
+      button.setAttribute('onclick', 'deleteUser(this)');
+      row.appendChild(document.createElement('td')).appendChild(button);
+    }
+   
 
     // Přidejte řádek do těla tabulky
     tableBody.appendChild(row);

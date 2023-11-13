@@ -9,11 +9,11 @@ module.exports.postResult = async (req, res) => {
   try {
     const result = await Result.create({ testRef, firstName, lastName, email, answersIndexes, mark, points});
     if (result) {
-      res.status(201).json({ _id: result._id, message: 'Result created successfully' }); // Vracíme _id záznamu
+      res.status(201).json({ _id: result._id, message: 'Vysledek uspesne vytvoren' }); // Vracíme _id záznamu
     }
   } catch (err) {
     console.log(err);
-    res.status(500).json({ error: 'Failed to create result' });
+    res.status(500).json({ error: 'Vytvoreni vysledku selhalo' });
   }
 }
 
@@ -40,7 +40,7 @@ module.exports.deleteResultById = async (req, res) => {
   try {
     const result = await Result.findByIdAndRemove(resultId);
     if (result) {
-      res.status(200).json({ message: 'Dokument byl úspěšně smazán' });
+      res.status(200).json({ message: 'Dokument byl uspesne smazan' });
     } else {
       res.status(404).json({ message: 'Dokument nebyl nalezen' });
     }
@@ -64,8 +64,8 @@ module.exports.updateResultById = async (req, res) => {
       let teacherRef = decodedToken.id;
       try {
         const updatedResult = await Result.findByIdAndUpdate(resultId, { mark:newMarkValue, points: newPointsValue}, {
-          new: true, // returns the updated test instead of the original one
-          runValidators: true, // validates the updated test against the schema
+          new: true, 
+          runValidators: true, 
         });
         if (updatedResult) {
           console.log('updatedResult ', updatedResult)

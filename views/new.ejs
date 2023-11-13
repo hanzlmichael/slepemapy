@@ -14,8 +14,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap" rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.1/fabric.min.js"></script>
-  
-  <!-- <script type="module" defer src="../inits/test.js"></script> -->
+  <script src="https://unpkg.com/@popperjs/core@2/dist/umd/popper.min.js"></script>
+  <script src="https://unpkg.com/tippy.js@6/dist/tippy-bundle.umd.js"></script>
   <script type="module" defer src="/inits/test.js"></script>
 </head>
 
@@ -1269,4 +1269,16 @@ tr {
   function showModalTableClue() {
     editResultDialog.showModal();
   }
+
+  tippy('#add-answer-wrap', {
+    content: "Přidat odpověď",
+    placement: 'bottom',
+    arrow: false
+  });
+
+  tippy('#shuffle-answers-btn', {
+    content: "Zamíchat odpovědi",
+    placement: 'bottom',
+    arrow: false
+  });
 </script>

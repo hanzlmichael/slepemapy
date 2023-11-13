@@ -25,7 +25,7 @@ const sendEmail = async (recipientEmail, createdToken, host) => {
       from: process.env.FROM_EMAIL, 
       to: recipientEmail, // Email příjemce
       subject: 'Reset hesla', // Předmět emailu
-      html: `Váš link pro resetování hesla je <a href="${host}/reset-password?id=${createdToken._id}&token=${createdToken.token}">zde</a>`,
+      html: `Váš link pro resetování hesla je <a href="${host}/reset-password?id=${createdToken._id}&token=${createdToken.token}">zde</a> <br> Tento link je platný 15 minut.`,
     };
 
     // Odešlete email

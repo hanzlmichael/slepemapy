@@ -23,26 +23,6 @@ export class Answer {
     this.term = term;
     this.isCorrect = isCorrect;
   }
-
-  // Metoda pro nastavení hodnoty term
-  setTerm(term) {
-    this.term = term;
-  }
-
-  // Metoda pro nastavení hodnoty isCorrect
-  setIsCorrect(isCorrect) {
-    this.isCorrect = isCorrect;
-  }
-
-  // Metoda pro získání hodnoty term
-  getTerm() {
-    return this.term;
-  }
-
-  // Metoda pro získání hodnoty isCorrect
-  getIsCorrect() {
-    return this.isCorrect;
-  }
 }
 
 export class Map {

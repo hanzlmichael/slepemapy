@@ -206,3 +206,13 @@ module.exports.getResults = async (req, res) => {
     console.log(err)
   }
 }
+
+module.exports.getTestsCount = async (req, res) => {
+  try {
+    const testCount = await Test.countDocuments({});
+    res.json({ testCount });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+};

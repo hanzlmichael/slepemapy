@@ -22,6 +22,10 @@
       <div class="panel">
         
         <h2>ADMIN</h2>
+        <div class="render-content" data-render="dashboard">
+          <span class="material-symbols-outlined">dashboard</span>
+          <button>Přehled</button>
+        </div>
         <div class="render-content" data-render="users">
           <span class="material-symbols-outlined">group</span>
           <button>uživatelé</button>
@@ -42,6 +46,19 @@
           <span class="material-symbols-outlined">admin_panel_settings</span>
           <button>administrace</button>
         </div> -->
+      </div>
+      <div class="content-wrapper dashboard">
+        <h2>Přehled</h2>
+        <div class="stats-wrapper">
+          <div class="stats stats-users">
+            <h3>Celkem registrovaných uživatelů</h3>
+            <div id="stats-total-users"></div>
+          </div>
+          <div class="stats stats-tests">
+            <h3>Celkem vytvořených testů</h3>
+            <div id="stats-total-tests"></div>
+          </div>
+        </div>
       </div>
       <div class="content-wrapper users">
         <h2>Uživatelé</h2>
@@ -67,8 +84,9 @@
             </tbody>
           </table>
           </div>
+          <button id="load-more-users" class="btn btn--gray" onclick="getAllUsers()">Načíst další</button>
       </div>
-      <div class="content-wrapper tests" data>
+      <div class="content-wrapper tests">
         <h2>Testy</h2>
         <div class="table-wrapper">
           <table id="test-table" class="table">
@@ -139,7 +157,7 @@
     background-color: #e7e7e7;
   }
 
-  #load-more-tests {
+  #load-more-tests, #load-more-users {
     margin-top: 1rem;
     min-width: 12rem;
     height: 3rem;
@@ -151,8 +169,6 @@
     background: rgb(245,245,245);
     padding: 1rem;
   }
-
- 
 
   .panel button {
     border: none;
@@ -206,7 +222,7 @@
     padding:2rem;
   }
 
-  .content-wrapper.tests, .content-wrapper.map,.content-wrapper.library,.content-wrapper.admin  {
+  .content-wrapper.tests, .content-wrapper.map,.content-wrapper.library,.content-wrapper.admin, .content-wrapper.users  {
     display:none;
   }
 
@@ -217,6 +233,39 @@
     border-bottom: 4px solid #f3f3f3;
     padding-bottom: 1rem;
   }
+
+  .stats-wrapper {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+  .stats {
+    padding:2.5rem;
+    background-color: #e9e9e9;
+    border-radius: 0.5rem;
+  }
+  .stats div {
+    font-size: 4rem;
+    color: #4333f5;
+  }
+
+  @media only screen and (max-width: 900px) {
+    .stats-wrapper {
+      grid-template-columns: 1fr ;
+    }  
+    .main {
+      grid-template-columns: auto 1fr;
+    }
+    .panel {
+      padding: 0 1rem;
+    }
+  }
+  @media only screen and (max-width: 600px) {
+    .main {
+      grid-template-columns: 1fr;
+    }
+  }
+
   /* TABLE */
 
   .table-wrapper {
@@ -313,7 +362,7 @@
   }
 
   .content-wrapper h3 {
-    font-size: 1.25rem;
+    font-size: 1.5rem;
     color: #707070;
     font-weight: 500;
     margin-bottom: 0.5rem;
@@ -348,8 +397,12 @@
 
 <script>
   document.addEventListener('DOMContentLoaded', function() {    
-    showContentWrapper("users");
-    getUsers();
+    debugger;
+    totalUsersCount();
+    totalTestsCount();
+    showContentWrapper("dashboard");
+    //getUsers();
+    getAllUsers();
     getAllTests();
   });
 
@@ -388,7 +441,13 @@
     const email = document.querySelector('.searchbar input').value;
 
     if (email === '') {
-      getUsers();
+      let tableBody = userTable.querySelector('tbody');
+      tableBody.innerHTML = "";
+      document.querySelector('#load-more-users').style.display = 'inline';
+      //getUsers();
+      usersPosition = 0;
+      foundUserElement.innerHTML = '';
+      getAllUsers();
       return;
     }
     // Vytvořte objekt JSON
@@ -407,8 +466,12 @@
         if (user.length === 0) {
           console.log('yes')
           foundUserElement.innerHTML = '<div class="red-bg">Uživatel nenalezen </div>';
+         
           fillTable(user, userTable);
         } else {
+          let tableBody = userTable.querySelector('tbody');
+          tableBody.innerHTML = "";
+          document.querySelector('#load-more-users').style.display = 'none';
           foundUserElement.innerHTML = `<div class="green-bg">Uživatel nalezen </div>`;
           fillTable(user, userTable);
         }
@@ -448,6 +511,31 @@
 
   function loadMoreTests() {
     getAllTests();
+  }
+
+  let usersCount = 10;
+  let usersPosition = 0;
+
+  async function getAllUsers() {
+    try {
+      const res = await fetch(`/users/all?count=${usersCount}&position=${usersPosition}`, {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' }
+      })
+      if (res) {
+        const users = await res.json();
+        console.log(users);
+        if (users.users.length === 0) {
+          document.querySelector('#load-more-users').style.display = 'none'
+        }
+        fillTable(users.users, userTable);
+        usersPosition = usersPosition + usersCount;
+        
+      }
+    }
+    catch (err) {
+      console.log(err);
+    }
   }
 
   let foundUserElement = document.querySelector('#found-user')
@@ -493,7 +581,7 @@
 
   function fillTable(data, table) {
     let tableBody = table.querySelector('tbody');
-    tableBody.innerHTML = "";
+    //tableBody.innerHTML = "";
 
     for (let i = 0; i < data.length; i++) {
       addRow(data[i], tableBody);
@@ -551,6 +639,40 @@
         if (rowElement) {
           rowElement.remove();
         }
+      }
+    }
+    catch (err) {
+      console.log(err);
+    }
+  }
+
+  async function totalUsersCount() {
+    try {
+      const res = await fetch('/users/count', {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' }
+      })
+      if (res) {
+        const data = await res.json(); 
+        let totalUsersElem = document.querySelector('#stats-total-users');
+        totalUsersElem.textContent = data.userCount;
+      }
+    }
+    catch (err) {
+      console.log(err);
+    }
+  }
+
+  async function totalTestsCount() {
+    try {
+      const res = await fetch('/tests/count', {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' }
+      })
+      if (res) {
+        const data = await res.json();
+        let totalTestsElem = document.querySelector('#stats-total-tests');
+        totalTestsElem.textContent = data.testCount;
       }
     }
     catch (err) {

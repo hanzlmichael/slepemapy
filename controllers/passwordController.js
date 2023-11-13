@@ -1,9 +1,8 @@
 const User = require("../models/User");
 const Token = require("../models/Token");
 const crypto = require('crypto');
-const nodemailer = require('nodemailer');
 const bcrypt = require('bcrypt');
-const sendEmail = require('../utils/sendEmail');
+const sendEmail = require('../service/sendEmail');
 
 module.exports.forgotPassword = async (req, res) => {
   res.render('forgot-password');

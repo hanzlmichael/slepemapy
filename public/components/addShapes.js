@@ -56,43 +56,22 @@ function deleteAllObjectsFromMap() {
         canvas.remove(object);
       }
     });
-
   }
-
-
 }
-
-
 
 function activeMagicWand() {
   stopMouseWheelHandler();
   resetZoom();
-  debugger;
-  console.log('cursor actived')
-  //let canvasContainer = document.querySelector('.canvas-container');
-  /* let canvasContainer = document.querySelector('.new-test-wrapper');
-  canvasContainer.classList.add('magic-wand'); */
-
-  //canvas.set({defaultCursor: 'url("../images/magicwandblack.png"), auto'});
   setCursorToPointer(canvas)
-
   floodFill(true);
 }
 
-
 function setCursorToPointer(canvas) {
   canvas.getObjects().forEach(function(obj) {
-    /* obj.hoverCursor = 'url("./images/magicwandblack.png"), auto';
-    obj.defaultCursor = 'url("./images/magicwandblack.png"), auto'; */
     obj.set({moveCursor : 'url("/images/magicwandblack.png"), auto'});
     obj.set({hoverCursor : 'url("/images/magicwandblack.png"), auto'});
     obj.set({defaultCursor : 'url("/images/magicwandblack.png"), auto'});
-    // canvas.set({defaultCursor: 'url("./images/magicwandblack.png"), auto'});
   });
-  /* canvas.set({defaultCursor: 'copy'});
-  canvas.set({hoverCursor:  'copy'});
-  canvas.set({moveCursor:  'copy'}); */
-  //canvas.renderAll();
 }
 
 export function setsetCursorToPointerOff() {
@@ -105,6 +84,5 @@ export function setsetCursorToPointerOff() {
   canvas.set({moveCursor: 'default'});
   canvas.set({hoverCursor: 'default'});
 }
-
 
 canvas.set({defaultCursor: 'url("./images/magicwandblack.png"), auto'});

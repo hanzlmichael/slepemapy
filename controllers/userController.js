@@ -42,3 +42,28 @@ module.exports.getUserByEmail = async (req, res) => {
     console.log(err)
   }
 }
+
+module.exports.getUsersCount = async (req, res) => {
+  try {
+    const userCount = await User.countDocuments({});
+    console.log('userCount', userCount);
+    res.json({ userCount });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
+
+module.exports.getAllUsers = async (req, res) => {
+  const { position, count } = req.query;
+  try {
+    const users = await User.find().skip(parseInt(position)).limit(parseInt(count)).select('email isAdmin');
+    if (users) {
+      res.json({users});
+    }
+  }
+  catch(err) {
+    console.log(err)
+    res.status(500).json({ error: 'Chyba při získávání uživatelů' });
+  }
+}

@@ -22,8 +22,7 @@
     <div class="layout">
       <div class="overlay-wrapper">
         <div class="title-wrap">
-          <h2><%=test.title%></h2>
-          
+          <h2><%=test.title%></h2>          
           <% if (test.timeLimit !== "null") { %>
             <div>Časový limit: <%=test.timeLimit%> minut</div>
           <% } %>    
@@ -83,8 +82,7 @@
             <span>Body: </span>
             <span id="result-total-points"></span>
           </div>
-        </div>
-        
+        </div>        
         <div>
           <a id="redirectToResult" href="">zobrazit výsledek</a>
         </div>
@@ -264,7 +262,7 @@
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     grid-auto-rows: 1fr;
     margin: 1rem 0;
-}
+  }   
 
   .options .btn--checked {
     background: #51cdd38f;
@@ -374,6 +372,7 @@
     color: #686867;
     font-weight: 600;
   }
+
   #result-mark, #result-total-points {
     color: #5bd7ad;
     position: relative;
@@ -381,12 +380,9 @@
     top: 0.25rem;
     left: 0.5rem;
   }
-
 </style>
 
 <script>
-
-
   // start testu
   let startTestBtn = document.querySelector("#startTestBtn");
   startTestBtn.addEventListener("click", startTest);
@@ -472,14 +468,10 @@
     debugger;
     document.querySelector('.overlay-test').style.display = "none";
     document.querySelector('.overlay-result').style.display = "grid";
-
     // zjistit zodpovezene otazky a porovnat se spravnymi 
-
     // vykreslit celkovy pocet bodu z testu
     setTotalPoints();
-
-    saveResultToDb(); 
-    
+    saveResultToDb();    
   }
 
   let answers = document.querySelectorAll('.question-content .btn--checked')
@@ -605,8 +597,6 @@
   
 
   function drawCanvases() {
-    console.log('Draw canvnases')
-    debugger;
     let url = window.location.href;
     let urlArray = url.split('/');
     const testId = urlArray[urlArray.length - 2];
@@ -619,10 +609,6 @@
           let questions = data.test.questions;
           let maps = data.test.maps;
           boundaries = data.test.marksBoundaries;
-          console.log('questions: ', questions);
-          console.log('maps: ', maps);
-          console.log('boundaries ', boundaries);
-          console.log('testRef ', data.test._id);
           
           for (let i = 0; i < questions.length; i++) {
             canvases.push(document.querySelector(`#canvas${i}`))
@@ -635,22 +621,6 @@
 
             let mapIndex = maps.findIndex( map => map.mapId == questions[i].map)
 
-            /*
-            fabric.Image.fromURL(maps[mapIndex].data, function (img) {
-              console.log('width of image: ', img.getScaledWidth(), img.getScaledHeight())
-              img.scaleToWidth(750, true);
-              canvasesTest[i].setDimensions({ width: 750, height: img.getScaledHeight() })
-              canvasesTest[i].add(img);
-              console.log(questions[i].shapes);
-              console.log('heere')
-              shapes[i] = JSON.stringify(questions[i].shapes);
-              console.log('shapes: ',  shapes[i] )
-              canvasesTest[i].loadFromJSON(questions[i].shapes);
-              canvasesTest[i].sendToBack(img);
-              console.log('objs: ',  canvasesTest[i].getObjects());
-            });*/
-
-            //test 
               fabric.Image.fromURL(maps[mapIndex].data, function(img) {
                 img.scaleToWidth(750,true);
                 canvasesTest[i].setDimensions({width: 750, height: img.getScaledHeight()})
@@ -660,14 +630,11 @@
                 testResizeMapToCanvas(canvasesTest[i], maps[mapIndex].data);
               })
               setShapes(canvasesTest[i], questions[i].shapes);
-              //testResizeMapToCanvas();
             
         } 
       })} 
   
       window.addEventListener("load", (event) => {
-        debugger;
-        console.log("page is fully loaded");
         initQuestions();
         drawCanvases();
       });
@@ -707,11 +674,8 @@ function setShapes(canvas, shapes) {
         credentials: 'include'
       })
       if (res.ok) {
-        console.log('res : ', res)
-        
         const resultData = await res.json();
         const resultId = resultData._id; // Získání _id z odpovědi
-        console.log('Nově vytvořený ObjectId:', resultId);
         let redirectElement = document.querySelector('#redirectToResult');
         redirectElement.setAttribute('href', `/results/${resultId}`);
 
@@ -768,6 +732,4 @@ function setShapes(canvas, shapes) {
     points.split('/');
     return points.split('/')[0];
   }
-
-
 </script>

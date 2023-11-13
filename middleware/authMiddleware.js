@@ -54,8 +54,6 @@ const checkAuthor = async (req, res, next) => {
     console.log('sliced ', testId)
   }
 
-  // check if user has a valid token
-  console.log('dostal se sem1')
   const token = req.cookies.jwt;
   if (token) {
     jwt.verify(token, process.env.JWT_SECRET_KEY, async (err, decodedToken) => {

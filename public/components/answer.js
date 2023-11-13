@@ -1,7 +1,6 @@
-
-const addAnswerWrapBtn = document.querySelector('#add-answer-wrap');
 export const answersWrap = document.querySelector('#answers-wrap');
 const shuffleAnswersBtn = document.querySelector('#shuffle-answers-btn'); 
+const addAnswerWrapBtn = document.querySelector('#add-answer-wrap');
 
 export function initAnswer() {
   answersWrap.addEventListener('click', removeAnswerWrap)  

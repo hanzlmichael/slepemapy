@@ -14,7 +14,7 @@ import { canvas,  } from '../inits/canvas.js';
 import { activateZooming } from "../draw/globalPrototypeSetting.js";
 import { resetZoom } from '../components/addShapes.js';
 import { test } from '../components/questionBar.js';
-import {testResizeMapToCanvas} from '../components/canvas.js';
+import { testResizeMapToCanvas } from '../components/canvas.js';
 
 initDefinitions();
 initAddShapes();

@@ -1,11 +1,15 @@
+import { test } from '../components/questionBar.js';
+
 export const answersWrap = document.querySelector('#answers-wrap');
 const shuffleAnswersBtn = document.querySelector('#shuffle-answers-btn'); 
 const addAnswerWrapBtn = document.querySelector('#add-answer-wrap');
+const randomAnswersBtn = document.querySelector('#random-answers-btn');
 
 export function initAnswer() {
   answersWrap.addEventListener('click', removeAnswerWrap)  
   addAnswerWrapBtn.addEventListener('click', appendAnswerToDom);
   shuffleAnswersBtn.addEventListener('click', shuffleAnswers);
+  randomAnswersBtn.addEventListener('click', randomAnswer);
 }
 
 function appendAnswerToDom() {
@@ -101,4 +105,28 @@ export function validateAnswers() {
       return false;
     }
   }
+}
+
+function randomAnswer() {
+  debugger;
+  let allTerms = getAllTerms();
+  let randomValue = getRandomNumber(allTerms.length);
+  appendAnswerToDom(); 
+  const lastAnswerText = document.querySelectorAll('#answers-wrap .answer-text');
+  lastAnswerText[lastAnswerText.length-1].value = allTerms[randomValue];
+}
+
+function getAllTerms() {
+  debugger;
+  let terms = [];
+  for (let i = 0; i < test.questions.length - 1; i++) {
+    for (let j = 0; j < test.questions[i].answers.length; j++) {
+      terms.push(test.questions[i].answers[j].term)
+    }
+  }
+  return terms;
+}
+
+function getRandomNumber(n) {
+  return Math.floor(Math.random() * n);
 }

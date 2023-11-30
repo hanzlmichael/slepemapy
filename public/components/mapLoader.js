@@ -1,4 +1,4 @@
-import { selectMap, mapsWrap } from '../inits/definitions.js';
+import { selectMap } from '../inits/definitions.js';
 import { test, maps, actualQuestionIndex } from '../components/questionBar.js';
 import { Map } from '../components/classes.js';
 
@@ -8,7 +8,6 @@ export const setMapCoundToMapsLength = (value) => mapCount = value;
 let resultImage = document.querySelector(".maps-wrap");
 
 export function initMapLoader() {
-  /* Nahrávání map PAGE 1 */
   document.querySelector('#map-upload').addEventListener('change', handleMap);
   document.querySelector('.maps-wrap').addEventListener('click', deleteMap);
   observe();  
@@ -85,12 +84,12 @@ function checkIfQuestionContainsMap(mapId) {
   return true;
 }
 
-// sledovane zmeny
+// Sledovane zmeny
 const config = {
   childList: true
 }
 
-// sledovany node
+// Sledovany node
 const targetNode = resultImage;
 console.log("targetNOde: ", targetNode);
 
@@ -100,7 +99,6 @@ function observe() {
       if (mutation.type === 'childList') {
         debugger;
         if (mutation.addedNodes[0]) {  
-          console.log("here ", mutation.addedNodes[0]) 
           let mapName = mutation.addedNodes[0].querySelector('input').value;
           createUniqueMapId(mutation.addedNodes[0].querySelector('img').getAttribute('src'));
           selectMap.add(new Option(`${mapName}`,`${maps[maps.length - 1].mapId}`))
@@ -108,13 +106,9 @@ function observe() {
           mutation.addedNodes[0].setAttribute('id', maps[maps.length -1 ].mapId)
         }
         if (mutation.removedNodes[0]) {
-          debugger;
-          let mapIdToDelete = mutation.removedNodes[0].id;
-          console.log('mapId ', mapIdToDelete);
-          
+          let mapIdToDelete = mutation.removedNodes[0].id;          
           // smazat z pole maps mapu ktera ma id smazaneho nodu
           test.maps = maps.filter(map =>  map.mapId != mapIdToDelete)
-
           selectMap.removeChild(selectMap.querySelector(`option[value="${mapIdToDelete}"]`));
         }
       }

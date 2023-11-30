@@ -36,8 +36,6 @@ function drawFinal(o) {
 function finishShape() {
   canvas.off("mouse:move");
   canvas.off("mouse:down");
- /*  removeTempObjects() 
-  removeStartCircle() */
   drawFinalPolygon();
   resetValues();
   removeSelection();
@@ -131,8 +129,6 @@ function removeStartCircle() {
 }
 
 function getCoords(o) {
- // return canvas.getPointer(options.e, false);
-/*  console.log(canvas.getPointer("mouse:move", false)) */
   if (o.e.type == "mousemove") return canvas.getPointer("mouse:move", false)
 	if (o.e.type == "mousedown") return canvas.getPointer("mouse:down", false)
 }

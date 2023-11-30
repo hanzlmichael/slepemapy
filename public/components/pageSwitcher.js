@@ -2,14 +2,14 @@ import { showElement } from '../inits/definitions.js';
 import { drawQuestion, saveQuestion } from '../components/question.js';
 import { test, panel, canvasWrap } from '../components/questionBar.js';
 
-
 export const progressBarHeadingsCount = 3;
 export let progressBarHeadings = ["Nahrátí map", "Tvorba otázek", "Dokončení"];
 export let progressBarHeading = document.querySelector("#progress-bar-heading");
 export let headingNumber = 0;
 export let rectangles = document.querySelectorAll('.rectangle')
 export let actualPageIndex = 0;
-  // Stránka pro vytváření map, vytváření otázek a dokončení testu
+
+// Stránka pro vytváření map, vytváření otázek a dokončení testu
 export let createTestPages = document.querySelectorAll('.create-test-page');
 
 let prevBtn = document.querySelector('#prev-btn');
@@ -22,7 +22,6 @@ export function initPageSwitcher() {
 
 export function prevState() {
   headingNumber--;
-  /* isCreateOfQuestionsActive(); */
   handleChangePages("dec");
   if (headingNumber < 0) {
       headingNumber = 0;            
@@ -45,9 +44,8 @@ export function nextState() {
   progressBarHeading.innerText = progressBarHeadings[headingNumber];
 }
 
- // return true if page "Tvorba otázek" is displayed
+// Jestli je zobrazena sekce "Tvorba otázek"
 function isCreateOfQuestionsActive() {
-  debugger;
   if (headingNumber == 1) {
     console.log("tvorba otázek");
   }
@@ -55,14 +53,11 @@ function isCreateOfQuestionsActive() {
     showElement(panel);
     if (test.questions[0].map !== "null") {
       showElement(canvasWrap);
-      /* drawQuestion(); */
     }
-  }
-  
+  }  
 }
 
 function isPageCreateTestDetailsActive() {
-  debugger;
   if (headingNumber == 2) {
     if (test.questions.length > 0) {
       saveQuestion();
@@ -70,7 +65,6 @@ function isPageCreateTestDetailsActive() {
     }
     // vykreslit soucet bodu ze vsech otazek
     document.querySelector('#total-points-value').textContent = sumOfQuestionsPoints(); 
-
   }
 }
 

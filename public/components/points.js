@@ -4,7 +4,6 @@ const MAX_POINT_VALUE = 10;
 const MIN_POINT_VALUE = 1;
 export let pointValue = document.querySelector('#point-value');
 
-
 export function initPoints() {
   incPointBtn.addEventListener('click', incPointValue);
   decPointBtn.addEventListener('click', decPointValue);

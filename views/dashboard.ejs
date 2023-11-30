@@ -26,12 +26,7 @@
   }   
 %>
 
-
 <script>
-
-  /* let testsfromejs = <% - JSON.stringify(tests) %>;
-  console.log(testsfromejs); */
-
   async function deleteTest(id) {
     try {
       const res = await fetch(`/tests/${id.value}`, {
@@ -101,12 +96,6 @@
               <span>Poslední úprava:</span>
               <span class="date-created"><%= parseTimeFromMongoose(tests[i].updatedAt) %></span>
             </div>
-            
-              <!-- <div class="manipulate-btn-wrap">
-                <button value="<%= tests[i]._id %>" onclick="editTest(this)">Upravit</button>
-                <button class="delete-btn" value="<%= tests[i]._id %>" onclick="deleteTest(this)">Smazat</button>
-              </div>
-              <button class="results-btn" id="<%= tests[i]._id%>">Výsledky</button> -->
               <% if (tests[i].isActive) { %>
                 <div class="copy-link-wrap">
                   <div>link pro sdílení testu</div>
@@ -134,11 +123,9 @@
                     <a id="results" href="/tests/<%=tests[i]._id%>/results" class="material-symbols-outlined" value="<%= tests[i]._id%>">data_table</a>
                   </div> 
                   <% } %>
-  
           </div>            
         <%};%>   
       </div>
-      
       </div>  
     </main>
   </div>
@@ -175,26 +162,22 @@
     },600)
   }
 
-
-
   // tooltips
   tippy('#delete', {
   content: "Smazat",
    placement: 'bottom',
   arrow: false
-});
-tippy('#edit', {
-  content: "Upravit",
-  placement: 'bottom',
-  arrow: false
-});
-tippy('#results', {
-  content: "Výsledky",
-  placement: 'bottom',
-  arrow: false
-});
-
-
+  });
+  tippy('#edit', {
+    content: "Upravit",
+    placement: 'bottom',
+    arrow: false
+  });
+  tippy('#results', {
+    content: "Výsledky",
+    placement: 'bottom',
+    arrow: false
+  });
 </script>
   
 
@@ -241,6 +224,7 @@ tippy('#results', {
   display:flex;
   padding:1rem 1rem 0 1rem;
   gap:1rem;
+  overflow-x: auto;
 }
 
 .navigation-btn {

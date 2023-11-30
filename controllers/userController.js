@@ -2,10 +2,8 @@ const User = require("../models/User");
 const mongoose = require('mongoose');
 
 module.exports.getUsers = async (req, res) => {
-  console.log('yes')
   try {
     const results = await User.find({});
-    console.log(results);
     if (results) {
       res.json({results});
     }
@@ -31,7 +29,6 @@ module.exports.deleteUser = async (req, res) => {
 
 module.exports.getUserByEmail = async (req, res) => {
   const email = req.body.email;
-  console.log('EMAIL: ', email);
   try {
     const user = await User.find({email: email});
     if (user) {
@@ -46,7 +43,6 @@ module.exports.getUserByEmail = async (req, res) => {
 module.exports.getUsersCount = async (req, res) => {
   try {
     const userCount = await User.countDocuments({});
-    console.log('userCount', userCount);
     res.json({ userCount });
   } catch (err) {
     console.error(err);

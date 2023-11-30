@@ -17,8 +17,6 @@
     <link rel="stylesheet" href="/global.css">
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.1/fabric.min.js"></script>
-    
   </head>
   <body>
     <div class="layout">
@@ -68,13 +66,8 @@
         </tbody>
       </table>
       </div>
-  <% }  %> 
-        
-        
-
+  <% }  %>         
 </div>
-
-        
         </div>
     </div>
      
@@ -213,8 +206,6 @@ th:nth-child(7) {
 
 <script>
   async function deleteResult(resultId) {
-    console.log('resultId ', resultId.value);
-    console.log('e.target ', resultId);
     try {
       const res = await fetch(`/results/${resultId.value}`, {
         method: 'DELETE',

@@ -6,7 +6,6 @@ require('dotenv').config();
 const { checkUser } = require('./middleware/authMiddleware');
 const authRoutes = require('./routes/authRoutes');
 const testRoutes = require('./routes/testRoutes');
-const examRoutes = require('./routes/examRoutes');
 const resultRoutes = require('./routes/resultRoutes');
 const userRoutes = require('./routes/userRoutes');
 const passwordRoutes = require('./routes/passwordRoutes');
@@ -18,7 +17,7 @@ const PORT =  process.env.PORT || 3213;
 // view engine 
 app.set('view engine', 'ejs')
 
-// middleware
+// global middlewares
 app.use(express.static('public'));
 app.use(express.json({ limit: '15mb'}));
 app.use(cookieParser());
@@ -43,7 +42,6 @@ connectDB().then(() => {
 app.get('*', checkUser);
 app.get('/', (req, res) => res.render('index'));
 app.use('/tests', testRoutes);
-app.use('/exam', examRoutes);
 app.use('/results', resultRoutes);
 app.get('/admin', requireAuth, isAdmin, (req, res) => res.render('admin'));
 app.use('/users', userRoutes);

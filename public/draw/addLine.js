@@ -65,13 +65,9 @@ function createPolyline(e, isTemp) {
     polylinePoints[pointsCount] = getCoords()
     let polyline = new fabric.Polyline(polylinePoints, {
       strokeWidth: 3,
-      /* hasBorders: false,
-      hasControls: false, */
       stroke:"rgba(245,36,47,0.9)", 
       fill:'transparent',
       strokeLineJoin: 'round',
-      /* hoverCursor:'default',
-      moveCursor:'default', */
       isTemp: isTemp
     })
     canvas.add(polyline)
@@ -81,12 +77,8 @@ function createPolyline(e, isTemp) {
     let circle = new fabric.Circle({
       fill: "rgba(245,36,47,0.9)",
       radius: 2,
-      /* hasBorders: false,
-      hasControls: false, */
       left: coords.x - 2,
       top: coords.y - 2,
-      /* hoverCursor:'default',
-      moveCursor:'default', */
       isTemp: isTemp
     })
     canvas.add(circle)
@@ -100,7 +92,6 @@ function createPolyline(e, isTemp) {
     pointsCount = 0
     canvas.off('mouse:move')
     canvas.off('mouse:down')
-
     // smaze oznaceni tlacitek v panelu nastaveni
     removeSelection();
   }

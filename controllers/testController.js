@@ -12,7 +12,6 @@ module.exports.getTests = async (req, res) => {
       res.status(500).json({ error: 'Chyba při načítání testů' });
     } else {
       let teacherRef = decodedToken.id;
-      console.log('teacherRef ', teacherRef)
       let tests = await Test.find({ teacherRef: new mongoose.Types.ObjectId(`${teacherRef}`)}).sort({ createdAt: -1});
       res.render('dashboard', { tests });  
     }
@@ -22,20 +21,6 @@ module.exports.getTests = async (req, res) => {
 module.exports.getAllTests = async (req, res) => {
   const { position, count } = req.query;
   try {
-    /* const tests = await Test.find().skip(parseInt(position)).limit(parseInt(count)).select('email title');
-    */ 
-    /* const tests = await Test.findOne().select('teacherRef title');
-
-    console.log(tests);
-
-    User.populate('tests').exec(function (err, user) {
-      if (err) return HandleError(err);
-      console.log('The author is %s', user.tests.email);
-      if (tests) {
-        res.json({tests});
-      }
-    }) */
-
     const tests = await Test.find().populate('teacherRef', 'email').skip(parseInt(position)).limit(parseInt(count)).select('teacherRef title');
     if (tests) {
       res.json({tests});
@@ -49,14 +34,10 @@ module.exports.getAllTests = async (req, res) => {
 
 
 module.exports.getTestById = async (req, res) => {
-  console.log('yy')
   let testId = req.params.testId;
-  console.log('here')
   try {
     const test = await Test.findById(testId);
     if (test) {
-      console.log('foundTest: ', testId)
-      console.log(test)
       res.render('new', { test });
     }
   }
@@ -70,19 +51,15 @@ module.exports.getTestByIdTest = async (req, res) => {
   try {
     const test = await Test.findById(testId);
     if (test) {
-      console.log('get test by id test : ', test)
       return res.json({ test });
     } else {
-      // Pokud test nebyl nalezen, můžete poslat chybovou odpověď.
       return res.status(404).json({ error: 'Test not found' });
     }
   } catch (err) {
     console.log(err);
-    // Pokud došlo k chybě, můžete také poslat chybovou odpověď.
     return res.status(500).json({ error: 'Internal server error' });
   }
 }
-
 
 module.exports.postTest = async (req, res) => {
   const { title, maps, questions, marksBoundaries, timeLimit } = req.body;
@@ -95,14 +72,12 @@ module.exports.postTest = async (req, res) => {
 
   jwt.verify(token, process.env.JWT_SECRET_KEY, async (err, decodedToken) => {
     if (err) {
-      // Handle token verification error
       res.sendStatus(403);
     } else {
       let teacherRef = decodedToken.id;
       try {
         const createdTest = await Test.create({ teacherRef, title, maps, questions, marksBoundaries, timeLimit})
         if (createdTest) {
-          console.log('createdTest: ', createdTest)
           res.redirect('/tests');
         }
       }
@@ -118,18 +93,15 @@ module.exports.updateTestById = async (req, res) => {
   const testId = req.params.testId;
   
   const token = req.cookies.jwt;
-  let teacherRef;
 
   jwt.verify(token, process.env.JWT_SECRET_KEY, async (err, decodedToken) => {
     if (err) {
-      // Handle token verification error
       res.sendStatus(403);
     } else {
-      let teacherRef = decodedToken.id;
       try {
         const updatedTest = await Test.findByIdAndUpdate(testId, {title, maps, questions, timeLimit, marksBoundaries }, {
-          new: true, // returns the updated test instead of the original one
-          runValidators: true, // validates the updated test against the schema
+          new: true, 
+          runValidators: true, 
         });
         if (updatedTest) {
           res.redirect('/tests');
@@ -142,14 +114,11 @@ module.exports.updateTestById = async (req, res) => {
   });  
 }
 
-
 module.exports.deleteTest = async (req, res) => {
   let testId = req.params.testId;
-
   try {
     const test = await Test.findByIdAndRemove(testId);
     if (test) {
-
       // smazat všechny resulty 
       const testIdObjectId = new mongoose.Types.ObjectId(testId);
       // Použijte testIdObjectId v deleteMany
@@ -174,7 +143,6 @@ module.exports.publishTest = async (req, res) => {
     if (test) {
       res.redirect(204, '/tests');
     }
-    /* res.status(204).json({message: 'Test uspesne aktualizovan.', refresh: true}); */
   } catch (err) {
     console.log(err);
     res.status(500);
@@ -187,7 +155,6 @@ module.exports.getExam = async (req, res) => {
     const test = await Test.findById(testId);
     if (test) {
       res.render('exam', {test})
-      /* res.json({ test }); */
     }
   }
   catch(err) {
@@ -212,7 +179,7 @@ module.exports.getTestsCount = async (req, res) => {
     const testCount = await Test.countDocuments({});
     res.json({ testCount });
   } catch (err) {
-    console.error(err);
+    console.log(err);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 };

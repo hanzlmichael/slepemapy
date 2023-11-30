@@ -74,7 +74,6 @@ function removeAnswerWrap(e) {
   }
 }
 
-
 function shuffleAnswers() {
   const answersWrap = document.getElementById("answers-wrap");
   const answerWraps = Array.from(answersWrap.getElementsByClassName("answer-wrap"));
@@ -94,7 +93,6 @@ function shuffleAnswers() {
 
 // zkontroluje jestli je v otázce aspon 1 odpověď zaškrtnutá jako správná
 export function validateAnswers() {
-  debugger;
   let answersWrapElem = document.querySelector('#answers-wrap');
   if (answersWrapElem.children.length === 0) return true;
   else {
@@ -110,23 +108,48 @@ export function validateAnswers() {
 function randomAnswer() {
   debugger;
   let allTerms = getAllTerms();
-  let randomValue = getRandomNumber(allTerms.length);
+  let allActualTerms = getAllTermsInActiveQuestion();
+
+  if (allTerms.length === 0) {
+    alert("Nejsou vytvořeny žádné otázky ze kterých by šly odpovědi generovat.");
+    return;
+  }
+
+  let newSet = subtractSets(allTerms, allActualTerms);
+
+  if (newSet.size === 0) {
+    alert("Již nelze generovat žádné náhodné pojmy")
+    return;
+  }
+  let randomValue = getRandomNumber(newSet.size);
+  let newSetArray = Array.from(newSet);
   appendAnswerToDom(); 
   const lastAnswerText = document.querySelectorAll('#answers-wrap .answer-text');
-  lastAnswerText[lastAnswerText.length-1].value = allTerms[randomValue];
+  lastAnswerText[lastAnswerText.length-1].value = newSetArray[randomValue];
 }
 
 function getAllTerms() {
-  debugger;
   let terms = [];
   for (let i = 0; i < test.questions.length - 1; i++) {
     for (let j = 0; j < test.questions[i].answers.length; j++) {
       terms.push(test.questions[i].answers[j].term)
     }
   }
-  return terms;
+  return new Set(terms);
 }
 
 function getRandomNumber(n) {
   return Math.floor(Math.random() * n);
+}
+
+function getAllTermsInActiveQuestion() {
+  let allTermsElem = document.querySelectorAll('#answers-wrap .answer-text')
+  let values = Array.from(allTermsElem).map(input => input.value);
+  return new Set(values);
+}
+
+function subtractSets(setA, setB) {
+  // Vytvoření nového Setu obsahujícího rozdíl mezi A a B
+  const resultSet = new Set([...setA].filter(item => !setB.has(item)));
+  return resultSet;
 }

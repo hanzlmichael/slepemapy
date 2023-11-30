@@ -16,9 +16,7 @@ const testSchema = new mongoose.Schema({
   isActive: {
     type: Boolean,
     default: false
-  },
-  completeUntil: Date,
-  accesCode: String
+  }
 }, { timestamps: true });
 
 const Test = mongoose.model('test', testSchema);

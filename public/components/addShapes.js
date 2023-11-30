@@ -11,7 +11,6 @@ let deleteAllObjectsFromMapBtn = document.querySelector('#deleteAllObjectsFromMa
 let activateMagicWandBtn = document.querySelector('#activateMagicWand');
 
 export function initAddShapes() {
-  console.log('init add shapes loaded')
   shapeInputs.forEach((input) => {
     input.addEventListener("click", activateCanvasDrawing);
   });
@@ -44,12 +43,12 @@ export function resetZoom() {
 }
 
 function deleteAllObjectsFromMap() {
-  let activeObjects = canvas.getActiveObjects(); // get array of selected objects
+  let activeObjects = canvas.getActiveObjects(); 
   if (activeObjects.length) {
     activeObjects.forEach(function(object) {
-      canvas.remove(object); // remove each selected object from the canvas
+      canvas.remove(object); 
     });
-    canvas.discardActiveObject().renderAll(); // clear selection and redraw canvas
+    canvas.discardActiveObject().renderAll(); 
   } else {
     canvas.forEachObject(function(object) {
       if (!(object.bg ===true)) {

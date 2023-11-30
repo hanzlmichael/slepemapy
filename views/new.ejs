@@ -95,6 +95,19 @@
                   <div class="wrap-testing">  
                     <div class="canvas-wrap-testing">
                       <canvas class="canvas-testing" id="canvas"></canvas>
+                      <div class="navigation">
+                        <button class="material-symbols-outlined" id="move-north">north</button>
+                        <button class="material-symbols-outlined" id="move-south">south</button>
+                        <button class="material-symbols-outlined" id="move-west">west</button>
+                        <button class="material-symbols-outlined" id="move-east">east</button>
+                        <div></div>
+                      </div>
+                      <div class="zoom-buttons-wrapper">
+                        <span id="zoom-in-btn" class="material-symbols-outlined">zoom_in</span>
+                        <span id="zoom-out-btn" class="material-symbols-outlined">zoom_out</span>
+                        <span id="deleteAllObjectsFromMapBtn" class="material-symbols-outlined" >delete</span>
+                        <span class="material-symbols-outlined" id="zoomOutBtn">zoom_out_map</span>
+                      </div>
                     </div>
                     <div class="panel-testing">
                       <div class="question-heading-wrap">
@@ -132,14 +145,14 @@
                           </label>
                         </div>
                         <div class="canvas-icons">
-                          <div class="canvas-icon-wrap">
+                          <!-- <div class="canvas-icon-wrap">
                             <span class="material-symbols-outlined" id="deleteAllObjectsFromMapBtn">delete</span>
                             <span  class="icon-text">Vymazat obsah mapy</span>
-                          </div>
-                          <div class="canvas-icon-wrap">
+                          </div> -->
+                          <!-- <div class="canvas-icon-wrap">
                             <span class="material-symbols-outlined" id="zoomOutBtn">zoom_out_map</span>
                             <span class="icon-text">Původní pozice</span>
-                          </div>
+                          </div> -->
                           <div class="canvas-icon-wrap">
                             <span class="material-symbols-outlined" id="activateMagicWand">
                               <svg fill="#000000" height="24px" width="24px" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 56.599 56.599" xml:space="preserve" transform="matrix(-1, 0, 0, 1, 0, 0)">
@@ -198,7 +211,10 @@
                   <dialog id="editResultDialog">
                     <form method="dialog">
                       <div>
-                        - Body se nesmí překrývat
+                        - Minimální počet bodů musí být alespoň <b>4</b>
+                      </div>
+                      <div>
+                        - Body se nesmí překrývat                        
                       </div>
                       <div>
                         - Příklad správného nastavení pro 20 bodů:
@@ -283,9 +299,9 @@
                           <span class="mark-number">1</span>
                         </td>
                         <td>
-                          <input class="table-input-number" type="number" value="<%=test.marksBoundaries[0]%>">
+                          <input class="table-input-number table-input-number-to-fill" type="number" value="<%=test.marksBoundaries[0]%>">
                           <span class="dash">–</span>
-                          <input class="table-input-number" type="number" value="<%=test.marksBoundaries[1]%>">
+                          <input class="table-input-number table-input-number-to-fill" type="number" value="<%=test.marksBoundaries[1]%>">
                         </td>
                       </tr>
                       <tr>
@@ -293,9 +309,9 @@
                           <span class="mark-number">2</span>
                         </td>
                         <td>
-                          <input class="table-input-number" type="number" value="<%=test.marksBoundaries[2]%>">
+                          <input class="table-input-number table-input-number-to-fill" type="number" value="<%=test.marksBoundaries[2]%>">
                           <span class="dash">–</span>
-                          <input class="table-input-number" type="number" value="<%=test.marksBoundaries[3]%>">
+                          <input class="table-input-number table-input-number-to-fill" type="number" value="<%=test.marksBoundaries[3]%>">
                         </td>
                       </tr>
                       <tr>
@@ -303,9 +319,9 @@
                           <span class="mark-number">3</span>
                         </td>
                         <td>
-                          <input class="table-input-number" type="number" value="<%=test.marksBoundaries[4]%>">
+                          <input class="table-input-number table-input-number-to-fill" type="number" value="<%=test.marksBoundaries[4]%>">
                           <span class="dash">–</span>
-                          <input class="table-input-number" type="number" value="<%=test.marksBoundaries[5]%>">
+                          <input class="table-input-number table-input-number-to-fill" type="number" value="<%=test.marksBoundaries[5]%>">
                         </td>
                       </tr>
                       <tr>
@@ -313,9 +329,9 @@
                           <span class="mark-number">4</span>
                         </td>
                         <td>
-                          <input class="table-input-number" type="number" value="<%=test.marksBoundaries[6]%>">
+                          <input class="table-input-number table-input-number-to-fill" type="number" value="<%=test.marksBoundaries[6]%>">
                           <span class="dash">–</span>
-                          <input class="table-input-number" type="number" value="<%=test.marksBoundaries[7]%>">
+                          <input class="table-input-number table-input-number-to-fill" type="number" value="<%=test.marksBoundaries[7]%>">
                         </td>
                       </tr>
                       <tr>
@@ -323,9 +339,9 @@
                           <span class="mark-number">5</span>
                         </td>
                         <td>
-                          <input class="table-input-number" type="number" value="<%=test.marksBoundaries[8]%>">
+                          <input class="table-input-number table-input-number-to-fill" type="number" value="<%=test.marksBoundaries[8]%>">
                           <span class="dash">–</span>
-                          <input class="table-input-number" type="number" value="<%=test.marksBoundaries[9]%>">
+                          <input class="table-input-number table-input-number-to-fill" type="number" value="<%=test.marksBoundaries[9]%>">
                         </td>
                       </tr>
                     <% } else { %>
@@ -334,9 +350,9 @@
                           <span class="mark-number">1</span>
                         </td>
                         <td>
-                          <input class="table-input-number" type="number" value="0">
+                          <input class="table-input-number table-input-number-to-fill" type="number" value="0">
                           <span class="dash">–</span>
-                          <input class="table-input-number" type="number" value="0">
+                          <input class="table-input-number table-input-number-to-fill" type="number" value="0">
                         </td>
                       </tr>
                       <tr>
@@ -344,9 +360,9 @@
                           <span class="mark-number">2</span>
                         </td>
                         <td>
-                          <input class="table-input-number" type="number" value="0">
+                          <input class="table-input-number table-input-number-to-fill" type="number" value="0">
                           <span class="dash">–</span>
-                          <input class="table-input-number" type="number" value="0">
+                          <input class="table-input-number table-input-number-to-fill" type="number" value="0">
                         </td>
                       </tr>
                       <tr>
@@ -354,9 +370,9 @@
                           <span class="mark-number">3</span>
                         </td>
                         <td>
-                          <input class="table-input-number" type="number" value="0">
+                          <input class="table-input-number table-input-number-to-fill" type="number" value="0">
                           <span class="dash">–</span>
-                          <input class="table-input-number" type="number" value="0">
+                          <input class="table-input-number table-input-number-to-fill" type="number" value="0">
                         </td>
                       </tr>
                       <tr>
@@ -364,9 +380,9 @@
                           <span class="mark-number">4</span>
                         </td>
                         <td>
-                          <input class="table-input-number" type="number" value="0">
+                          <input class="table-input-number table-input-number-to-fill" type="number" value="0">
                           <span class="dash">–</span>
-                          <input class="table-input-number" type="number" value="0">
+                          <input class="table-input-number table-input-number-to-fill" type="number" value="0">
                         </td>
                       </tr>
                       <tr>
@@ -374,17 +390,19 @@
                           <span class="mark-number">5</span>
                         </td>
                         <td>
-                          <input class="table-input-number" type="number" value="0">
+                          <input class="table-input-number table-input-number-to-fill" type="number" value="0">
                           <span class="dash">–</span>
-                          <input class="table-input-number" type="number" value="0">
+                          <input class="table-input-number table-input-number-to-fill" type="number" value="0">
                         </td>
                       </tr>
                       <% } %>
                   </table>
+                  <span class="error" id="bad-boundaries">Špatně nastavené body pro známkování</span>
                   <div class="total-points-wrap">
                     <span>Celkový počet bodů je: </span>
                     <span id="total-points-value">0</span>
                   </div>
+                  <button class="btn btn--gray m-top1" id="generate-marks-ranges">vyplnit automaticky</button>
                 </div>
                 <div class="time-limit-wrap">
                   <h4 class="wrap-heading-small">Časový limit</h4>
@@ -551,6 +569,11 @@
 .create-test-page--active {
   display:block;
   height: 100%;
+}
+
+#generate-marks-ranges::after {
+  content: "\2611";
+  margin-left: 0.5rem;
 }
 
 
@@ -726,7 +749,87 @@
   overflow-x:auto;
   visibility: hidden;
   height: fit-content;
+  position:relative;
 }
+
+.zoom-buttons-wrapper {
+  position: absolute;
+  right:0.15rem;
+  top:0.15rem;
+}
+
+.zoom-buttons-wrapper span {
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+  background-color: rgb(225,225,225);
+  border-radius: 0.5rem;
+  padding:0.25rem;
+  user-select: none;
+}
+
+.zoom-buttons-wrapper span:hover {
+  cursor: pointer;
+  background-color: rgb(210,210,210);
+}
+
+.navigation {
+  display:grid;
+  grid-template-columns:2.5rem 2.5rem 2.5rem;
+  grid-template-rows: 2.5rem 2.5rem 2.5rem;
+  transform:scale(0.6);
+  width:fit-content;
+  position:absolute;
+  top:-1.75rem;
+  left:-1.75rem
+}
+
+.navigation button {
+  border:none;
+}
+
+.navigation button:hover {
+  background-color: rgb(210,210,210);
+}
+
+.navigation > * {
+  background: rgb(225,225,225);
+  color: #0e0e0e;
+}
+
+.navigation button:nth-child(1) {
+  grid-column: 2/3;
+  border-radius: 9999px;
+  position:relative;
+  top:0.75rem;
+}
+
+.navigation button:nth-child(2) {
+  grid-column: 2/3;
+  grid-row: 3;
+  border-radius: 9999px;
+  position:relative;
+  top:-0.75rem;
+}
+
+.navigation button:nth-child(3) {
+  grid-row: 2/3;
+  grid-column: 1/2;
+  border-radius: 9999px;
+  position:relative;
+  right:-0.75rem;
+}
+
+.navigation button:nth-child(4) {
+  grid-column: 3/4;
+  grid-row: 2;
+  border-radius: 9999px;
+  position:relative;
+  left:-0.75rem;
+}
+
+.navigation div {
+  grid-row: 2/3;
+}
+
 .canvas-testing {
   overflow-x:auto;
   width:750px;
@@ -777,7 +880,6 @@
   padding: 0 1rem 0 1rem;
   margin-bottom: 0.5rem;
 }
-
 
 .panel-testing .wrap-heading-small {
   text-transform: uppercase;
@@ -877,7 +979,6 @@
   user-select: none;
   color: #4f98f4;
 }
-
 
 .answer-wrap {
   background-color:rgb(235,235,235);
@@ -1219,10 +1320,11 @@ tr {
 
 .error {
   color:rgb(253, 43, 43);
+  margin-top: 0.5rem;
   font-size: 0.9rem;
 }
 
-#missing-title {
+#missing-title, #bad-boundaries {
   display:none;
 }
 
@@ -1251,9 +1353,6 @@ tr {
   box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
 }
 
-#save-changes {
-
-}
 #close {
   position: absolute;
   right:1rem;

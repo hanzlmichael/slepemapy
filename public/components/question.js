@@ -4,17 +4,13 @@ import { test, questions, actualQuestionIndex, panel, canvasWrap, decActualQuest
 import { pointValue } from '../components/points.js';
 import { answersWrap, createNewAnswer } from '../components/answer.js';
 import { Answer } from '../components/classes.js';
-import { testResizeMapToCanvas } from '../components/canvas.js';
 
 export function initQuestion() {
   deleteQuestionBtn.addEventListener('click', removeQuestion);
   questionIndex = actualQuestionIndex;
-  console.log('here 1')
-  console.log('questionIndex ', questionIndex);
 }
 
 let questionIndex;
-console.log('questionIndex ', questionIndex);
 
 function removeQuestionIcon() {
   wrapQuestions.querySelector('span:last-of-type').remove();
@@ -25,14 +21,11 @@ function removeQuestionObject() {
   questions.splice(indexOfQuestionToDeleteFromArray, 1);
 }
 
-
 function indexOfQuestion() {
   return Number(wrapQuestions.querySelector('input:checked + label').textContent - 1);
 }
 
 function removeQuestion() {
-  debugger;
-  console.log('remove ', questionIndex)
   if (sumOfQuestions() === valueOfQuestion()) {
     removeQuestionObject();
     removeQuestionIcon(); 
@@ -53,22 +46,14 @@ function removeQuestion() {
   drawQuestion();
 }
 
-export function drawQuestion() {
-  
+export function drawQuestion() {  
   questionNumber.textContent = valueOfQuestion();  
-
   // vykreslit hodnotu bodu
   setPointValue();
-
   // vykreslit odpovedi
   setAnswers();
-
   // vykreslit mapu
   setMap();  
-
-  // vykreslit shapes
-  //setShapes();
-
 }
 
 function getPointValue() {
@@ -76,7 +61,6 @@ function getPointValue() {
 }
 
 function setPointValue() {
-  console.log(questionIndex);
   pointValue.textContent = test.questions[actualQuestionIndex].points;
 }
 
@@ -126,13 +110,6 @@ function saveShapes() {
   test.questions[actualQuestionIndex].shapes = JSON.stringify(canvas);
 }
 
-/* function saveShapes() {
-  removeMapFromCanvas().then(() => {
-    // Zde máme jistotu, že mapa byla odstraněna
-    test.questions[actualQuestionIndex].shapes = JSON.stringify(canvas);
-  });
-} */
-
 export function setShapes() {
   let shapes = test.questions[actualQuestionIndex].shapes;
   if (shapes === null) {
@@ -141,38 +118,9 @@ export function setShapes() {
   }
   canvas.loadFromJSON(shapes);
   canvas.renderAll();
-  /* testLoad(shapes); */
-}
-
-function testLoad(shapesJSON) {
-  canvas.loadFromJSON(shapesJSON, function() {
-    canvas.renderAll();
-    console.log('renderALL1')
-    canvas.forEachObject(function(obj) {
-      console.log('render HERE')
-      console.log('canvas get obj ', canvas.getObjects())
-      /* if (obj.type === 'polyline' && obj.src) { */
-        if (obj.src) {
-        fabric.Image.fromURL(obj.src, function(img) {
-          img.set({
-            left: obj.left, // Nastavte pozici, kde chcete zobrazit obrázek
-            top: obj.top,
-            scaleX: obj.scaleX,
-            scaleY: obj.scaleY
-          });
-          console.log('renderALL3')
-          canvas.add(img);
-          //canvas.remove(obj); // Odstranění původního objektu polyline
-          canvas.renderAll();
-          console.log('renderALL2')
-        });
-      }
-    });
-  });
 }
 
 export function saveQuestion() {
-  debugger;
   if (questions) {
     test.questions[actualQuestionIndex].answers = getAnswers();
     test.questions[actualQuestionIndex].points = getPointValue();
@@ -181,42 +129,11 @@ export function saveQuestion() {
   }
 }
 
-function resetSelectMap() {
-  selectMap.selectedIndex = "0";
-  fireChangeEventOnSelectMap();
-}
-
 function fireChangeEventOnSelectMap() {
   let event = new Event('change');
   selectMap.dispatchEvent(event);
 }
 
-/* function removeMapFromCanvas() {
-  debugger;
-  let objs = canvas.getObjects();
-  canvas.remove(objs[0]); 
-  objs.forEach(obj => {
- 	if (obj.type == 'image') {
-   	canvas.remove(obj)
-  }
- })
-} */
-
-/* function removeMapFromCanvas() {
-  return new Promise((resolve, reject) => {
-    let objs = canvas.getObjects();
-    if (objs.length > 0) {
-      objs.forEach(obj => {
-        if (obj.type == 'image') {
-          canvas.remove(obj)
-       }
-       resolve();
-      });
-    } else {
-      resolve(); // Pokud nejsou žádné objekty na plátně, pokračujeme bez čekání
-    }
-  });
-} */
 function removeMapFromCanvas() {
   let objs = canvas.getObjects();
   objs.forEach(obj => {

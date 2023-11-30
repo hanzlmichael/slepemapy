@@ -6,12 +6,8 @@ function setDefaultCursor() {
 }
 
 export function turnOfControls(obj) {
-  let controls = [ "ml", "mt", "mr", "mb", "mtr"]
-  /* controls.forEach((control) => obj.setControlVisible(control, false)) */
-  controls.forEach(control => fabric.Object.prototype.setControlVisible(control, false))
-  /* fabric.Object.prototype.moveCursor = "default" */
-  //fabric.Object.prototype.hoverCursor = "default"
-  /* fabric.Object.prototype.hoverCursor = "default" */
+  let controls = [ "ml", "mt", "mr", "mb", "mtr"];
+  controls.forEach(control => fabric.Object.prototype.setControlVisible(control, false));
 }
 
 function initObjectDeleteIcon() {
@@ -52,9 +48,6 @@ function initObjectDeleteIcon() {
 }
 
 export function activateSettings() {
-  /* fabric.Object.prototype.padding = 10;
-  fabric.Object.prototype.borderColor = "rgb(211,33,45)"
-  fabric.Object.prototype.borderDashArray = [5] */
   fabric.Object.prototype.padding = 4;
   fabric.Object.prototype.borderColor = "rgb(211,33,45)";
   fabric.Object.prototype.borderDashArray = [3,3];
@@ -86,4 +79,3 @@ export function initGlobalPrototypeSettings() {
   initObjectDeleteIcon();
   setDefaultCursor();
 }
-

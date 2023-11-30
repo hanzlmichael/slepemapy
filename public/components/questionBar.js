@@ -32,8 +32,6 @@ function addQuestion() {
     alert("Označte správnou odpověď");
     return;
   }
-  let mapWraps = document.querySelectorAll('.map-wrap');
-  debugger;
   if (test.questions.length > 0) {
     saveQuestion();
   }
@@ -41,30 +39,15 @@ function addQuestion() {
   createQuestionIcon();
   setLastQuestionIconAsChecked();
   actualQuestionIndex = test.questions.length;
-  /* createQuestionObject(); */
   showElement(panel);
 
-  /* if (mapWraps.length === 1) {
-    selectMap.selectedIndex = "1";
-    createQuestionObject(getMap());
-    simulateSelectMapEvent();
-  } else {
-    createQuestionObject(null);
-  } */
   if (maps.length === 1) {
     selectMap.selectedIndex = "1";
     createQuestionObject(getMap());
   } else {
     createQuestionObject(null);
   }
-
   drawQuestion();
-}
-
-function simulateSelectMapEvent() { 
-  selectMap.selectedIndex = "1";
-  let event = new Event('change');
-  selectMap.dispatchEvent(event);
 }
 
 function createQuestionIcon() {

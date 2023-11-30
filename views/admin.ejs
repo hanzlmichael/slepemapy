@@ -401,7 +401,6 @@
     totalUsersCount();
     totalTestsCount();
     showContentWrapper("dashboard");
-    //getUsers();
     getAllUsers();
     getAllTests();
   });
@@ -418,23 +417,6 @@
     let clickedElementData = clickedElement.closest('.render-content').dataset.render;
     hideAllContentWrappers();
     showContentWrapper(clickedElementData);
-    //renderData(clickedElementData);
-  }
-
-  async function getUsers() {
-    try {
-      const res = await fetch('/users/', {
-        method: 'GET',
-        headers: { 'Content-Type': 'application/json' }
-      })
-      if (res) {
-        const users = await res.json();
-        fillTable(users.results, userTable);
-      }
-    }
-    catch (err) {
-      console.log(err);
-    }
   }
 
   async function getUserByEmail() {
@@ -444,7 +426,6 @@
       let tableBody = userTable.querySelector('tbody');
       tableBody.innerHTML = "";
       document.querySelector('#load-more-users').style.display = 'inline';
-      //getUsers();
       usersPosition = 0;
       foundUserElement.innerHTML = '';
       getAllUsers();
@@ -466,7 +447,6 @@
         if (user.length === 0) {
           console.log('yes')
           foundUserElement.innerHTML = '<div class="red-bg">Uživatel nenalezen </div>';
-          //fillTable(user, userTable);
         } else {
           let tableBody = userTable.querySelector('tbody');
           tableBody.innerHTML = "";
@@ -482,7 +462,6 @@
     }
   }
 
-  // fetch(`/users?position=${position}&batchSize=${batchSize}`)
   const count = 10;
   let position = 0;
   async function getAllTests() {
@@ -528,8 +507,7 @@
           document.querySelector('#load-more-users').style.display = 'none'
         }
         fillTable(users.users, userTable);
-        usersPosition = usersPosition + usersCount;
-        
+        usersPosition = usersPosition + usersCount;        
       }
     }
     catch (err) {
@@ -604,7 +582,6 @@
       row.appendChild(document.createElement('td')).appendChild(button);
     }
    
-
     // Přidejte řádek do těla tabulky
     tableBody.appendChild(row);
   }
@@ -677,7 +654,5 @@
     catch (err) {
       console.log(err);
     }
-  }
-   
-  
+  }  
 </script>

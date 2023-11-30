@@ -1,4 +1,4 @@
-import { canvas, setCanvas } from '../inits/canvas.js';
+import { canvas } from '../inits/canvas.js';
 import { activateZooming } from './globalPrototypeSetting.js';
 import { setsetCursorToPointerOff } from '../components/addShapes.js';
 
@@ -83,12 +83,8 @@ let FloodFill = {
 
 }; 
 
-
-/* var fillColor = '#F5242F'; */
 var fillColor = '#ff757d';
 var fillTolerance = 50;
-//fill: "rgba(245,36,47,0.9)",
-
 
 function hexToRgb(hex, opacity) {
 	opacity = Math.round(opacity * 255) || 255;
@@ -103,21 +99,11 @@ function hexToRgb(hex, opacity) {
 export function floodFill(enable) {
   debugger;
 	if (!enable) {
-		console.log('canvas off')
 		canvas.off('mouse:down');
 		canvas.selection = true;
 		canvas.forEachObject(function(object){
 			object.selectable = true;
 		});
-
-		//fixObjects();
-		
-		/* Vymazat duplicitní vytvořený tvar  */
-    //removeDuplicateObjects();
-
-		/* Zrušit selectable u canvas */
-		//disableSelectableMapBackground();
-		/* Vymazat duplicitní vytvořený tvar  */
 		setsetCursorToPointerOff();
 		activateZooming();
 		return;
@@ -130,8 +116,6 @@ export function floodFill(enable) {
 	canvas.forEachObject(function(object){
 		object.selectable = false;
 	});
-  /* canvas = canvas; */
-	//setCanvas(canvas);
 
 	canvas.on({
 		'mouse:down': function(e) {
@@ -141,8 +125,7 @@ export function floodFill(enable) {
 				mouseX = Math.round(mouse.x), mouseY = Math.round(mouse.y),
 				canvas = testCanvas.lowerCanvasEl,
 				context = testCanvas.getContext('2d'),
-				//parsedColor = hexToRgb(fillColor),
-				parsedColor = [245,36,47,230], //fill: "rgba(245,36,47,0.9)",
+				parsedColor = [245,36,47,230],
 				imageData = context.getImageData(0, 0, testCanvas.width, testCanvas.height),
 				getPointOffset = function(x,y) {
 					return 4 * (y * imageData.width + x)
@@ -151,12 +134,9 @@ export function floodFill(enable) {
 				target = imageData.data.slice(targetOffset, targetOffset + 4);
 
 			if (FloodFill.withinTolerance(target, 0, parsedColor, fillTolerance)) {
-				// Trying to fill something which is (essentially) the fill color
-				console.log('Ignore... same color')
 				return;
 			}
 
-			// Perform flood fill
 			var data = FloodFill.fill(
 				imageData.data,
 				getPointOffset,
@@ -176,16 +156,15 @@ export function floodFill(enable) {
 			tmpCanvas.width = canvas.width;
 			tmpCanvas.height = canvas.height;
 
-			var palette = tmpCtx.getImageData(0, 0, tmpCanvas.width, tmpCanvas.height); // x, y, w, h
-			palette.data.set(new Uint8ClampedArray(data.coords)); // Assuming values 0..255, RGBA
-			tmpCtx.putImageData(palette, 0, 0); // Repost the data.
-			var imgData = tmpCtx.getImageData(data.x, data.y, data.width, data.height); // Get cropped image
+			var palette = tmpCtx.getImageData(0, 0, tmpCanvas.width, tmpCanvas.height); 
+			palette.data.set(new Uint8ClampedArray(data.coords)); 
+			tmpCtx.putImageData(palette, 0, 0); 
+			var imgData = tmpCtx.getImageData(data.x, data.y, data.width, data.height); 
 
 			tmpCanvas.width = data.width;
 			tmpCanvas.height = data.height;
 			tmpCtx.putImageData(imgData,0,0);
 
-			// Convert canvas back to image:
 			var img = new Image();
 			img.onload = function() {
 				testCanvas.add(new fabric.Image(img, {
@@ -207,48 +186,13 @@ export function floodFill(enable) {
 	});
 }
 
-/* var fcanvas;
-
-fcanvas = new fabric.Canvas('canvas', {
-  backgroundColor: '#fff',
-  enableRetinaScaling: false,
-}); */
-
-function disableSelectableMapBackground() {
-	let objects = canvas.getObjects();
-	console.log('objects[0] ', objects[0]);
-	console.log('objects[0] ', objects[0].selectable);
-	objects[0].selectable = false;
-	console.log('objects[0] ', objects[0].selectable);
-	objects[objects.length-1].selectable = true;
-}
-
-function removeDuplicateObjects() {
-	let objects = canvas.getObjects();
-	for (let i = 0; i < objects.length; i++) {
-		// vymažu poslední vytvořený objekt
-		canvas.remove(objects[objects.length - 1]);
-	}
-	canvas.renderAll();
-}
-
-function makeLastObjectSelectable() {
-	let objects = canvas.getObjects();
-	console.log(objects);
-	objects[objects.length - 1].selectable = true;
-}
-
 function fixObjects() {
 	let objects = canvas.getObjects();
 	for (let i = 0; i < objects.length; i++) {
     if (objects[i].bg === true) {
       objects[i].selectable = false;
-      //objects[i].hoverCursor = "help";
       canvas.sendToBack(objects[i]);
-      //canvas.requestRenderAll;
     }
   }
-	console.log('objects length: ', objects.length);
-	canvas.remove(objects[objects.length - 1])
-
+	canvas.remove(objects[objects.length - 1]);
 }

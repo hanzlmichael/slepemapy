@@ -52,7 +52,7 @@
 
     if (password !== passwordConfirm.value) {
       passwordError.textContent = "Hesla se neshodují"
-      return
+      return;
     }
 
     try {
@@ -69,7 +69,6 @@
         passwordError.textContent = data.errors.password;
       }
       if (data.user) {
-        console.log('dostalo se sem do /tests')
         location.assign('/tests');
       }
     }

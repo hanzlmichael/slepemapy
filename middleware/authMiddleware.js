@@ -28,7 +28,6 @@ const checkUser = (req, res, next) => {
 const requireAuth = (req, res, next) => {
   const token = req.cookies.jwt;
 
-  // check json web token exists & is verified
   if (token) {
     jwt.verify(token, process.env.JWT_SECRET_KEY, (err, decodedToken) => {
       if (err) {
@@ -46,56 +45,39 @@ const requireAuth = (req, res, next) => {
 
 
 const checkAuthor = async (req, res, next) => {
-  console.log('dostal se sem')
   let testId = req.url.substring(1, req.url.length)
-  console.log('testId ', testId)
   if (testId.length > 24) {
     testId = testId.slice(0,24)
-    console.log('sliced ', testId)
   }
-
   const token = req.cookies.jwt;
   if (token) {
     jwt.verify(token, process.env.JWT_SECRET_KEY, async (err, decodedToken) => {
       if (err) {
-        console.log('err1')
         res.locals.author = null;
         next();
       } else {
         let user, teacherRef;
-
-        console.log('decodedid ', decodedToken.id);
-        // use Promise.all() to wait for both queries to complete
         await Promise.all([
           User.findById(decodedToken.id).select("_id").exec(),
           Test.findById(testId).select("teacherRef").exec()
         ])
           .then(([userDoc, testDoc]) => {
-            console.log('err2')
             user = userDoc._id.toString();
             teacherRef = testDoc.teacherRef.toString();
-            console.log('srovnani ', user, teacherRef)
           })
           .catch((err) => {
-            console.log('err3')
             console.log(err);
           });
 
         if (user == teacherRef) {
-          console.log('--------------------------------', user)
-
           res.locals.author = user;
         } else {
-          console.log('err4')
-          //res.locals.author = null;
           res.redirect('/tests')
         }
-
         next();
       }
     });
   } else {
-    //res.locals.author = null;
     res.redirect('/tests')
     next();
   }
@@ -114,12 +96,10 @@ const isAuthor = async (req, res, next) => {
         const url = req.url;
         const parts = url.split('/');
         const resultId = parts[parts.length - 1];
-
         let testRef;
         let authorId;
         try {
           testRef = await Result.findById(resultId).select("testRef");
-          console.log('HERE - testRef: ', testRef)
         } catch(err) {
           console.log(err)
         }
@@ -130,13 +110,9 @@ const isAuthor = async (req, res, next) => {
             next();
             return;
           }
-          console.log('testRef in HERE : ', testRef.testRef)
-          console.log('HERE - authorId: ', authorId.teacherRef)
         } catch(err) {
           console.log(err)
         }
-        console.log('authorId.teacherRef === decodedToken.id', authorId.teacherRef, decodedToken.id);
-
         if (authorId.teacherRef.toString() === decodedToken.id) {
           res.locals.isAuthor = true;
         } else {
@@ -164,7 +140,6 @@ const isAdmin = async (req, res, next) => {
         if (isAdmin) {
           next();
         } else {
-          console.log("Nedostatečná autorizace");
           res.redirect("/");
         }
       } else {

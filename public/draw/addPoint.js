@@ -45,11 +45,10 @@ function createCircle(e, isTemp) {
 }
 
 function stopDraw() {
-  console.log('draw stopped');
 	canvas.off('mouse:move')
   canvas.off('mouse:down')
   let allObjs = canvas.getObjects('circle')
- allObjs.filter(obj => {
+  allObjs.filter(obj => {
   	if (obj.isTemp == true) {
     	canvas.remove(obj)
     } 

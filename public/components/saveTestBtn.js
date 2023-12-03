@@ -1,5 +1,6 @@
 import { showLoader, hideLoader, loadTestOverlay } from "./loader.js";
 import { test, questions, maps } from '../components/questionBar.js';
+import { resizeAllMaps } from '../components/canvas.js';
 
 let saveTestBtn = document.querySelector('#saveTest');
 let marksBoundariesInputs = document.querySelectorAll('.table-input-number');
@@ -70,8 +71,8 @@ function generateRangesForBoundaries(points) {
   let ranges = [0.9,0.75,0.6,0.45]  
   let pointsRanges = [];
   let position = 0;
-  let pointsRangesFor4 = [4,4,3,3,2,2,1,1,0,0]
-  let pointsRangesFor5 = [5,5,4,4,3,3,2,2,0,1]
+  let pointsRangesFor4 = [4,4,3,3,2,2,1,1,0,0];
+  let pointsRangesFor5 = [5,5,4,4,3,3,2,2,0,1];
   
   if (points === 4) {
     return pointsRangesFor4;
@@ -140,11 +141,13 @@ function marksBoundariesError() {
 }
 
 async function saveTestToDb() {
+  debugger;
   showLoader(loadTestOverlay);
   try {
     let title = testTitle.value;
     let timeLimit = document.querySelector('#selectTimeLimit').value;
     let marksBoundaries = getMarksBoundaries();
+    let maps = await resizeAllMaps();
     const res = await fetch('/tests/new', {
       method: 'POST', 
       body: JSON.stringify( { title, maps, questions, marksBoundaries, timeLimit } ),
@@ -175,7 +178,7 @@ async function updateTestInDb(testId) {
     let title = testTitle.value;
     let timeLimit = document.querySelector('#selectTimeLimit').value;
     let marksBoundaries = getMarksBoundaries();   
-    let maps = test.maps;
+    let maps = await resizeAllMaps();
     let questions = test.questions; 
     let fetchUrl = '/tests/' + testId;
     const res = await fetch(fetchUrl, {

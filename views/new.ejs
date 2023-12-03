@@ -59,8 +59,8 @@
                         Nahrát mapy
                         <input type="file" id="map-upload" multiple accept="image/*">
                       </label>
-                      <div>* Max. velikost mapy: 1 Mb</div>
-                      <div>* Max. počet map: 5</div>
+                      <div>* Max. velikost mapy: 15 Mb</div>
+                      <div>* Max. počet map: 10</div>
                     </div>
                     <div class="maps-wrap">
                       <% if (test) { %>
@@ -95,6 +95,7 @@
                   <div class="wrap-testing">  
                     <div class="canvas-wrap-testing">
                       <canvas class="canvas-testing" id="canvas"></canvas>
+                      <canvas id="canvasForMapManipulation"></canvas>
                       <div class="navigation">
                         <button class="material-symbols-outlined" id="move-north">north</button>
                         <button class="material-symbols-outlined" id="move-south">south</button>
@@ -454,9 +455,7 @@
                   uložit test
                 </button>
               </div>
-          </div>
-          
-
+          </div>   
       </div>
   </main>
   </div>
@@ -743,6 +742,9 @@
 
 /*layout 2 stranka - canvas, nastaveni otazky*/
 
+#canvasForMapManipulation {
+  display:none;
+}
 
 .canvas-wrap-testing {
   width:750px;

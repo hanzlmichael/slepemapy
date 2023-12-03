@@ -26,8 +26,8 @@ function handleMap(e) {
     reader.onload = function() {
       let imageFile = reader.result;
       let name = input.files[i].name;
-      if (input.files[i].size > 1000000) {
-        alert("Maximální velikost mapy je 1 Mb!");
+      if (input.files[i].size > 15000000) {
+        alert("Maximální velikost mapy je 15 Mb!");
         mapCount--;
         return;
       }

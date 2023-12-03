@@ -1,7 +1,8 @@
-import { canvas } from '../inits/canvas.js';
+import { canvas, canvasForMapManipulation } from '../inits/canvas.js';
 import { selectMap, hideElement, showElement, mapsWrap } from '../inits/definitions.js';
 import { canvasWrap, test } from '../components/questionBar.js';
 import { setShapes } from '../components/question.js';
+import { Map } from '../components/classes.js';
 
 const zoomInBtn = document.querySelector('#zoom-in-btn')
 const zoomOutBtn = document.querySelector('#zoom-out-btn')
@@ -62,7 +63,6 @@ function resizeMapToCanvas(data) {
   })
   setShapes();
 }
-
 
 export function fixResizeMapToCanvas() {
   let mapId = selectMap.value;
@@ -149,4 +149,36 @@ function moveNorthSouth(e) {
 
     // Aktualizace pohledu
     canvas.requestRenderAll();
+}
+
+export async function resizeAllMaps() {
+  let maps = test.maps;
+  let resizedMapsSrc = [];
+  
+  for (let i = 0; i < maps.length; i++) {
+    // Vytvoření Promise pro každý obrázek
+    const loadImage = () => {
+      return new Promise((resolve, reject) => {
+        fabric.Image.fromURL(maps[i].data, function (img) {
+          if (img.getScaledWidth() > 750) {
+            img.scaleToWidth(750, true);
+            canvasForMapManipulation.clear();
+            canvasForMapManipulation.setDimensions({ width: 750, height: img.getScaledHeight() });
+            canvasForMapManipulation.add(img);
+            canvasForMapManipulation.renderAll();
+            const resizedDataURL = canvasForMapManipulation.toDataURL();
+            resolve(resizedDataURL);
+          } else {
+            resolve(maps[i].data);
+          }
+        });
+      });
+    };
+
+    // Počkáme na dokončení načítání obrázku
+    const resizedMap = await loadImage();
+    resizedMapsSrc.push(new Map(maps[i].mapId, maps[i].title, resizedMap));
+  }
+
+  return resizedMapsSrc;
 }
